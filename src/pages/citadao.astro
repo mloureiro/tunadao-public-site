@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { url } from '../utils/url';
 import editions from '../data/citadao-editions.json';
 
 const sortedEditions = [...editions].filter(e => e.poster).sort((a, b) => b.year - a.year);
@@ -99,7 +100,7 @@ const awardOrder = [
             <article class="edition-card" id={`edicao-${edition.edition}`}>
               <div class="edition-poster">
                 {edition.poster && (
-                  <img src={edition.poster} alt={`Cartaz do ${edition.edition}º CITADÃO`} loading="lazy" />
+                  <img src={url(edition.poster)} alt={`Cartaz do ${edition.edition}º CITADÃO`} loading="lazy" />
                 )}
               </div>
               <div class="edition-info">

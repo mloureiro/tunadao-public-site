@@ -1,4 +1,6 @@
 ---
+import { url } from '../utils/url';
+
 interface Props {
   title: string;
   description?: string;
@@ -7,9 +9,9 @@ interface Props {
 const { title, description = "Tunadão 1998 - Tuna do Instituto Superior Politécnico de Viseu" } = Astro.props;
 
 const navItems = [
-  { href: "/", label: "Início" },
-  { href: "/citadao", label: "CITADÃO" },
-  { href: "/premios", label: "Prémios" },
+  { href: url('/'), label: "Início" },
+  { href: url('/citadao'), label: "CITADÃO" },
+  { href: url('/premios'), label: "Prémios" },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -22,13 +24,13 @@ const currentPath = Astro.url.pathname;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
     <title>{title} | Tunadão 1998</title>
   </head>
   <body>
     <header class="header">
       <nav class="nav">
-        <a href="/" class="logo">
+        <a href={url('/')} class="logo">
           <span class="logo-text">Tunadão</span>
           <span class="logo-year">1998</span>
         </a>

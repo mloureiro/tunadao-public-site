@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { url } from '../utils/url';
 import editions from '../data/citadao-editions.json';
 
 const latestEdition = editions.filter(e => e.poster).sort((a, b) => b.year - a.year)[0];
@@ -16,8 +17,8 @@ const nextEdition = editions.find(e => !e.poster && e.year >= new Date().getFull
           Desde 1998, a levar a tradição académica e a música tunante por Portugal e pelo mundo.
         </p>
         <div class="hero-actions">
-          <a href="/citadao" class="btn btn-primary">Conhecer o CITADÃO</a>
-          <a href="/galeria" class="btn btn-secondary">Ver Galeria</a>
+          <a href={url('/citadao')} class="btn btn-primary">Conhecer o CITADÃO</a>
+          <a href={url('/galeria')} class="btn btn-secondary">Ver Galeria</a>
         </div>
       </div>
     </div>
@@ -29,7 +30,7 @@ const nextEdition = editions.find(e => !e.poster && e.year >= new Date().getFull
       <div class="latest-content">
         <div class="latest-poster">
           {latestEdition.poster && (
-            <img src={latestEdition.poster} alt={`Cartaz do ${latestEdition.edition}º CITADÃO`} />
+            <img src={url(latestEdition.poster)} alt={`Cartaz do ${latestEdition.edition}º CITADÃO`} />
           )}
         </div>
         <div class="latest-info">
@@ -45,7 +46,7 @@ const nextEdition = editions.find(e => !e.poster && e.year >= new Date().getFull
               ))}
             </ul>
           </div>
-          <a href={`/citadao#edicao-${latestEdition.edition}`} class="btn btn-primary">Ver detalhes</a>
+          <a href={url(`/citadao#edicao-${latestEdition.edition}`)} class="btn btn-primary">Ver detalhes</a>
         </div>
       </div>
     </div>
@@ -104,7 +105,7 @@ const nextEdition = editions.find(e => !e.poster && e.year >= new Date().getFull
     <div class="container">
       <h2 class="section-title">Documentos</h2>
       <div class="downloads-grid">
-        <a href="/premios" class="download-card">
+        <a href={url('/premios')} class="download-card">
           <div class="download-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
           </div>
@@ -113,7 +114,7 @@ const nextEdition = editions.find(e => !e.poster && e.year >= new Date().getFull
             <p>Histórico de prémios</p>
           </div>
         </a>
-        <a href="/documents/tunadao-1998-citadao.pdf" class="download-card" target="_blank">
+        <a href={url('/documents/tunadao-1998-citadao.pdf')} class="download-card" target="_blank">
           <div class="download-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
           </div>
