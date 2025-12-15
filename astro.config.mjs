@@ -2,6 +2,6 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://YOUR_USERNAME.github.io',
-  base: '/tunadao-static',
+  site: 'https://mloureiro.github.io',
+  base: '/tunadao-public-site',
 });
