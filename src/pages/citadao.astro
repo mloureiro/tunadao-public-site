@@ -1,0 +1,418 @@
+---
+import Layout from '../layouts/Layout.astro';
+import editions from '../data/citadao-editions.json';
+
+const sortedEditions = [...editions].filter(e => e.poster).sort((a, b) => b.year - a.year);
+
+const awardLabels: Record<string, string> = {
+  melhorTuna: "Melhor Tuna",
+  segundaMelhorTuna: "2ª Melhor Tuna",
+  tunaMaisTuna: "Tuna + Tuna",
+  tunaDoPublico: "Tuna do Público",
+  melhorSerenata: "Melhor Serenata",
+  melhorOriginal: "Melhor Original",
+  melhorInstrumental: "Melhor Instrumental",
+  melhorSolista: "Melhor Solista",
+  melhorPandeireta: "Melhor Pandeireta",
+  melhorEstandarte: "Melhor Estandarte",
+  melhorPassacalles: "Melhor Passacalles",
+  mencaoHonrosa: "Menção Honrosa"
+};
+
+const awardOrder = [
+  "melhorTuna",
+  "segundaMelhorTuna",
+  "tunaMaisTuna",
+  "tunaDoPublico",
+  "melhorSerenata",
+  "melhorOriginal",
+  "melhorInstrumental",
+  "melhorSolista",
+  "melhorPandeireta",
+  "melhorEstandarte",
+  "melhorPassacalles",
+  "mencaoHonrosa"
+];
+---
+
+<Layout title="CITADÃO" description="Certame Internacional de Tunas Académicas do Dão - Festival de tunas organizado pela Tunadão 1998">
+  <section class="hero-small">
+    <div class="container">
+      <h1>CITADÃO</h1>
+      <p>Certame Internacional de Tunas Académicas do Dão</p>
+    </div>
+  </section>
+
+  <section class="section intro">
+    <div class="container">
+      <div class="intro-content">
+        <p>
+          O <strong>CITADÃO</strong> (Certame Internacional de Tunas Académicas do Dão) é um festival anual
+          organizado pela Tunadão 1998 graças à dedicação, empenho e entrega de todos os elementos
+          desta Mui Nobre Tuna.
+        </p>
+        <p>
+          Em 2004 realiza-se o primeiro CITADÃO - Certame Internacional de Tunas Académicas do Dão,
+          realizado pela TUNADÃO 1998. O Festival é realizado anualmente e conta com a presença de
+          prestigiadas tunas nacionais e internacionais.
+        </p>
+        <p>
+          Para além do convívio e espírito académico tem como objetivo mostrar aos visienses e a quem
+          vem assistir a qualidade e as tradições das Tunas existentes em Portugal.
+        </p>
+        <p>
+          Como já é característico do nosso certame, apresentamos regularmente Tunas do mais alto nível
+          provindas dos vários pontos do país e internacionais que vêm em busca de grande animação,
+          convívio, troca de tradições e costumes. Por último e não menos importantes temos sempre
+          presente tunas extraconcurso pertencentes ao Instituto Politécnico de Viseu.
+        </p>
+        <p>
+          Sem dúvida alguma é um evento que não seria possível realizar sem a ajuda da Câmara Municipal
+          de Viseu, do Instituto Politécnico de Viseu, dos patrocinadores, de toda a comunidade escolar,
+          família e amigos que sempre nos apoiaram nesta grande tarefa. A todos eles um muito obrigado!
+        </p>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-number">{editions.length}</span>
+            <span class="stat-label">Edições</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">2004</span>
+            <span class="stat-label">Ano de Início</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">Viseu</span>
+            <span class="stat-label">Cidade</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section editions">
+    <div class="container">
+      <h2 class="section-title">Edições</h2>
+      <div class="editions-grid">
+        {sortedEditions.map((edition) => {
+          const awards = edition.awards;
+          return (
+            <article class="edition-card" id={`edicao-${edition.edition}`}>
+              <div class="edition-poster">
+                {edition.poster && (
+                  <img src={edition.poster} alt={`Cartaz do ${edition.edition}º CITADÃO`} loading="lazy" />
+                )}
+              </div>
+              <div class="edition-info">
+                <div class="edition-header">
+                  <span class="edition-number">{edition.edition}º</span>
+                  <span class="edition-year">{edition.year}</span>
+                </div>
+                <h3>{edition.edition}º CITADÃO</h3>
+                <p class="edition-date">{edition.date}</p>
+                {edition.venue && <p class="edition-venue">{edition.venue}</p>}
+                {edition.note && <p class="edition-note">{edition.note}</p>}
+
+                {edition.tunas.length > 0 && (
+                  <div class="edition-tunas">
+                    <h4>Tunas a Concurso:</h4>
+                    <ul>
+                      {edition.tunas.map((tuna: string) => (
+                        <li>{tuna}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {edition.guests.length > 0 && (
+                  <div class="edition-guests">
+                    <h4>Participação Especial:</h4>
+                    <ul>
+                      {edition.guests.map((guest: string) => (
+                        <li>{guest}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {awards && (
+                  <div class="edition-awards">
+                    <h4>Prémios:</h4>
+                    <div class="awards-grid">
+                      {awardOrder.map((key) => {
+                        const value = awards[key as keyof typeof awards];
+                        if (!value) return null;
+                        const isMainAward = key === "melhorTuna";
+                        return (
+                          <div class:list={["award-item", { "award-main": isMainAward }]}>
+                            <span class="award-category">{awardLabels[key]}</span>
+                            <span class="award-winner">{value}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {!awards && (
+                  <p class="no-awards">Informação de prémios não disponível</p>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero-small {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: var(--color-white);
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .hero-small h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-small p {
+    font-size: 1.125rem;
+    opacity: 0.9;
+  }
+
+  .intro {
+    background: var(--color-white);
+  }
+
+  .intro-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .intro-content p {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+  }
+
+  .intro-content strong {
+    color: var(--color-text);
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .editions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .edition-card {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 2rem;
+    background: var(--color-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+  }
+
+  .edition-poster img {
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .edition-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .edition-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--color-accent);
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 1.125rem;
+    border-radius: 50%;
+  }
+
+  .edition-year {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+  }
+
+  .edition-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .edition-date {
+    font-size: 1rem;
+    color: var(--color-text-light);
+  }
+
+  .edition-venue {
+    font-size: 0.9375rem;
+    color: var(--color-text-light);
+    margin-bottom: 0.5rem;
+  }
+
+  .edition-note {
+    display: inline-block;
+    background: var(--color-bg);
+    color: var(--color-accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .edition-tunas,
+  .edition-guests,
+  .edition-awards {
+    margin-top: 1.5rem;
+  }
+
+  .edition-tunas h4,
+  .edition-guests h4,
+  .edition-awards h4 {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-light);
+    margin-bottom: 0.5rem;
+  }
+
+  .edition-tunas ul,
+  .edition-guests ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .edition-tunas li,
+  .edition-guests li {
+    background: var(--color-bg);
+    padding: 0.375rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: var(--color-text);
+  }
+
+  .edition-guests li {
+    background: transparent;
+    border: 1px solid var(--color-border);
+  }
+
+  .awards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .award-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem;
+    background: var(--color-bg);
+    border-radius: 6px;
+  }
+
+  .award-main {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: var(--color-white);
+  }
+
+  .award-main .award-category {
+    color: var(--color-accent);
+  }
+
+  .award-main .award-winner {
+    color: var(--color-white);
+    font-size: 1.125rem;
+  }
+
+  .award-category {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-light);
+    margin-bottom: 0.25rem;
+  }
+
+  .award-winner {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .no-awards {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .edition-card {
+      grid-template-columns: 1fr;
+    }
+
+    .edition-poster {
+      max-width: 250px;
+      margin: 0 auto;
+    }
+
+    .stats {
+      gap: 2rem;
+    }
+
+    .hero-small h1 {
+      font-size: 2.5rem;
+    }
+
+    .awards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
