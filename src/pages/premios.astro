@@ -1,0 +1,268 @@
+---
+import Layout from '../layouts/Layout.astro';
+import palmares from '../data/palmares.json';
+
+const sortedPalmares = [...palmares].sort((a, b) => b.year - a.year);
+const totalAwards = palmares.reduce((acc, year) =>
+  acc + year.festivals.reduce((festAcc, fest) => festAcc + fest.awards.length, 0), 0
+);
+const totalFestivals = palmares.reduce((acc, year) => acc + year.festivals.length, 0);
+const yearsActive = palmares.length;
+---
+
+<Layout title="Prémios" description="Palmarés da Tunadão 1998 - Prémios e distinções recebidos ao longo dos anos">
+  <section class="hero-small">
+    <div class="container">
+      <h1>Prémios</h1>
+      <p>Palmarés da Tunadão 1998</p>
+    </div>
+  </section>
+
+  <section class="section intro">
+    <div class="container">
+      <div class="intro-content">
+        <p>
+          Ao longo de mais de 25 anos de história, a <strong>Tunadão 1998</strong> tem sido distinguida
+          em diversos certames e festivais de tunas académicas por todo o país e além-fronteiras.
+        </p>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-number">{totalAwards}</span>
+            <span class="stat-label">Prémios</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">{totalFestivals}</span>
+            <span class="stat-label">Festivais</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">{yearsActive}</span>
+            <span class="stat-label">Anos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section palmares">
+    <div class="container">
+      <h2 class="section-title">Palmarés Completo</h2>
+
+      <div class="timeline">
+        {sortedPalmares.map((yearData) => (
+          <div class="year-block" id={`ano-${yearData.year}`}>
+            <div class="year-header">
+              <span class="year-badge">{yearData.year}</span>
+              <span class="year-count">{yearData.festivals.length} festival{yearData.festivals.length !== 1 ? 'is' : ''}</span>
+            </div>
+            <div class="festivals-grid">
+              {yearData.festivals.map((festival) => (
+                <article class="festival-card">
+                  <h3>{festival.name}</h3>
+                  {festival.location && <p class="festival-location">{festival.location}</p>}
+                  {festival.awards.length > 0 ? (
+                    <ul class="awards-list">
+                      {festival.awards.map((award) => (
+                        <li class:list={[
+                          "award-badge",
+                          { "award-main": award.toLowerCase().includes("melhor tuna") && !award.includes("2ª") && !award.includes("3ª") }
+                        ]}>
+                          {award}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p class="no-awards">Participação</p>
+                  )}
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero-small {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: var(--color-white);
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .hero-small h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-small p {
+    font-size: 1.125rem;
+    opacity: 0.9;
+  }
+
+  .intro {
+    background: var(--color-white);
+  }
+
+  .intro-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .intro-content p {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+  }
+
+  .intro-content strong {
+    color: var(--color-text);
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .year-block {
+    scroll-margin-top: 100px;
+  }
+
+  .year-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .year-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: var(--color-white);
+    font-weight: 700;
+    font-size: 1.25rem;
+    border-radius: 6px;
+  }
+
+  .year-count {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+
+  .festivals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .festival-card {
+    background: var(--color-white);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .festival-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    color: var(--color-text);
+  }
+
+  .festival-location {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: 1rem;
+  }
+
+  .awards-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .award-badge {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    background: var(--color-bg);
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    color: var(--color-text);
+  }
+
+  .award-main {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: var(--color-white);
+  }
+
+  .no-awards {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    font-style: italic;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .hero-small h1 {
+      font-size: 2.5rem;
+    }
+
+    .stats {
+      gap: 2rem;
+    }
+
+    .festivals-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .year-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+</style>
