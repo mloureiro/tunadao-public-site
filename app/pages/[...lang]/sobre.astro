@@ -80,13 +80,18 @@ const missionItems = [
   <!-- History Section -->
   <section class="history">
     <div class="container">
-      <div class="history__content">
-        <h2 class="section-title">{t('about.history')}</h2>
-        <div class="history__text">
-          <p>{t('about.historyText.p1')}</p>
-          <p>{t('about.historyText.p2')}</p>
-          <p>{t('about.historyText.p3')}</p>
-          <p>{t('about.historyText.p4')}</p>
+      <div class="history__grid">
+        <div class="history__logo">
+          <img src="/images/logo.svg" alt="Tunadão 1998 Logo" class="history__logo-img" />
+        </div>
+        <div class="history__content">
+          <h2 class="section-title">{t('about.history')}</h2>
+          <div class="history__text">
+            <p>{t('about.historyText.p1')}</p>
+            <p>{t('about.historyText.p2')}</p>
+            <p>{t('about.historyText.p3')}</p>
+            <p>{t('about.historyText.p4')}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -199,9 +204,45 @@ const missionItems = [
     background-color: var(--color-background);
   }
 
+  .history__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  @media (min-width: 768px) {
+    .history__grid {
+      grid-template-columns: 280px 1fr;
+      gap: var(--space-10);
+    }
+  }
+
+  .history__logo {
+    display: flex;
+    justify-content: center;
+  }
+
+  .history__logo-img {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+  }
+
+  @media (min-width: 768px) {
+    .history__logo-img {
+      max-width: 280px;
+      position: sticky;
+      top: var(--space-8);
+    }
+  }
+
   .history__content {
     max-width: 800px;
-    margin: 0 auto;
+  }
+
+  .history__content .section-title {
+    text-align: left;
   }
 
   .history__text p {

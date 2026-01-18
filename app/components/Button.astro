@@ -6,6 +6,7 @@ interface Props {
   class?: string;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
+  target?: string;
 }
 
 const {
@@ -15,10 +16,14 @@ const {
   class: className = '',
   type = 'button',
   disabled = false,
+  target,
 } = Astro.props;
 
 const Tag = href ? 'a' : 'button';
-const baseProps = href ? { href } : { type, disabled };
+const isExternal = target === '_blank';
+const baseProps = href
+  ? { href, target, ...(isExternal && { rel: 'noopener noreferrer' }) }
+  : { type, disabled };
 ---
 
 <Tag class:list={['btn', `btn--${variant}`, `btn--${size}`, className]} {...baseProps}>

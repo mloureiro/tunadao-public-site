@@ -121,9 +121,9 @@
   },
   "citadao": {
     "title": "Citadão Festival",
-    "subtitle": "International Competition of Academic Tunas of Dão",
-    "description": "CITADÃO - International Competition of Academic Tunas of Dão. The tuna festival organized by Tunadão since 2004.",
-    "editionDescription": "of the International Competition of Academic Tunas of Dão",
+    "subtitle": "Certame Internacional de Tunas Académicas do Dão",
+    "description": "CITADÃO - Certame Internacional de Tunas Académicas do Dão. The tuna festival organized by Tunadão since 2004.",
+    "editionDescription": "of CITADÃO",
     "edition": "th Edition",
     "year": "Year",
     "date": "Date",
@@ -137,7 +137,7 @@
     "participatingTunas": "Participating Tunas",
     "about": {
       "title": "What is CITADÃO?",
-      "p1": "<strong>CITADÃO - International Competition of Academic Tunas of Dão</strong> is an academic tuna festival organized by Tunadão since 2004. Held annually in Viseu, the festival brings together the best tunas in the country and international guests for two days of music, camaraderie and competition.",
+      "p1": "<strong>CITADÃO - Certame Internacional de Tunas Académicas do Dão</strong> is an academic tuna festival organized by Tunadão since 2004. Held annually in Viseu, the festival brings together the best tunas in the country and international guests for two days of music, camaraderie and competition.",
       "p2": "With {count} editions held, CITADÃO has become a reference in the national tuna scene, awarding musical excellence, creativity and academic spirit."
     }
   },
