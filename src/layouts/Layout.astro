@@ -4,7 +4,8 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Tunadão 1998 - Tuna do Instituto Politécnico de Viseu' } = Astro.props;
+const { title, description = 'Tunadão 1998 - Tuna do Instituto Politécnico de Viseu' } =
+  Astro.props;
 ---
 
 <!doctype html>
@@ -39,7 +40,13 @@ const { title, description = 'Tunadão 1998 - Tuna do Instituto Politécnico de 
   }
 
   html {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      sans-serif;
     background-color: var(--color-background);
     color: var(--color-text);
   }
