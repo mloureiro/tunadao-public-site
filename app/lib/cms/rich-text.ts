@@ -61,43 +61,50 @@ function renderNode(node: CMSRichTextNode): string {
     case 'linebreak':
       return '<br />';
 
-    case 'paragraph':
+    case 'paragraph': {
       const pContent = node.children?.map(renderNode).join('') || '';
       return `<p>${pContent}</p>`;
+    }
 
-    case 'heading':
+    case 'heading': {
       const hContent = node.children?.map(renderNode).join('') || '';
       const tag = node.tag || 'h2';
       return `<${tag}>${hContent}</${tag}>`;
+    }
 
-    case 'list':
+    case 'list': {
       const listContent = node.children?.map(renderNode).join('') || '';
       const listTag = node.listType === 'number' ? 'ol' : 'ul';
       return `<${listTag}>${listContent}</${listTag}>`;
+    }
 
-    case 'listitem':
+    case 'listitem': {
       const liContent = node.children?.map(renderNode).join('') || '';
       return `<li>${liContent}</li>`;
+    }
 
-    case 'link':
+    case 'link': {
       const linkContent = node.children?.map(renderNode).join('') || '';
       const url = node.url || '#';
       const target = node.target ? ` target="${node.target}"` : '';
       const rel = node.rel ? ` rel="${node.rel}"` : '';
       return `<a href="${escapeHtml(url)}"${target}${rel}>${linkContent}</a>`;
+    }
 
-    case 'quote':
+    case 'quote': {
       const quoteContent = node.children?.map(renderNode).join('') || '';
       return `<blockquote>${quoteContent}</blockquote>`;
+    }
 
-    case 'code':
+    case 'code': {
       const codeContent = node.children?.map(renderNode).join('') || '';
       return `<pre><code>${codeContent}</code></pre>`;
+    }
 
     case 'horizontalrule':
       return '<hr />';
 
-    case 'upload':
+    case 'upload': {
       // Handle uploaded images
       // @ts-expect-error - value contains media data
       const media = node.value;
@@ -106,6 +113,7 @@ function renderNode(node: CMSRichTextNode): string {
         return `<img src="${escapeHtml(media.url)}" alt="${escapeHtml(alt)}" />`;
       }
       return '';
+    }
 
     default:
       // For unknown node types, try to render children

@@ -20,7 +20,7 @@ export const translations = {
   en,
 } as const;
 
-type TranslationKeys = typeof pt;
+type _TranslationKeys = typeof pt;
 
 /**
  * Get a nested translation value by dot-separated path
@@ -87,7 +87,7 @@ export function useTranslations(lang: Language) {
  * @param lang - Target language
  * @param currentLang - Current language (to handle removing prefix)
  */
-export function getLocalizedPath(path: string, lang: Language, currentLang?: Language): string {
+export function getLocalizedPath(path: string, lang: Language, _currentLang?: Language): string {
   // Remove any existing language prefix
   let cleanPath = path;
   for (const l of Object.keys(languages)) {

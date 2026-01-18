@@ -14,7 +14,7 @@ export function getStaticPaths() {
 const { lang } = Astro.params;
 const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
-const l = (path: string) => getLocalizedPath(path, currentLang);
+const _l = (path: string) => getLocalizedPath(path, currentLang);
 
 // Fetch editions from CMS (with fallback)
 const editions = await getCitadaoEditions();
@@ -117,9 +117,9 @@ const latestEdition = editions[0];
                   <h4>{t('citadao.awards')}</h4>
                   <div class="awards-grid">
                     {Object.entries(edition.awards).map(([key, winner]) => {
-                      const isFirst = key === 'melhorTuna' || key.includes('melhor') && !key.includes('segundo') && !key.includes('terceiro');
-                      const isSecond = key === 'segundaMelhorTuna' || key.includes('segundo');
-                      const isThird = key === 'terceiraMelhorTuna' || key.includes('terceiro');
+                      const _isFirst = key === 'melhorTuna' || key.includes('melhor') && !key.includes('segundo') && !key.includes('terceiro');
+                      const _isSecond = key === 'segundaMelhorTuna' || key.includes('segundo');
+                      const _isThird = key === 'terceiraMelhorTuna' || key.includes('terceiro');
                       const awardClass = key === 'melhorTuna' ? 'award-item--gold' :
                                          key === 'segundaMelhorTuna' ? 'award-item--silver' :
                                          key === 'terceiraMelhorTuna' ? 'award-item--bronze' :

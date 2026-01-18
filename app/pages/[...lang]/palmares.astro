@@ -13,7 +13,7 @@ export function getStaticPaths() {
 const { lang } = Astro.params;
 const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
-const l = (path: string) => getLocalizedPath(path, currentLang);
+const _l = (path: string) => getLocalizedPath(path, currentLang);
 
 // Fetch Palmarés data from CMS (with fallback)
 const palmaresData = await getPalmaresYears();
