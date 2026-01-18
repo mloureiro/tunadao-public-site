@@ -3,18 +3,28 @@ import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
 import eslintPluginAstro from 'eslint-plugin-astro';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import globals from 'globals';
 
 export default [
   eslint.configs.recommended,
   ...eslintPluginAstro.configs.recommended,
   eslintConfigPrettier,
   {
-    files: ['**/*.{ts,tsx}'],
+    rules: {
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx,js,mjs}'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
       },
     },
     plugins: {
@@ -30,6 +40,6 @@ export default [
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '.astro/', '.payload/'],
+    ignores: ['dist/', 'node_modules/', '.astro/', '.payload/', 'cms/'],
   },
 ];
