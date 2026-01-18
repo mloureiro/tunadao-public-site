@@ -11,7 +11,8 @@
       "@utils/*": ["app/utils/*"],
       "@i18n/*": ["app/i18n/*"],
       "@assets/*": ["app/assets/*"],
-      "@data/*": ["app/data/*"]
+      "@data/*": ["app/data/*"],
+      "@lib/*": ["app/lib/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"
