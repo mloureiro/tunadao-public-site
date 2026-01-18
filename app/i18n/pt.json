@@ -1,0 +1,168 @@
+{
+  "nav": {
+    "home": "Início",
+    "about": "Sobre Nós",
+    "citadao": "Citadão",
+    "palmares": "Palmarés",
+    "blog": "Blog",
+    "videos": "Vídeos",
+    "music": "Música",
+    "contact": "Contacto"
+  },
+  "common": {
+    "readMore": "Ler mais",
+    "viewAll": "Ver todos",
+    "backTo": "Voltar a",
+    "loading": "A carregar...",
+    "error": "Ocorreu um erro",
+    "noResults": "Sem resultados",
+    "search": "Pesquisar",
+    "share": "Partilhar",
+    "close": "Fechar",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "toggleDarkMode": "Alternar modo escuro",
+    "skipToContent": "Ir para conteúdo principal"
+  },
+  "home": {
+    "title": "Tunadão 1998",
+    "subtitle": "Tuna do Instituto Politécnico de Viseu",
+    "heroText": "Desde 1998 a representar a academia e a cidade de Viseu por todo o país",
+    "cta": {
+      "about": "Conhecer a história",
+      "citadao": "Próximo Citadão"
+    },
+    "sections": {
+      "about": "Sobre Nós",
+      "citadao": "Festival Citadão",
+      "palmares": "Palmarés",
+      "blog": "Últimas Notícias"
+    }
+  },
+  "about": {
+    "title": "Sobre Nós",
+    "subtitle": "Mais de 25 anos de história",
+    "history": "A Nossa História",
+    "mission": "Missão",
+    "hierarchy": {
+      "title": "Hierarquia",
+      "tunoMestre": "Tuno-Mestre",
+      "tunosIlustres": "Tunos Ilustres",
+      "tunosDoutores": "Tunos Doutores/Engenheiros/Enfermeiros",
+      "tunos": "Tunos",
+      "caloiros": "Caloiros",
+      "aprendizes": "Aprendizes"
+    }
+  },
+  "citadao": {
+    "title": "Festival Citadão",
+    "subtitle": "Certame Internacional de Tunas Académicas do Dão",
+    "edition": "ª Edição",
+    "year": "Ano",
+    "date": "Data",
+    "venue": "Local",
+    "tunas": "Tunas a Concurso",
+    "guests": "Convidados",
+    "awards": "Prémios",
+    "viewDetails": "Ver detalhes",
+    "allEditions": "Todas as edições"
+  },
+  "palmares": {
+    "title": "Palmarés",
+    "subtitle": "Prémios conquistados pela Tunadão",
+    "festival": "Festival",
+    "location": "Local",
+    "awards": "Prémios",
+    "noAwards": "Prémio de Participação"
+  },
+  "awards": {
+    "melhorTuna": "Melhor Tuna",
+    "segundaMelhorTuna": "2ª Melhor Tuna",
+    "terceiraMelhorTuna": "3ª Melhor Tuna",
+    "tunaMaisTuna": "Tuna Mais Tuna",
+    "tunaDoPublico": "Tuna do Público",
+    "melhorSerenata": "Melhor Serenata",
+    "melhorPassacalles": "Melhor Passacalles",
+    "melhorPandeireta": "Melhor Pandeireta",
+    "melhorInstrumental": "Melhor Instrumental",
+    "melhorSolista": "Melhor Solista",
+    "melhorOriginal": "Melhor Tema Original",
+    "melhorEstandarte": "Melhor Estandarte",
+    "melhorPortaEstandarte": "Melhor Porta-Estandarte",
+    "mencaoHonrosa": "Menção Honrosa",
+    "premioParticipacao": "Prémio de Participação"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Notícias e eventos",
+    "readingTime": "min de leitura",
+    "publishedAt": "Publicado a",
+    "byAuthor": "por",
+    "tags": "Tags",
+    "relatedPosts": "Artigos relacionados"
+  },
+  "videos": {
+    "title": "Vídeos",
+    "subtitle": "A nossa música em vídeo",
+    "categories": {
+      "all": "Todos",
+      "atuacao": "Atuações",
+      "festival": "Festivais",
+      "serenata": "Serenatas",
+      "citadao": "Citadão",
+      "outro": "Outros"
+    },
+    "watchOn": "Ver no YouTube"
+  },
+  "music": {
+    "title": "Música",
+    "subtitle": "A nossa discografia",
+    "albums": "Álbuns",
+    "listenOn": "Ouvir no Spotify",
+    "tracks": "Faixas",
+    "recordingTypes": {
+      "live": "Gravado ao Vivo",
+      "studio": "Gravado em Estúdio"
+    }
+  },
+  "contact": {
+    "title": "Contacto",
+    "subtitle": "Entre em contacto connosco",
+    "form": {
+      "name": "Nome",
+      "email": "Email",
+      "subject": "Assunto",
+      "message": "Mensagem",
+      "submit": "Enviar mensagem",
+      "sending": "A enviar...",
+      "success": "Mensagem enviada com sucesso!",
+      "error": "Erro ao enviar mensagem. Tente novamente."
+    },
+    "info": {
+      "title": "Informações",
+      "email": "Email",
+      "phone": "Telefone",
+      "address": "Morada"
+    },
+    "social": "Siga-nos nas redes sociais"
+  },
+  "footer": {
+    "navigation": "Navegação",
+    "content": "Conteúdo",
+    "contact": "Contacto",
+    "followUs": "Siga-nos",
+    "copyright": "Todos os direitos reservados"
+  },
+  "error": {
+    "404": {
+      "title": "Página não encontrada",
+      "message": "A página que procura não existe ou foi movida.",
+      "backHome": "Voltar ao início"
+    },
+    "500": {
+      "title": "Erro de servidor",
+      "message": "Ocorreu um erro. Tente novamente mais tarde.",
+      "backHome": "Voltar ao início"
+    }
+  }
+}

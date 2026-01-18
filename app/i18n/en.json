@@ -1,0 +1,168 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "citadao": "Citadão",
+    "palmares": "Awards",
+    "blog": "Blog",
+    "videos": "Videos",
+    "music": "Music",
+    "contact": "Contact"
+  },
+  "common": {
+    "readMore": "Read more",
+    "viewAll": "View all",
+    "backTo": "Back to",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "noResults": "No results",
+    "search": "Search",
+    "share": "Share",
+    "close": "Close",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "toggleDarkMode": "Toggle dark mode",
+    "skipToContent": "Skip to main content"
+  },
+  "home": {
+    "title": "Tunadão 1998",
+    "subtitle": "Tuna of the Polytechnic Institute of Viseu",
+    "heroText": "Since 1998, representing the academy and the city of Viseu throughout Portugal",
+    "cta": {
+      "about": "Discover our history",
+      "citadao": "Next Citadão"
+    },
+    "sections": {
+      "about": "About Us",
+      "citadao": "Citadão Festival",
+      "palmares": "Awards",
+      "blog": "Latest News"
+    }
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "More than 25 years of history",
+    "history": "Our History",
+    "mission": "Mission",
+    "hierarchy": {
+      "title": "Hierarchy",
+      "tunoMestre": "Tuno-Master",
+      "tunosIlustres": "Illustrious Tunos",
+      "tunosDoutores": "Doctors/Engineers/Nurses Tunos",
+      "tunos": "Tunos",
+      "caloiros": "Freshmen",
+      "aprendizes": "Apprentices"
+    }
+  },
+  "citadao": {
+    "title": "Citadão Festival",
+    "subtitle": "International Competition of Academic Tunas of Dão",
+    "edition": "th Edition",
+    "year": "Year",
+    "date": "Date",
+    "venue": "Venue",
+    "tunas": "Competing Tunas",
+    "guests": "Guests",
+    "awards": "Awards",
+    "viewDetails": "View details",
+    "allEditions": "All editions"
+  },
+  "palmares": {
+    "title": "Awards",
+    "subtitle": "Awards won by Tunadão",
+    "festival": "Festival",
+    "location": "Location",
+    "awards": "Awards",
+    "noAwards": "Participation Award"
+  },
+  "awards": {
+    "melhorTuna": "Best Tuna",
+    "segundaMelhorTuna": "2nd Best Tuna",
+    "terceiraMelhorTuna": "3rd Best Tuna",
+    "tunaMaisTuna": "Most Tunante Tuna",
+    "tunaDoPublico": "People's Choice",
+    "melhorSerenata": "Best Serenade",
+    "melhorPassacalles": "Best Passacalles",
+    "melhorPandeireta": "Best Pandeireta",
+    "melhorInstrumental": "Best Instrumental",
+    "melhorSolista": "Best Soloist",
+    "melhorOriginal": "Best Original Theme",
+    "melhorEstandarte": "Best Banner",
+    "melhorPortaEstandarte": "Best Banner Bearer",
+    "mencaoHonrosa": "Honorable Mention",
+    "premioParticipacao": "Participation Award"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "News and events",
+    "readingTime": "min read",
+    "publishedAt": "Published on",
+    "byAuthor": "by",
+    "tags": "Tags",
+    "relatedPosts": "Related posts"
+  },
+  "videos": {
+    "title": "Videos",
+    "subtitle": "Our music in video",
+    "categories": {
+      "all": "All",
+      "atuacao": "Performances",
+      "festival": "Festivals",
+      "serenata": "Serenades",
+      "citadao": "Citadão",
+      "outro": "Other"
+    },
+    "watchOn": "Watch on YouTube"
+  },
+  "music": {
+    "title": "Music",
+    "subtitle": "Our discography",
+    "albums": "Albums",
+    "listenOn": "Listen on Spotify",
+    "tracks": "Tracks",
+    "recordingTypes": {
+      "live": "Live Recording",
+      "studio": "Studio Recording"
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Get in touch with us",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "submit": "Send message",
+      "sending": "Sending...",
+      "success": "Message sent successfully!",
+      "error": "Error sending message. Please try again."
+    },
+    "info": {
+      "title": "Information",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address"
+    },
+    "social": "Follow us on social media"
+  },
+  "footer": {
+    "navigation": "Navigation",
+    "content": "Content",
+    "contact": "Contact",
+    "followUs": "Follow us",
+    "copyright": "All rights reserved"
+  },
+  "error": {
+    "404": {
+      "title": "Page not found",
+      "message": "The page you're looking for doesn't exist or has been moved.",
+      "backHome": "Go back home"
+    },
+    "500": {
+      "title": "Server error",
+      "message": "An error occurred. Please try again later.",
+      "backHome": "Go back home"
+    }
+  }
+}
