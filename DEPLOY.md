@@ -6,6 +6,17 @@ This project consists of two parts:
 - **Frontend (Astro)**: Deployed to GitHub Pages
 - **CMS (PayloadCMS)**: Deployed to Render.com
 
+### Data Architecture
+
+The frontend is a **static site** (SSG) that fetches data from the CMS **at build time**:
+
+1. During `npm run build`, Astro fetches all content from PayloadCMS REST API
+2. Pages are pre-rendered with the fetched data
+3. The generated static HTML is deployed to GitHub Pages
+4. **No runtime CMS dependency** - the static site works without the CMS running
+
+**Fallback mechanism**: If the CMS is unavailable during build, the frontend falls back to static data in `app/data/` to ensure builds always succeed.
+
 ---
 
 ## Frontend - GitHub Pages
@@ -115,10 +126,33 @@ To rebuild the frontend when CMS content changes:
 ### Local Development
 
 ```bash
-# Frontend
-npm run dev
-
-# CMS (in cms/ directory)
+# Terminal 1 - CMS
 cd cms
 npm run dev
+
+# Terminal 2 - Frontend
+npm run dev
+```
+
+**Note:** In dev mode, pages fetch from CMS on-demand (when you visit them), not at startup. You can start the frontend first and the CMS later.
+
+---
+
+## Frontend Environment Variables
+
+The frontend uses these environment variables for CMS integration:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `CMS_URL` | PayloadCMS API URL | `http://localhost:3000` |
+| `USE_CMS` | Enable CMS fetching | `true` |
+
+**For production builds:**
+
+```bash
+# Build with CMS data
+CMS_URL=https://your-cms.onrender.com npm run build
+
+# Build with fallback data only (no CMS)
+USE_CMS=false npm run build
 ```
