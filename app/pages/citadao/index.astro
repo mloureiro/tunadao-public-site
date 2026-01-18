@@ -2,30 +2,10 @@
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
 import { t } from '@i18n/index';
+import { editionsData, awardLabels } from '@data/citadao-editions';
 
-// Static data - will be replaced with CMS data when connected
-const editions = [
-  { edition: 19, year: 2025, date: 'Maio 2025', venue: 'A anunciar', tunasCount: 4, hasAwards: true },
-  { edition: 18, year: 2024, date: '4 Maio', venue: 'Viseu', tunasCount: 4, hasAwards: true },
-  { edition: 17, year: 2023, date: '5-6 Maio', venue: 'Solar Vinhos do Dão / Aula Magna IPV', tunasCount: 4, hasAwards: true },
-  { edition: 16, year: 2022, date: '29-30 Abril', venue: 'Viseu', tunasCount: 6, hasAwards: true },
-  { edition: 15, year: 2019, date: '3-4 Maio', venue: 'Clube de Viseu / Aula Magna', tunasCount: 4, hasAwards: true },
-  { edition: 14, year: 2018, date: '4-5 Maio', venue: 'Clube de Viseu / Aula Magna', tunasCount: 4, hasAwards: true, notes: '20 Anos - Tunadão Canta' },
-  { edition: 13, year: 2017, date: '5-6 Maio', venue: 'Aula Magna IPV', tunasCount: 4, hasAwards: true },
-  { edition: 12, year: 2016, date: '29-30 Abril', venue: 'Aula Magna do I.P.V. / Rua Formosa', tunasCount: 4, hasAwards: true },
-  { edition: 11, year: 2015, date: '1-2 Maio', venue: 'Aula Magna I.P.V. / Rua Formosa', tunasCount: 4, hasAwards: true },
-  { edition: 10, year: 2014, date: '2-3 Maio', venue: 'Aula Magna do I.P.V. / Rua Formosa', tunasCount: 5, hasAwards: true },
-  { edition: 9, year: 2013, date: '3-4 Maio', venue: 'Aula Magna I.P.V. / Rua Formosa', tunasCount: 4, hasAwards: true, notes: '15 Anos - 1998-2013' },
-  { edition: 8, year: 2012, date: '4-5 Maio', venue: 'Aula Magna do IPV / Rua Formosa', tunasCount: 4, hasAwards: true },
-  { edition: 7, year: 2011, date: '29-30 Abril', venue: 'Aula Magna do I.P.V. / Rua Formosa', tunasCount: 4, hasAwards: true },
-  { edition: 6, year: 2010, date: '30 Abril - 1 Maio', venue: 'Aula Magna do I.P.V.', tunasCount: 3, hasAwards: true },
-  { edition: 5, year: 2009, date: '1-2 Maio', venue: 'Aula Magna IPV / Rua Formosa', tunasCount: 5, hasAwards: true },
-  { edition: 4, year: 2008, date: '2-3 Maio', venue: 'Aula Magna ISPV / Rua Formosa', tunasCount: 5, hasAwards: false, notes: '10º Aniversário da Tunadão 1998' },
-  { edition: 3, year: 2007, date: '23-24 Março', venue: 'Aula Magna do ISPV / Forum Viseu', tunasCount: 5, hasAwards: true },
-  { edition: 2, year: 2005, date: '3-4 Novembro', venue: 'Aula Magna do ISPV', tunasCount: 5, hasAwards: false },
-  { edition: 1, year: 2004, date: '4-5 Novembro', venue: 'Aula Magna do ISPV', tunasCount: 5, hasAwards: false },
-];
-
+// Convert to array and sort by year descending
+const editions = Object.values(editionsData).sort((a, b) => b.year - a.year);
 const latestEdition = editions[0];
 ---
 
@@ -45,7 +25,7 @@ const latestEdition = editions[0];
   <section class="latest">
     <div class="container">
       <div class="latest__card">
-        <div class="latest__badge">{latestEdition.edition}{t('citadao.edition')}</div>
+        <div class="latest__badge">{latestEdition.edition}ª Edição</div>
         <h2 class="latest__title">CITADÃO {latestEdition.year}</h2>
         <div class="latest__info">
           <div class="latest__info-item">
@@ -57,8 +37,8 @@ const latestEdition = editions[0];
             <span>{latestEdition.venue}</span>
           </div>
         </div>
-        <Button href={`/citadao/${latestEdition.year}`} variant="primary" size="lg">
-          {t('citadao.viewDetails')}
+        <Button href="#citadao-${latestEdition.year}" variant="primary" size="lg">
+          Ver detalhes
         </Button>
       </div>
     </div>
@@ -83,34 +63,66 @@ const latestEdition = editions[0];
     </div>
   </section>
 
-  <!-- All Editions Grid -->
+  <!-- All Editions -->
   <section class="editions">
     <div class="container">
       <h2 class="section-title">{t('citadao.allEditions')}</h2>
-      <div class="editions__grid">
+      <div class="editions__list">
         {editions.map((edition) => (
-          <a href={`/citadao/${edition.year}`} class="edition-card">
-            <div class="edition-card__header">
-              <span class="edition-card__edition">{edition.edition}º</span>
-              <span class="edition-card__year">{edition.year}</span>
-            </div>
-            <div class="edition-card__body">
-              <div class="edition-card__date">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                {edition.date}
+          <article class="edition-item" id={`citadao-${edition.year}`}>
+            <div class="edition-item__header">
+              <div class="edition-item__title">
+                <span class="edition-item__number">{edition.edition}ª Edição</span>
+                <h3>CITADÃO {edition.year}</h3>
               </div>
-              <div class="edition-card__tunas">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                {edition.tunasCount} tunas
+              <div class="edition-item__meta">
+                <span class="edition-item__date">{edition.date}</span>
+                <span class="edition-item__venue">{edition.venue}</span>
               </div>
               {edition.notes && (
-                <div class="edition-card__notes">{edition.notes}</div>
+                <span class="edition-item__badge">{edition.notes}</span>
               )}
             </div>
-            <div class="edition-card__footer">
-              <span class="edition-card__link">{t('citadao.viewDetails')} →</span>
+
+            <div class="edition-item__content">
+              {/* Tunas Participantes */}
+              <div class="edition-item__section">
+                <h4>Tunas Participantes</h4>
+                <ul class="edition-item__tunas">
+                  {edition.tunas.map((tuna) => (
+                    <li>{tuna}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Convidados */}
+              {edition.guests && edition.guests.length > 0 && (
+                <div class="edition-item__section">
+                  <h4>Convidados</h4>
+                  <ul class="edition-item__guests">
+                    {edition.guests.map((guest) => (
+                      <li>{guest}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Prémios */}
+              {edition.awards && Object.keys(edition.awards).length > 0 && (
+                <div class="edition-item__section edition-item__awards">
+                  <h4>Prémios</h4>
+                  <div class="awards-grid">
+                    {Object.entries(edition.awards).map(([key, winner]) => (
+                      <div class="award-item">
+                        <span class="award-item__name">{awardLabels[key] || key}</span>
+                        <span class="award-item__winner">{winner}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          </a>
+          </article>
         ))}
       </div>
     </div>
@@ -243,118 +255,143 @@ const latestEdition = editions[0];
     text-align: center;
   }
 
-  /* Editions Grid */
+  /* Editions List */
   .editions {
     padding: var(--space-12) 0;
     background-color: var(--color-background);
   }
 
-  .editions__grid {
-    display: grid;
-    gap: var(--space-4);
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  @media (min-width: 640px) {
-    .editions__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .editions__grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .editions__grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .edition-card {
+  .editions__list {
     display: flex;
     flex-direction: column;
+    gap: var(--space-6);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .edition-item {
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
   }
 
-  .edition-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .edition-card__header {
+  .edition-item__header {
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     color: var(--color-text-inverted);
-    padding: var(--space-4);
+    padding: var(--space-5);
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
+    gap: var(--space-4);
   }
 
-  .edition-card__edition {
+  .edition-item__title {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .edition-item__number {
+    display: block;
     font-size: var(--text-sm);
-    font-weight: 500;
+    opacity: 0.85;
+    margin-bottom: var(--space-1);
+  }
+
+  .edition-item__title h3 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .edition-item__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    text-align: right;
+    font-size: var(--text-sm);
     opacity: 0.9;
   }
 
-  .edition-card__year {
-    font-size: var(--text-2xl);
-    font-weight: 700;
+  .edition-item__badge {
+    background-color: var(--color-secondary);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 600;
   }
 
-  .edition-card__body {
-    padding: var(--space-4);
-    flex-grow: 1;
+  .edition-item__content {
+    padding: var(--space-5);
+    display: grid;
+    gap: var(--space-5);
   }
 
-  .edition-card__date,
-  .edition-card__tunas {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
+  @media (min-width: 768px) {
+    .edition-item__content {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .edition-item__awards {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .edition-item__section h4 {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-3);
+  }
+
+  .edition-item__tunas,
+  .edition-item__guests {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     font-size: var(--text-sm);
     color: var(--color-text-muted);
-    margin-bottom: var(--space-2);
   }
 
-  .edition-card__date svg,
-  .edition-card__tunas svg {
-    color: var(--color-primary);
-    flex-shrink: 0;
+  .edition-item__tunas li,
+  .edition-item__guests li {
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid var(--color-border-light);
   }
 
-  .edition-card__notes {
-    margin-top: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    background-color: var(--color-secondary);
-    color: var(--color-text-inverted);
+  .edition-item__tunas li:last-child,
+  .edition-item__guests li:last-child {
+    border-bottom: none;
+  }
+
+  .awards-grid {
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .award-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3);
+    background-color: var(--color-background);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--color-primary);
+  }
+
+  .award-item__name {
     font-size: var(--text-xs);
-    font-weight: 500;
-    border-radius: var(--radius-sm);
-    text-align: center;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
 
-  .edition-card__footer {
-    padding: var(--space-3) var(--space-4);
-    border-top: 1px solid var(--color-border);
-  }
-
-  .edition-card__link {
+  .award-item__winner {
     font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--color-primary);
-    transition: color var(--transition-fast);
-  }
-
-  .edition-card:hover .edition-card__link {
-    color: var(--color-primary-dark);
+    font-weight: 600;
+    color: var(--color-text);
   }
 </style>
