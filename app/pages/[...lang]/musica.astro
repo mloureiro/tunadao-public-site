@@ -1,7 +1,19 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
-import { t } from '@i18n/index';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang: Language = (lang as Language) || defaultLang;
+const t = useTranslations(currentLang);
+const l = (path: string) => getLocalizedPath(path, currentLang);
 
 // Album data - will be replaced with CMS data when connected
 const albums = [
@@ -10,7 +22,7 @@ const albums = [
     title: 'De Capa Bem Traçada',
     year: 2008,
     spotifyAlbumId: '5ljVRcZan9DLkFDm5aWAgt',
-    description: 'Gravado em estúdio, o segundo álbum da Tunadão apresenta uma seleção de músicas tradicionais portuguesas com arranjos únicos.',
+    description: t('music.albumDescriptions.deCapaBemTracada'),
     type: 'studio',
   },
   {
@@ -18,7 +30,7 @@ const albums = [
     title: 'Por Ruelas e Calçadas',
     year: 2003,
     spotifyAlbumId: '3xcpAOCKk7soUNfdnTC6Sn',
-    description: 'O primeiro álbum da Tunadão, gravado ao vivo, captura a energia e espírito das atuações da tuna.',
+    description: t('music.albumDescriptions.porRuelasECalcadas'),
     type: 'live',
   },
 ];
@@ -26,7 +38,7 @@ const albums = [
 
 <Layout
   title={`${t('music.title')} | Tunadão 1998`}
-  description="Discografia da Tunadão 1998 - Ouve os nossos álbuns no Spotify. Música tradicional portuguesa e composições originais."
+  description={t('music.description')}
 >
   <!-- Hero Section -->
   <section class="hero">
@@ -44,7 +56,7 @@ const albums = [
           <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
         </svg>
         <div class="spotify-cta__text">
-          <p>Ouve toda a nossa discografia no Spotify</p>
+          <p>{t('music.spotifyCta')}</p>
         </div>
         <Button
           href="https://open.spotify.com/artist/7HeYIxlV5Nb1KvZkBx00sH"
@@ -52,7 +64,7 @@ const albums = [
           size="lg"
           target="_blank"
         >
-          Abrir no Spotify
+          {t('music.openOnSpotify')}
         </Button>
       </div>
     </div>

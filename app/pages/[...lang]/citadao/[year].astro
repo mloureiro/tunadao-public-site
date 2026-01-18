@@ -1,20 +1,31 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
-import { t } from '@i18n/index';
-import { editionsData, awardLabels } from '@data/citadao-editions';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import { editionsData } from '@data/citadao-editions';
 
 export function getStaticPaths() {
-  return Object.keys(editionsData).map((year) => ({
-    params: { year },
-  }));
+  const languages: (string | undefined)[] = [undefined, 'en'];
+  const paths: { params: { lang: string | undefined; year: string } }[] = [];
+
+  for (const lang of languages) {
+    for (const year of Object.keys(editionsData)) {
+      paths.push({ params: { lang, year } });
+    }
+  }
+
+  return paths;
 }
 
-const { year } = Astro.params;
+const { lang, year } = Astro.params;
+const currentLang: Language = (lang as Language) || defaultLang;
+const t = useTranslations(currentLang);
+const l = (path: string) => getLocalizedPath(path, currentLang);
+
 const edition = editionsData[parseInt(year as string)];
 
 if (!edition) {
-  return Astro.redirect('/citadao');
+  return Astro.redirect(l('/citadao'));
 }
 
 const allYears = Object.keys(editionsData).map(Number).sort((a, b) => b - a);
@@ -25,13 +36,13 @@ const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
 
 <Layout
   title={`${edition.edition}${t('citadao.edition')} CITADÃO ${edition.year} | Tunadão 1998`}
-  description={`CITADÃO ${edition.year} - ${edition.edition}ª Edição do Certame Internacional de Tunas Académicas do Dão`}
+  description={`CITADÃO ${edition.year} - ${edition.edition}${t('citadao.edition')} ${t('citadao.editionDescription')}`}
 >
   <!-- Hero Section -->
   <section class="hero">
     <div class="container">
       <div class="hero__breadcrumb">
-        <a href="/citadao">← {t('citadao.allEditions')}</a>
+        <a href={l('/citadao')}>← {t('citadao.allEditions')}</a>
       </div>
       <div class="hero__badge">{edition.edition}{t('citadao.edition')}</div>
       <h1 class="hero__title">CITADÃO {edition.year}</h1>
@@ -67,7 +78,7 @@ const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
           </div>
           <div class="info__content">
             <span class="info__label">{t('citadao.tunas')}</span>
-            <span class="info__value">{edition.tunas.length} tunas</span>
+            <span class="info__value">{edition.tunas.length} {t('citadao.tunasCount')}</span>
           </div>
         </div>
       </div>
@@ -111,7 +122,7 @@ const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
         <div class="awards__grid">
           {Object.entries(edition.awards).map(([key, winner]) => (
             <div class="award-item" class:list={{ 'award-item--highlight': key === 'melhorTuna' }}>
-              <span class="award-item__label">{awardLabels[key] || key}</span>
+              <span class="award-item__label">{t(`awards.${key}`)}</span>
               <span class="award-item__winner">{winner}</span>
             </div>
           ))}
@@ -125,15 +136,15 @@ const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
     <div class="container">
       <div class="navigation__buttons">
         {prevYear && (
-          <Button href={`/citadao/${prevYear}`} variant="outline">
+          <Button href={l(`/citadao/${prevYear}`)} variant="outline">
             ← CITADÃO {prevYear}
           </Button>
         )}
-        <Button href="/citadao" variant="secondary">
+        <Button href={l('/citadao')} variant="secondary">
           {t('citadao.allEditions')}
         </Button>
         {nextYear && (
-          <Button href={`/citadao/${nextYear}`} variant="outline">
+          <Button href={l(`/citadao/${nextYear}`)} variant="outline">
             CITADÃO {nextYear} →
           </Button>
         )}

@@ -1,17 +1,35 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Card from '@components/Card.astro';
-import { t } from '@i18n/index';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 import { getAllPosts } from '@data/blog-posts';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang: Language = (lang as Language) || defaultLang;
+const t = useTranslations(currentLang);
+const l = (path: string) => getLocalizedPath(path, currentLang);
 
 // Get posts from data file
 const posts = getAllPosts();
 
-const categories = ['Todos', 'Notícias', 'Eventos', 'Prémios'];
+const categories = [
+  { key: 'all', label: t('blog.categories.all') },
+  { key: 'news', label: t('blog.categories.news') },
+  { key: 'events', label: t('blog.categories.events') },
+  { key: 'awards', label: t('blog.categories.awards') },
+];
 
 function formatDate(dateStr: string): string {
+  const locale = currentLang === 'en' ? 'en-GB' : 'pt-PT';
   const date = new Date(dateStr);
-  return date.toLocaleDateString('pt-PT', {
+  return date.toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -21,7 +39,7 @@ function formatDate(dateStr: string): string {
 
 <Layout
   title={`${t('blog.title')} | Tunadão 1998`}
-  description="Blog da Tunadão 1998 - Notícias, eventos e novidades da tuna do Instituto Politécnico de Viseu."
+  description={t('blog.description')}
 >
   <!-- Hero Section -->
   <section class="hero">
@@ -39,9 +57,9 @@ function formatDate(dateStr: string): string {
           <button
             class="category-btn"
             class:list={{ 'category-btn--active': index === 0 }}
-            data-category={category.toLowerCase()}
+            data-category={category.key}
           >
-            {category}
+            {category.label}
           </button>
         ))}
       </div>
@@ -53,7 +71,7 @@ function formatDate(dateStr: string): string {
     <div class="container">
       <div class="posts__grid">
         {posts.map((post) => (
-          <a href={`/blog/${post.slug}`} class="post-card">
+          <a href={l(`/blog/${post.slug}`)} class="post-card">
             <div class="post-card__image">
               <div class="post-card__placeholder">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
@@ -277,7 +295,7 @@ function formatDate(dateStr: string): string {
         // Filter posts
         postCards.forEach((card) => {
           const postCategory = card.querySelector('.post-card__category')?.textContent?.toLowerCase();
-          if (category === 'todos' || postCategory === category) {
+          if (category === 'all' || postCategory === category) {
             (card as HTMLElement).style.display = 'flex';
           } else {
             (card as HTMLElement).style.display = 'none';

@@ -9,6 +9,24 @@
     "music": "Música",
     "contact": "Contacto"
   },
+  "stats": {
+    "founded": "Fundação",
+    "yearsHistory": "Anos de história",
+    "members": "Tunos",
+    "citadaoEditions": "Edições do Citadão"
+  },
+  "highlights": {
+    "citadaoDesc": "O maior certame de tunas académicas da região do Dão. Desde 2004 a reunir as melhores tunas do país.",
+    "palmaresDesc": "Mais de duas décadas de prémios conquistados em festivais por todo o país.",
+    "aboutDesc": "Conhece a história da tuna mais antiga do Instituto Politécnico de Viseu."
+  },
+  "aboutPreview": {
+    "text1": "A Tunadão nasceu em 1998, fruto da vontade de um grupo de estudantes do Instituto Politécnico de Viseu em criar uma tuna académica que representasse a instituição e a cidade. Desde então, tem sido uma referência na vida académica viseense, participando em festivais por todo o país e organizando o CITADÃO - Certame Internacional de Tunas Académicas do Dão.",
+    "text2": "Com mais de 25 anos de história, a Tunadão continua a formar novos tunos, a preservar tradições académicas e a levar a música portuguesa e a cultura tunante a palcos de norte a sul do país."
+  },
+  "musicCta": {
+    "text": "Ouve a nossa discografia no Spotify. Dois álbuns com o melhor da música tradicional portuguesa e composições originais da Tunadão."
+  },
   "common": {
     "readMore": "Ler mais",
     "viewAll": "Ver todos",
@@ -42,38 +60,102 @@
   "about": {
     "title": "Sobre Nós",
     "subtitle": "Mais de 25 anos de história",
+    "description": "Conhece a história da Tunadão 1998, a tuna académica do Instituto Politécnico de Viseu. Mais de 25 anos de tradição e música.",
     "history": "A Nossa História",
+    "historyText": {
+      "p1": "A Tunadão nasceu em 1998, fruto da vontade de um grupo de estudantes do Instituto Politécnico de Viseu em criar uma tuna académica que representasse a instituição e a cidade de Viseu. O nome \"Tunadão\" surge da junção de \"Tuna\" com \"Dão\", a região vinícola onde Viseu se insere, criando uma identidade única e representativa das suas raízes.",
+      "p2": "Desde a sua fundação, a Tunadão tem sido uma referência na vida académica viseense, participando em dezenas de festivais por todo o país e além-fronteiras, conquistando prémios e reconhecimento pelo seu trabalho musical e pela qualidade das suas atuações.",
+      "p3": "Em 2004, a Tunadão deu início a uma das suas maiores realizações: o CITADÃO - Certame Internacional de Tunas Académicas do Dão. Este festival tornou-se um dos eventos mais importantes do calendário tunante nacional, reunindo anualmente as melhores tunas do país e convidados internacionais.",
+      "p4": "Com mais de 25 anos de história, a Tunadão continua a formar novos tunos, a preservar tradições académicas e a levar a música portuguesa e a cultura tunante a palcos de norte a sul do país. A tuna mantém um repertório diversificado que inclui músicas tradicionais portuguesas, composições originais e adaptações de temas populares."
+    },
+    "milestones": {
+      "title": "Marcos Históricos",
+      "1998": "Fundação da Tunadão no Instituto Politécnico de Viseu",
+      "1999": "Primeira participação num festival de tunas",
+      "2003": "Lançamento do primeiro álbum \"Por Ruelas e Calçadas\"",
+      "2004": "Primeira edição do CITADÃO",
+      "2008": "Lançamento do segundo álbum \"De Capa Bem Traçada\"",
+      "2023": "Celebração dos 25 anos da Tunadão"
+    },
     "mission": "Missão",
+    "missionItems": {
+      "tradition": {
+        "title": "Preservar a Tradição",
+        "description": "Manter viva a tradição das tunas académicas portuguesas, preservando e transmitindo este património cultural."
+      },
+      "train": {
+        "title": "Formar Tunos",
+        "description": "Acolher e formar novos membros, transmitindo conhecimentos musicais e valores académicos."
+      },
+      "represent": {
+        "title": "Representar a Academia",
+        "description": "Levar o nome do Instituto Politécnico de Viseu e da cidade por todo o país e além-fronteiras."
+      },
+      "community": {
+        "title": "Promover a Convivência",
+        "description": "Fomentar o espírito de camaradagem e amizade entre tunos, criando laços que perduram para a vida."
+      }
+    },
     "hierarchy": {
       "title": "Hierarquia",
+      "intro": "A hierarquia da tuna segue uma estrutura tradicional, onde cada nível representa uma etapa no percurso de cada membro.",
       "tunoMestre": "Tuno-Mestre",
+      "tunoMestreDesc": "O líder máximo da tuna, responsável pela direção artística e musical.",
       "tunosIlustres": "Tunos Ilustres",
+      "tunosIlustresDesc": "Tunos que se destacaram e foram reconhecidos pelo seu contributo excecional.",
       "tunosDoutores": "Tunos Doutores/Engenheiros/Enfermeiros",
+      "tunosDoutoresDesc": "Tunos que concluíram os seus cursos superiores.",
       "tunos": "Tunos",
+      "tunosDesc": "Membros plenos da tuna que completaram o seu percurso de aprendizagem.",
       "caloiros": "Caloiros",
-      "aprendizes": "Aprendizes"
+      "caloirosDesc": "Novos membros em fase de integração na tuna.",
+      "aprendizes": "Aprendizes",
+      "aprendizesDesc": "Candidatos a tunos em processo de aprendizagem musical."
+    },
+    "cta": {
+      "palmares": "Ver Palmarés",
+      "citadao": "Conhecer o CITADÃO",
+      "more": "Queres conhecer mais?",
+      "moreDesc": "Descobre o nosso percurso nos festivais e os prémios conquistados ao longo dos anos."
     }
   },
   "citadao": {
     "title": "Festival Citadão",
     "subtitle": "Certame Internacional de Tunas Académicas do Dão",
+    "description": "CITADÃO - Certame Internacional de Tunas Académicas do Dão. O festival de tunas organizado pela Tunadão desde 2004.",
+    "editionDescription": "do Certame Internacional de Tunas Académicas do Dão",
     "edition": "ª Edição",
     "year": "Ano",
     "date": "Data",
     "venue": "Local",
     "tunas": "Tunas a Concurso",
+    "tunasCount": "tunas",
     "guests": "Convidados",
     "awards": "Prémios",
     "viewDetails": "Ver detalhes",
-    "allEditions": "Todas as edições"
+    "allEditions": "Todas as edições",
+    "participatingTunas": "Tunas Participantes",
+    "about": {
+      "title": "O que é o CITADÃO?",
+      "p1": "O <strong>CITADÃO - Certame Internacional de Tunas Académicas do Dão</strong> é um festival de tunas académicas organizado pela Tunadão desde 2004. Realizado anualmente em Viseu, o festival reúne as melhores tunas do país e convidados internacionais para dois dias de música, convívio e competição.",
+      "p2": "Com {count} edições realizadas, o CITADÃO tornou-se uma referência no panorama tunante nacional, premiando a excelência musical, a criatividade e o espírito académico."
+    }
   },
   "palmares": {
     "title": "Palmarés",
     "subtitle": "Prémios conquistados pela Tunadão",
+    "description": "Palmarés da Tunadão 1998 - Prémios conquistados em festivais de tunas por todo o país desde 1999.",
     "festival": "Festival",
     "location": "Local",
     "awards": "Prémios",
-    "noAwards": "Prémio de Participação"
+    "noAwards": "Prémio de Participação",
+    "stats": {
+      "awards": "Prémios",
+      "festivals": "Festivais",
+      "bestTuna": "Melhor Tuna",
+      "yearsOfAwards": "Anos de Palmarés"
+    },
+    "awardsCount": "prémios"
   },
   "awards": {
     "melhorTuna": "Melhor Tuna",
@@ -95,15 +177,24 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Notícias e eventos",
+    "description": "Blog da Tunadão 1998 - Notícias, eventos e novidades da tuna do Instituto Politécnico de Viseu.",
     "readingTime": "min de leitura",
     "publishedAt": "Publicado a",
     "byAuthor": "por",
     "tags": "Tags",
-    "relatedPosts": "Artigos relacionados"
+    "relatedPosts": "Artigos relacionados",
+    "backToBlog": "Voltar ao Blog",
+    "categories": {
+      "all": "Todos",
+      "news": "Notícias",
+      "events": "Eventos",
+      "awards": "Prémios"
+    }
   },
   "videos": {
     "title": "Vídeos",
     "subtitle": "A nossa música em vídeo",
+    "description": "Vídeos da Tunadão 1998 - Atuações, festivais, serenatas e momentos especiais da tuna do Instituto Politécnico de Viseu.",
     "categories": {
       "all": "Todos",
       "atuacao": "Atuações",
@@ -112,31 +203,55 @@
       "citadao": "Citadão",
       "outro": "Outros"
     },
-    "watchOn": "Ver no YouTube"
+    "watchOn": "Ver no YouTube",
+    "youtubeCta": {
+      "title": "Subscreve o nosso canal",
+      "description": "Fica a par de todas as novidades e vídeos da Tunadão no YouTube.",
+      "button": "Subscrever Canal"
+    }
   },
   "music": {
     "title": "Música",
     "subtitle": "A nossa discografia",
+    "description": "Discografia da Tunadão 1998 - Ouve os nossos álbuns no Spotify. Música tradicional portuguesa e composições originais.",
     "albums": "Álbuns",
     "listenOn": "Ouvir no Spotify",
+    "openOnSpotify": "Abrir no Spotify",
+    "spotifyCta": "Ouve toda a nossa discografia no Spotify",
     "tracks": "Faixas",
     "recordingTypes": {
       "live": "Gravado ao Vivo",
       "studio": "Gravado em Estúdio"
+    },
+    "albumDescriptions": {
+      "deCapaBemTracada": "Gravado em estúdio, o segundo álbum da Tunadão apresenta uma seleção de músicas tradicionais portuguesas com arranjos únicos.",
+      "porRuelasECalcadas": "O primeiro álbum da Tunadão, gravado ao vivo, captura a energia e espírito das atuações da tuna."
     }
   },
   "contact": {
     "title": "Contacto",
     "subtitle": "Entre em contacto connosco",
+    "description": "Entra em contacto com a Tunadão 1998. Envia-nos uma mensagem para marcares atuações, pedidos de informação ou qualquer outro assunto.",
     "form": {
       "name": "Nome",
+      "namePlaceholder": "O teu nome",
       "email": "Email",
+      "emailPlaceholder": "email@exemplo.com",
       "subject": "Assunto",
+      "subjectPlaceholder": "Seleciona um assunto",
+      "subjectOptions": {
+        "atuacao": "Pedido de Atuação",
+        "citadao": "CITADÃO - Festival",
+        "informacao": "Pedido de Informação",
+        "recrutamento": "Quero ser Tuno",
+        "outro": "Outro Assunto"
+      },
       "message": "Mensagem",
+      "messagePlaceholder": "Escreve a tua mensagem...",
       "submit": "Enviar mensagem",
       "sending": "A enviar...",
-      "success": "Mensagem enviada com sucesso!",
-      "error": "Erro ao enviar mensagem. Tente novamente."
+      "success": "Mensagem enviada com sucesso! Entraremos em contacto brevemente.",
+      "error": "Erro ao enviar mensagem. Por favor, tente novamente."
     },
     "info": {
       "title": "Informações",
@@ -144,7 +259,8 @@
       "phone": "Telefone",
       "address": "Morada"
     },
-    "social": "Siga-nos nas redes sociais"
+    "social": "Siga-nos nas redes sociais",
+    "mapTitle": "Localização da Tunadão 1998"
   },
   "footer": {
     "navigation": "Navegação",

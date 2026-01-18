@@ -1,22 +1,35 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
 import LanguageSelector from './LanguageSelector.astro';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = defaultLang } = Astro.props;
+const t = useTranslations(lang);
 
 interface NavItem {
-  label: string;
+  labelKey: string;
   href: string;
 }
 
-const navItems: NavItem[] = [
-  { label: 'Início', href: '/' },
-  { label: 'Sobre Nós', href: '/sobre' },
-  { label: 'Citadão', href: '/citadao' },
-  { label: 'Palmarés', href: '/palmares' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Vídeos', href: '/videos' },
-  { label: 'Música', href: '/musica' },
-  { label: 'Contacto', href: '/contacto' },
+const navItemsConfig: NavItem[] = [
+  { labelKey: 'nav.home', href: '/' },
+  { labelKey: 'nav.about', href: '/sobre' },
+  { labelKey: 'nav.citadao', href: '/citadao' },
+  { labelKey: 'nav.palmares', href: '/palmares' },
+  { labelKey: 'nav.blog', href: '/blog' },
+  { labelKey: 'nav.videos', href: '/videos' },
+  { labelKey: 'nav.music', href: '/musica' },
+  { labelKey: 'nav.contact', href: '/contacto' },
 ];
+
+const navItems = navItemsConfig.map(item => ({
+  label: t(item.labelKey),
+  href: getLocalizedPath(item.href, lang),
+}));
 
 const currentPath = Astro.url.pathname;
 ---
@@ -52,7 +65,7 @@ const currentPath = Astro.url.pathname;
     </nav>
 
     <div class="header__actions">
-      <LanguageSelector />
+      <LanguageSelector lang={lang} currentPath={Astro.url.pathname} />
       <ThemeToggle />
       <button class="header__menu-btn" aria-label="Abrir menu" aria-expanded="false">
         <span class="header__menu-icon"></span>

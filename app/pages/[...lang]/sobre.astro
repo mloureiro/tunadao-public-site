@@ -1,54 +1,73 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
-import { t } from '@i18n/index';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang: Language = (lang as Language) || defaultLang;
+const t = useTranslations(currentLang);
+const l = (path: string) => getLocalizedPath(path, currentLang);
 
 const hierarchy = [
   {
     title: t('about.hierarchy.tunoMestre'),
-    description: 'O líder máximo da tuna, responsável pela direção artística e musical.',
+    description: t('about.hierarchy.tunoMestreDesc'),
     icon: '👑',
   },
   {
     title: t('about.hierarchy.tunosIlustres'),
-    description: 'Tunos que se destacaram e foram reconhecidos pelo seu contributo excecional.',
+    description: t('about.hierarchy.tunosIlustresDesc'),
     icon: '⭐',
   },
   {
     title: t('about.hierarchy.tunosDoutores'),
-    description: 'Tunos que concluíram os seus cursos superiores.',
+    description: t('about.hierarchy.tunosDoutoresDesc'),
     icon: '🎓',
   },
   {
     title: t('about.hierarchy.tunos'),
-    description: 'Membros plenos da tuna que completaram o seu percurso de aprendizagem.',
+    description: t('about.hierarchy.tunosDesc'),
     icon: '🎭',
   },
   {
     title: t('about.hierarchy.caloiros'),
-    description: 'Novos membros em fase de integração na tuna.',
+    description: t('about.hierarchy.caloirosDesc'),
     icon: '🌱',
   },
   {
     title: t('about.hierarchy.aprendizes'),
-    description: 'Candidatos a tunos em processo de aprendizagem musical.',
+    description: t('about.hierarchy.aprendizesDesc'),
     icon: '📚',
   },
 ];
 
 const milestones = [
-  { year: '1998', event: 'Fundação da Tunadão no Instituto Politécnico de Viseu' },
-  { year: '1999', event: 'Primeira participação num festival de tunas' },
-  { year: '2003', event: 'Lançamento do primeiro álbum "Por Ruelas e Calçadas"' },
-  { year: '2004', event: 'Primeira edição do CITADÃO' },
-  { year: '2008', event: 'Lançamento do segundo álbum "De Capa Bem Traçada"' },
-  { year: '2023', event: 'Celebração dos 25 anos da Tunadão' },
+  { year: '1998', event: t('about.milestones.1998') },
+  { year: '1999', event: t('about.milestones.1999') },
+  { year: '2003', event: t('about.milestones.2003') },
+  { year: '2004', event: t('about.milestones.2004') },
+  { year: '2008', event: t('about.milestones.2008') },
+  { year: '2023', event: t('about.milestones.2023') },
+];
+
+const missionItems = [
+  { icon: '🎵', title: t('about.missionItems.tradition.title'), description: t('about.missionItems.tradition.description') },
+  { icon: '🎓', title: t('about.missionItems.train.title'), description: t('about.missionItems.train.description') },
+  { icon: '🌍', title: t('about.missionItems.represent.title'), description: t('about.missionItems.represent.description') },
+  { icon: '🤝', title: t('about.missionItems.community.title'), description: t('about.missionItems.community.description') },
 ];
 ---
 
 <Layout
   title={`${t('about.title')} | Tunadão 1998`}
-  description="Conhece a história da Tunadão 1998, a tuna académica do Instituto Politécnico de Viseu. Mais de 25 anos de tradição e música."
+  description={t('about.description')}
 >
   <!-- Hero Section -->
   <section class="hero">
@@ -64,29 +83,10 @@ const milestones = [
       <div class="history__content">
         <h2 class="section-title">{t('about.history')}</h2>
         <div class="history__text">
-          <p>
-            A Tunadão nasceu em 1998, fruto da vontade de um grupo de estudantes do Instituto
-            Politécnico de Viseu em criar uma tuna académica que representasse a instituição e a
-            cidade de Viseu. O nome "Tunadão" surge da junção de "Tuna" com "Dão", a região vinícola
-            onde Viseu se insere, criando uma identidade única e representativa das suas raízes.
-          </p>
-          <p>
-            Desde a sua fundação, a Tunadão tem sido uma referência na vida académica viseense,
-            participando em dezenas de festivais por todo o país e além-fronteiras, conquistando
-            prémios e reconhecimento pelo seu trabalho musical e pela qualidade das suas atuações.
-          </p>
-          <p>
-            Em 2004, a Tunadão deu início a uma das suas maiores realizações: o CITADÃO - Certame
-            Internacional de Tunas Académicas do Dão. Este festival tornou-se um dos eventos mais
-            importantes do calendário tunante nacional, reunindo anualmente as melhores tunas do
-            país e convidados internacionais.
-          </p>
-          <p>
-            Com mais de 25 anos de história, a Tunadão continua a formar novos tunos, a preservar
-            tradições académicas e a levar a música portuguesa e a cultura tunante a palcos de norte
-            a sul do país. A tuna mantém um repertório diversificado que inclui músicas tradicionais
-            portuguesas, composições originais e adaptações de temas populares.
-          </p>
+          <p>{t('about.historyText.p1')}</p>
+          <p>{t('about.historyText.p2')}</p>
+          <p>{t('about.historyText.p3')}</p>
+          <p>{t('about.historyText.p4')}</p>
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@ const milestones = [
   <!-- Timeline Section -->
   <section class="timeline">
     <div class="container">
-      <h2 class="section-title">Marcos Históricos</h2>
+      <h2 class="section-title">{t('about.milestones.title')}</h2>
       <div class="timeline__items">
         {milestones.map((item) => (
           <div class="timeline__item">
@@ -114,26 +114,13 @@ const milestones = [
       <div class="mission__content">
         <h2 class="section-title">{t('about.mission')}</h2>
         <div class="mission__grid">
-          <div class="mission__item">
-            <div class="mission__icon">🎵</div>
-            <h3>Preservar a Tradição</h3>
-            <p>Manter viva a tradição das tunas académicas portuguesas, preservando e transmitindo este património cultural.</p>
-          </div>
-          <div class="mission__item">
-            <div class="mission__icon">🎓</div>
-            <h3>Formar Tunos</h3>
-            <p>Acolher e formar novos membros, transmitindo conhecimentos musicais e valores académicos.</p>
-          </div>
-          <div class="mission__item">
-            <div class="mission__icon">🌍</div>
-            <h3>Representar a Academia</h3>
-            <p>Levar o nome do Instituto Politécnico de Viseu e da cidade por todo o país e além-fronteiras.</p>
-          </div>
-          <div class="mission__item">
-            <div class="mission__icon">🤝</div>
-            <h3>Promover a Convivência</h3>
-            <p>Fomentar o espírito de camaradagem e amizade entre tunos, criando laços que perduram para a vida.</p>
-          </div>
+          {missionItems.map((item) => (
+            <div class="mission__item">
+              <div class="mission__icon">{item.icon}</div>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -144,8 +131,7 @@ const milestones = [
     <div class="container">
       <h2 class="section-title">{t('about.hierarchy.title')}</h2>
       <p class="hierarchy-section__intro">
-        A hierarquia da tuna segue uma estrutura tradicional, onde cada nível representa
-        uma etapa no percurso de cada membro.
+        {t('about.hierarchy.intro')}
       </p>
       <div class="hierarchy__grid">
         {hierarchy.map((level) => (
@@ -163,14 +149,14 @@ const milestones = [
   <section class="cta">
     <div class="container">
       <div class="cta__content">
-        <h2>Queres conhecer mais?</h2>
-        <p>Descobre o nosso percurso nos festivais e os prémios conquistados ao longo dos anos.</p>
+        <h2>{t('about.cta.more')}</h2>
+        <p>{t('about.cta.moreDesc')}</p>
         <div class="cta__buttons">
-          <Button href="/palmares" variant="primary" size="lg">
-            Ver Palmarés
+          <Button href={l('/palmares')} variant="primary" size="lg">
+            {t('about.cta.palmares')}
           </Button>
-          <Button href="/citadao" variant="outline" size="lg">
-            Conhecer o CITADÃO
+          <Button href={l('/citadao')} variant="outline" size="lg">
+            {t('about.cta.citadao')}
           </Button>
         </div>
       </div>

@@ -1,33 +1,39 @@
 ---
-import { languages, defaultLang } from '@i18n/index';
+import { languages, languageFlags, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 
-const currentLang = defaultLang;
+interface Props {
+  lang?: Language;
+  currentPath?: string;
+}
 
-const languageFlags: Record<string, string> = {
-  pt: '🇵🇹',
-  en: '🇬🇧',
-};
+const { lang = defaultLang, currentPath = '/' } = Astro.props;
+
+// Generate URLs for each language
+const languageUrls = Object.keys(languages).reduce((acc, code) => {
+  acc[code] = getLocalizedPath(currentPath, code as Language, lang);
+  return acc;
+}, {} as Record<string, string>);
 ---
 
 <div class="lang-selector">
   <button class="lang-selector__btn" aria-label="Selecionar idioma" aria-expanded="false">
-    <span class="lang-selector__flag" data-lang="pt">{languageFlags[currentLang]}</span>
-    <span class="lang-selector__current">{currentLang.toUpperCase()}</span>
+    <span class="lang-selector__flag">{languageFlags[lang]}</span>
+    <span class="lang-selector__current">{lang.toUpperCase()}</span>
     <svg class="lang-selector__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="6 9 12 15 18 9"></polyline>
     </svg>
   </button>
   <div class="lang-selector__dropdown" aria-hidden="true">
     {Object.entries(languages).map(([code, name]) => (
-      <button
-        class={`lang-selector__option ${code === currentLang ? 'active' : ''}`}
+      <a
+        href={languageUrls[code]}
+        class={`lang-selector__option ${code === lang ? 'active' : ''}`}
         data-lang={code}
-        data-flag={languageFlags[code]}
       >
         <span class="lang-selector__option-flag">{languageFlags[code]}</span>
         <span class="lang-selector__code">{code.toUpperCase()}</span>
         <span class="lang-selector__name">{name}</span>
-      </button>
+      </a>
     ))}
   </div>
 </div>
@@ -144,40 +150,12 @@ const languageFlags: Record<string, string> = {
   .lang-selector__option.active .lang-selector__name {
     opacity: 1;
   }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateX(-50%) translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-  }
-
-  @keyframes fadeOut {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
 </style>
 
 <script>
   const selector = document.querySelector('.lang-selector');
   const btn = selector?.querySelector('.lang-selector__btn');
   const dropdown = selector?.querySelector('.lang-selector__dropdown');
-  const options = selector?.querySelectorAll('.lang-selector__option');
-  const currentText = selector?.querySelector('.lang-selector__current');
-  const currentFlag = selector?.querySelector('.lang-selector__flag');
-
-  const flags: Record<string, string> = {
-    pt: '🇵🇹',
-    en: '🇬🇧',
-  };
 
   if (btn && dropdown) {
     // Toggle dropdown
@@ -195,72 +173,12 @@ const languageFlags: Record<string, string> = {
       }
     });
 
-    // Language selection
-    options?.forEach((option) => {
-      option.addEventListener('click', () => {
-        const lang = option.getAttribute('data-lang');
-        if (lang && currentText && currentFlag) {
-          // Close dropdown
-          btn.setAttribute('aria-expanded', 'false');
-          dropdown.setAttribute('aria-hidden', 'true');
-
-          if (lang === 'en') {
-            // Show notification that English is coming soon
-            showNotification('English version coming soon! / Versão em inglês em breve!');
-            return;
-          }
-
-          // Store preference
-          localStorage.setItem('preferred-lang', lang);
-
-          // Update UI
-          currentText.textContent = lang.toUpperCase();
-          currentFlag.textContent = flags[lang] || flags['pt'];
-          options.forEach(opt => opt.classList.remove('active'));
-          option.classList.add('active');
-        }
-      });
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        btn.setAttribute('aria-expanded', 'false');
+        dropdown.setAttribute('aria-hidden', 'true');
+      }
     });
-
-    function showNotification(message: string) {
-      // Remove existing notification if any
-      const existing = document.querySelector('.lang-notification');
-      if (existing) existing.remove();
-
-      const notification = document.createElement('div');
-      notification.className = 'lang-notification';
-      notification.textContent = message;
-      notification.style.cssText = `
-        position: fixed;
-        bottom: 24px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: var(--color-primary);
-        color: white;
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        z-index: 9999;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        animation: slideUp 0.3s ease;
-      `;
-      document.body.appendChild(notification);
-
-      setTimeout(() => {
-        notification.style.animation = 'fadeOut 0.3s ease forwards';
-        setTimeout(() => notification.remove(), 300);
-      }, 3000);
-    }
-
-    // Load saved preference on init
-    const savedLang = localStorage.getItem('preferred-lang');
-    if (savedLang && currentText && currentFlag) {
-      currentText.textContent = savedLang.toUpperCase();
-      currentFlag.textContent = flags[savedLang] || flags['pt'];
-      options?.forEach((opt) => {
-        opt.classList.toggle('active', opt.getAttribute('data-lang') === savedLang);
-      });
-    }
   }
 </script>

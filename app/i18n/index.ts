@@ -6,6 +6,11 @@ export const languages = {
   en: 'English',
 } as const;
 
+export const languageFlags: Record<string, string> = {
+  pt: '🇵🇹',
+  en: '🇬🇧',
+};
+
 export type Language = keyof typeof languages;
 
 export const defaultLang: Language = 'pt';
@@ -57,6 +62,19 @@ export function getLangFromUrl(url: URL): Language {
 }
 
 /**
+ * Get language from Astro's currentLocale or URL
+ */
+export function getLang(astroLocale: string | undefined, url?: URL): Language {
+  if (astroLocale && astroLocale in translations) {
+    return astroLocale as Language;
+  }
+  if (url) {
+    return getLangFromUrl(url);
+  }
+  return defaultLang;
+}
+
+/**
  * Create a translation function for a specific language
  */
 export function useTranslations(lang: Language) {
@@ -64,11 +82,34 @@ export function useTranslations(lang: Language) {
 }
 
 /**
- * Get localized path
+ * Get localized path - converts a path to the correct language version
+ * @param path - The path to localize (e.g., '/sobre')
+ * @param lang - Target language
+ * @param currentLang - Current language (to handle removing prefix)
  */
-export function getLocalizedPath(path: string, lang: Language): string {
-  if (lang === defaultLang) {
-    return path;
+export function getLocalizedPath(path: string, lang: Language, currentLang?: Language): string {
+  // Remove any existing language prefix
+  let cleanPath = path;
+  for (const l of Object.keys(languages)) {
+    if (path.startsWith(`/${l}/`)) {
+      cleanPath = path.slice(l.length + 1);
+      break;
+    } else if (path === `/${l}`) {
+      cleanPath = '/';
+      break;
+    }
   }
-  return `/${lang}${path}`;
+
+  // Add language prefix for non-default languages
+  if (lang === defaultLang) {
+    return cleanPath;
+  }
+  return `/${lang}${cleanPath}`;
+}
+
+/**
+ * Get the alternate language
+ */
+export function getAlternateLang(lang: Language): Language {
+  return lang === 'pt' ? 'en' : 'pt';
 }

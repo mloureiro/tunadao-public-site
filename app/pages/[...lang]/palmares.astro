@@ -1,6 +1,18 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import { t } from '@i18n/index';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang: Language = (lang as Language) || defaultLang;
+const t = useTranslations(currentLang);
+const l = (path: string) => getLocalizedPath(path, currentLang);
 
 // Static data - will be replaced with CMS data when connected
 const palmaresData = [
@@ -168,7 +180,7 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
 
 <Layout
   title={`${t('palmares.title')} | Tunadão 1998`}
-  description="Palmarés da Tunadão 1998 - Prémios conquistados em festivais de tunas por todo o país desde 1999."
+  description={t('palmares.description')}
 >
   <!-- Hero Section -->
   <section class="hero">
@@ -184,19 +196,19 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
       <div class="stats__grid">
         <div class="stats__item">
           <span class="stats__value">{totalAwards}+</span>
-          <span class="stats__label">Prémios</span>
+          <span class="stats__label">{t('palmares.stats.awards')}</span>
         </div>
         <div class="stats__item">
           <span class="stats__value">{totalFestivals}</span>
-          <span class="stats__label">Festivais</span>
+          <span class="stats__label">{t('palmares.stats.festivals')}</span>
         </div>
         <div class="stats__item">
           <span class="stats__value">{melhorTunaCount}</span>
-          <span class="stats__label">Melhor Tuna</span>
+          <span class="stats__label">{t('palmares.stats.bestTuna')}</span>
         </div>
         <div class="stats__item">
           <span class="stats__value">{palmaresData.length}</span>
-          <span class="stats__label">Anos de Palmarés</span>
+          <span class="stats__label">{t('palmares.stats.yearsOfAwards')}</span>
         </div>
       </div>
     </div>
@@ -210,7 +222,7 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
           <div class="year-header">
             <h2 class="year-title">{yearData.year}</h2>
             <span class="year-count">
-              {yearData.festivals.reduce((t, f) => t + f.awards.length, 0)} prémios
+              {yearData.festivals.reduce((total, f) => total + f.awards.length, 0)} {t('palmares.awardsCount')}
             </span>
           </div>
           <div class="festivals-grid">

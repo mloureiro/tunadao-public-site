@@ -1,25 +1,37 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
-import { t } from '@i18n/index';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 import { postsData } from '@data/blog-posts';
 
 export function getStaticPaths() {
-  return Object.keys(postsData).map((slug) => ({
-    params: { slug },
-  }));
+  const languages: (string | undefined)[] = [undefined, 'en'];
+  const paths: { params: { lang: string | undefined; slug: string } }[] = [];
+
+  for (const lang of languages) {
+    for (const slug of Object.keys(postsData)) {
+      paths.push({ params: { lang, slug } });
+    }
+  }
+
+  return paths;
 }
 
-const { slug } = Astro.params;
-const post = postsData[slug];
+const { lang, slug } = Astro.params;
+const currentLang: Language = (lang as Language) || defaultLang;
+const t = useTranslations(currentLang);
+const l = (path: string) => getLocalizedPath(path, currentLang);
+
+const post = postsData[slug as string];
 
 if (!post) {
-  return Astro.redirect('/blog');
+  return Astro.redirect(l('/blog'));
 }
 
 function formatDate(dateStr: string): string {
+  const locale = currentLang === 'en' ? 'en-GB' : 'pt-PT';
   const date = new Date(dateStr);
-  return date.toLocaleDateString('pt-PT', {
+  return date.toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -38,7 +50,7 @@ function formatDate(dateStr: string): string {
         <div class="blog-post__meta">
           <span class="blog-post__category">{post.category}</span>
           <time datetime={post.date}>{formatDate(post.date)}</time>
-          <span class="blog-post__reading-time">{post.readingTime} min de leitura</span>
+          <span class="blog-post__reading-time">{post.readingTime} {t('blog.readingTime')}</span>
         </div>
         <h1 class="blog-post__title">{post.title}</h1>
         <p class="blog-post__excerpt">{post.excerpt}</p>
@@ -51,8 +63,8 @@ function formatDate(dateStr: string): string {
         <div class="blog-post__body" set:html={post.content} />
 
         <div class="blog-post__footer">
-          <Button href="/blog" variant="outline">
-            ← Voltar ao Blog
+          <Button href={l('/blog')} variant="outline">
+            ← {t('blog.backToBlog')}
           </Button>
         </div>
       </div>

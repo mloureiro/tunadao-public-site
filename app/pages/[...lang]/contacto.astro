@@ -2,7 +2,19 @@
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
 import SocialLinks from '@components/SocialLinks.astro';
-import { t } from '@i18n/index';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang: Language = (lang as Language) || defaultLang;
+const t = useTranslations(currentLang);
+const l = (path: string) => getLocalizedPath(path, currentLang);
 
 const contactInfo = {
   email: 'tunadao@gmail.com',
@@ -13,7 +25,7 @@ const contactInfo = {
 
 <Layout
   title={`${t('contact.title')} | Tunadão 1998`}
-  description="Entra em contacto com a Tunadão 1998. Envia-nos uma mensagem para marcares atuações, pedidos de informação ou qualquer outro assunto."
+  description={t('contact.description')}
 >
   <!-- Hero Section -->
   <section class="hero">
@@ -40,7 +52,7 @@ const contactInfo = {
                 id="name"
                 name="name"
                 required
-                placeholder="O teu nome"
+                placeholder={t('contact.form.namePlaceholder')}
               />
             </div>
 
@@ -51,19 +63,19 @@ const contactInfo = {
                 id="email"
                 name="email"
                 required
-                placeholder="email@exemplo.com"
+                placeholder={t('contact.form.emailPlaceholder')}
               />
             </div>
 
             <div class="form-group">
               <label for="subject">{t('contact.form.subject')} *</label>
               <select id="subject" name="subject" required>
-                <option value="">Seleciona um assunto</option>
-                <option value="atuacao">Pedido de Atuação</option>
-                <option value="citadao">CITADÃO - Festival</option>
-                <option value="informacao">Pedido de Informação</option>
-                <option value="recrutamento">Quero ser Tuno</option>
-                <option value="outro">Outro Assunto</option>
+                <option value="">{t('contact.form.subjectPlaceholder')}</option>
+                <option value="atuacao">{t('contact.form.subjectOptions.atuacao')}</option>
+                <option value="citadao">{t('contact.form.subjectOptions.citadao')}</option>
+                <option value="informacao">{t('contact.form.subjectOptions.informacao')}</option>
+                <option value="recrutamento">{t('contact.form.subjectOptions.recrutamento')}</option>
+                <option value="outro">{t('contact.form.subjectOptions.outro')}</option>
               </select>
             </div>
 
@@ -74,7 +86,7 @@ const contactInfo = {
                 name="message"
                 rows="5"
                 required
-                placeholder="Escreve a tua mensagem..."
+                placeholder={t('contact.form.messagePlaceholder')}
               ></textarea>
             </div>
 
@@ -84,7 +96,12 @@ const contactInfo = {
               </Button>
             </div>
 
-            <div class="form-status" id="formStatus"></div>
+            <div class="form-status" id="formStatus"
+              data-sending={t('contact.form.sending')}
+              data-success={t('contact.form.success')}
+              data-error={t('contact.form.error')}
+              data-submit={t('contact.form.submit')}
+            ></div>
           </form>
         </div>
 
@@ -151,7 +168,7 @@ const contactInfo = {
               allowfullscreen=""
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
-              title="Localização da Tunadão 1998"
+              title={t('contact.mapTitle')}
             ></iframe>
           </div>
         </div>
@@ -372,6 +389,11 @@ const contactInfo = {
     const formStatus = document.getElementById('formStatus');
 
     if (form && formStatus) {
+      const sendingText = formStatus.dataset.sending || 'Sending...';
+      const successText = formStatus.dataset.success || 'Message sent successfully!';
+      const errorText = formStatus.dataset.error || 'Error sending message.';
+      const submitText = formStatus.dataset.submit || 'Send message';
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -384,7 +406,7 @@ const contactInfo = {
 
         const submitButton = form.querySelector('button[type="submit"]');
         if (submitButton) {
-          submitButton.textContent = 'A enviar...';
+          submitButton.textContent = sendingText;
           (submitButton as HTMLButtonElement).disabled = true;
         }
 
@@ -393,15 +415,15 @@ const contactInfo = {
           // For now, simulate a successful submission
           await new Promise(resolve => setTimeout(resolve, 1000));
 
-          formStatus.textContent = 'Mensagem enviada com sucesso! Entraremos em contacto brevemente.';
+          formStatus.textContent = successText;
           formStatus.className = 'form-status success';
           form.reset();
         } catch (error) {
-          formStatus.textContent = 'Erro ao enviar mensagem. Por favor, tente novamente.';
+          formStatus.textContent = errorText;
           formStatus.className = 'form-status error';
         } finally {
           if (submitButton) {
-            submitButton.textContent = 'Enviar mensagem';
+            submitButton.textContent = submitText;
             (submitButton as HTMLButtonElement).disabled = false;
           }
         }

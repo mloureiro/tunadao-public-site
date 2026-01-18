@@ -1,38 +1,50 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
-import { t } from '@i18n/index';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },  // / (PT - default)
+    { params: { lang: 'en' } },       // /en/
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang: Language = (lang as Language) || defaultLang;
+const t = useTranslations(currentLang);
+const l = (path: string) => getLocalizedPath(path, currentLang);
 
 const stats = [
-  { value: '1998', label: 'Fundação' },
-  { value: '25+', label: 'Anos de história' },
-  { value: '60+', label: 'Tunos' },
-  { value: '19', label: 'Edições do Citadão' },
+  { value: '1998', label: t('stats.founded') },
+  { value: '25+', label: t('stats.yearsHistory') },
+  { value: '60+', label: t('stats.members') },
+  { value: '19', label: t('stats.citadaoEditions') },
 ];
 
 const highlights = [
   {
     title: t('home.sections.citadao'),
-    description: 'O maior certame de tunas académicas da região do Dão. Desde 2004 a reunir as melhores tunas do país.',
-    href: '/citadao',
+    description: t('highlights.citadaoDesc'),
+    href: l('/citadao'),
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
   },
   {
     title: t('home.sections.palmares'),
-    description: 'Mais de duas décadas de prémios conquistados em festivais por todo o país.',
-    href: '/palmares',
+    description: t('highlights.palmaresDesc'),
+    href: l('/palmares'),
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`,
   },
   {
     title: t('home.sections.about'),
-    description: 'Conhece a história da tuna mais antiga do Instituto Politécnico de Viseu.',
-    href: '/sobre',
+    description: t('highlights.aboutDesc'),
+    href: l('/sobre'),
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
   },
 ];
 ---
 
-<Layout title="Tunadão 1998 - Tuna do Instituto Politécnico de Viseu">
+<Layout title={`Tunadão 1998 - ${t('home.subtitle')}`}>
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero__background"></div>
@@ -41,10 +53,10 @@ const highlights = [
       <p class="hero__subtitle">{t('home.subtitle')}</p>
       <p class="hero__text">{t('home.heroText')}</p>
       <div class="hero__actions">
-        <Button href="/sobre" variant="primary" size="lg">
+        <Button href={l('/sobre')} variant="primary" size="lg">
           {t('home.cta.about')}
         </Button>
-        <Button href="/citadao" variant="outline" size="lg">
+        <Button href={l('/citadao')} variant="outline" size="lg">
           {t('home.cta.citadao')}
         </Button>
       </div>
@@ -90,17 +102,9 @@ const highlights = [
     <div class="container">
       <div class="about-preview__content">
         <h2 class="about-preview__title">{t('about.history')}</h2>
-        <p class="about-preview__text">
-          A Tunadão nasceu em 1998, fruto da vontade de um grupo de estudantes do Instituto Politécnico de Viseu
-          em criar uma tuna académica que representasse a instituição e a cidade. Desde então, tem sido uma
-          referência na vida académica viseense, participando em festivais por todo o país e organizando o
-          CITADÃO - Certame Internacional de Tunas Académicas do Dão.
-        </p>
-        <p class="about-preview__text">
-          Com mais de 25 anos de história, a Tunadão continua a formar novos tunos, a preservar tradições
-          académicas e a levar a música portuguesa e a cultura tunante a palcos de norte a sul do país.
-        </p>
-        <Button href="/sobre" variant="secondary">
+        <p class="about-preview__text">{t('aboutPreview.text1')}</p>
+        <p class="about-preview__text">{t('aboutPreview.text2')}</p>
+        <Button href={l('/sobre')} variant="secondary">
           {t('home.cta.about')}
         </Button>
       </div>
@@ -112,10 +116,7 @@ const highlights = [
     <div class="container">
       <div class="music-cta__content">
         <h2 class="music-cta__title">{t('music.title')}</h2>
-        <p class="music-cta__text">
-          Ouve a nossa discografia no Spotify. Dois álbuns com o melhor da música tradicional portuguesa
-          e composições originais da Tunadão.
-        </p>
+        <p class="music-cta__text">{t('musicCta.text')}</p>
         <Button
           href="https://open.spotify.com/artist/7HeYIxlV5Nb1KvZkBx00sH"
           variant="primary"

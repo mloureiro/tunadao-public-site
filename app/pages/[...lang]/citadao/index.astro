@@ -1,8 +1,20 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
-import { t } from '@i18n/index';
-import { editionsData, awardLabels } from '@data/citadao-editions';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import { editionsData } from '@data/citadao-editions';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang: Language = (lang as Language) || defaultLang;
+const t = useTranslations(currentLang);
+const l = (path: string) => getLocalizedPath(path, currentLang);
 
 // Convert to array and sort by year descending
 const editions = Object.values(editionsData).sort((a, b) => b.year - a.year);
@@ -11,7 +23,7 @@ const latestEdition = editions[0];
 
 <Layout
   title={`${t('citadao.title')} | Tunadão 1998`}
-  description="CITADÃO - Certame Internacional de Tunas Académicas do Dão. O festival de tunas organizado pela Tunadão desde 2004."
+  description={t('citadao.description')}
 >
   <!-- Hero Section -->
   <section class="hero">
@@ -25,7 +37,7 @@ const latestEdition = editions[0];
   <section class="latest">
     <div class="container">
       <div class="latest__card">
-        <div class="latest__badge">{latestEdition.edition}ª Edição</div>
+        <div class="latest__badge">{latestEdition.edition}{t('citadao.edition')}</div>
         <h2 class="latest__title">CITADÃO {latestEdition.year}</h2>
         <div class="latest__info">
           <div class="latest__info-item">
@@ -38,7 +50,7 @@ const latestEdition = editions[0];
           </div>
         </div>
         <Button href="#citadao-${latestEdition.year}" variant="primary" size="lg">
-          Ver detalhes
+          {t('citadao.viewDetails')}
         </Button>
       </div>
     </div>
@@ -48,17 +60,9 @@ const latestEdition = editions[0];
   <section class="about-citadao">
     <div class="container">
       <div class="about-citadao__content">
-        <h2>O que é o CITADÃO?</h2>
-        <p>
-          O <strong>CITADÃO - Certame Internacional de Tunas Académicas do Dão</strong> é um festival
-          de tunas académicas organizado pela Tunadão desde 2004. Realizado anualmente em Viseu,
-          o festival reúne as melhores tunas do país e convidados internacionais para dois dias
-          de música, convívio e competição.
-        </p>
-        <p>
-          Com {editions.length} edições realizadas, o CITADÃO tornou-se uma referência no panorama
-          tunante nacional, premiando a excelência musical, a criatividade e o espírito académico.
-        </p>
+        <h2>{t('citadao.about.title')}</h2>
+        <p set:html={t('citadao.about.p1')} />
+        <p set:html={t('citadao.about.p2').replace('{count}', String(editions.length))} />
       </div>
     </div>
   </section>
@@ -72,7 +76,7 @@ const latestEdition = editions[0];
           <article class="edition-item" id={`citadao-${edition.year}`}>
             <div class="edition-item__header">
               <div class="edition-item__title">
-                <span class="edition-item__number">{edition.edition}ª Edição</span>
+                <span class="edition-item__number">{edition.edition}{t('citadao.edition')}</span>
                 <h3>CITADÃO {edition.year}</h3>
               </div>
               <div class="edition-item__meta">
@@ -87,7 +91,7 @@ const latestEdition = editions[0];
             <div class="edition-item__content">
               {/* Tunas Participantes */}
               <div class="edition-item__section">
-                <h4>Tunas Participantes</h4>
+                <h4>{t('citadao.participatingTunas')}</h4>
                 <ul class="edition-item__tunas">
                   {edition.tunas.map((tuna) => (
                     <li>{tuna}</li>
@@ -98,7 +102,7 @@ const latestEdition = editions[0];
               {/* Convidados */}
               {edition.guests && edition.guests.length > 0 && (
                 <div class="edition-item__section">
-                  <h4>Convidados</h4>
+                  <h4>{t('citadao.guests')}</h4>
                   <ul class="edition-item__guests">
                     {edition.guests.map((guest) => (
                       <li>{guest}</li>
@@ -110,7 +114,7 @@ const latestEdition = editions[0];
               {/* Prémios */}
               {edition.awards && Object.keys(edition.awards).length > 0 && (
                 <div class="edition-item__section edition-item__awards">
-                  <h4>Prémios</h4>
+                  <h4>{t('citadao.awards')}</h4>
                   <div class="awards-grid">
                     {Object.entries(edition.awards).map(([key, winner]) => {
                       const isFirst = key === 'melhorTuna' || key.includes('melhor') && !key.includes('segundo') && !key.includes('terceiro');
@@ -136,7 +140,7 @@ const latestEdition = editions[0];
                             {key === 'melhorOriginal' && '✨'}
                             {key === 'melhorEstandarte' && '🏴'}
                           </span>
-                          <span class="award-item__name">{awardLabels[key] || key}</span>
+                          <span class="award-item__name">{t(`awards.${key}`)}</span>
                           <span class="award-item__winner">{winner}</span>
                         </div>
                       );

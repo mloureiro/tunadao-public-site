@@ -2,6 +2,7 @@
 import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
 import '@styles/global.css';
+import { getLang, type Language } from '@i18n/index';
 
 interface Props {
   title: string;
@@ -15,11 +16,12 @@ const {
   image = '/og-image.jpg',
 } = Astro.props;
 
+const lang: Language = getLang(Astro.currentLocale, Astro.url);
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="pt">
+<html lang={lang === 'en' ? 'en' : 'pt'} data-lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -74,12 +76,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <body>
     <a href="#main-content" class="skip-link">Ir para conteúdo principal</a>
 
-    <Header />
+    <Header lang={lang} />
 
     <main id="main-content">
       <slot />
     </main>
 
-    <Footer />
+    <Footer lang={lang} />
   </body>
 </html>

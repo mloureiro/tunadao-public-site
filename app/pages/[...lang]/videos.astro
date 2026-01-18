@@ -1,7 +1,19 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
-import { t } from '@i18n/index';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang: Language = (lang as Language) || defaultLang;
+const t = useTranslations(currentLang);
+const l = (path: string) => getLocalizedPath(path, currentLang);
 
 // Sample videos - will be replaced with CMS data when connected
 const videos = [
@@ -61,7 +73,7 @@ const categories = [
 
 <Layout
   title={`${t('videos.title')} | Tunadão 1998`}
-  description="Vídeos da Tunadão 1998 - Atuações, festivais, serenatas e momentos especiais da tuna do Instituto Politécnico de Viseu."
+  description={t('videos.description')}
 >
   <!-- Hero Section -->
   <section class="hero">
@@ -145,15 +157,15 @@ const categories = [
           <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
           <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#fff"></polygon>
         </svg>
-        <h2>Subscreve o nosso canal</h2>
-        <p>Fica a par de todas as novidades e vídeos da Tunadão no YouTube.</p>
+        <h2>{t('videos.youtubeCta.title')}</h2>
+        <p>{t('videos.youtubeCta.description')}</p>
         <Button
           href="https://www.youtube.com/@TUNADAO1998"
           variant="primary"
           size="lg"
           target="_blank"
         >
-          Subscrever Canal
+          {t('videos.youtubeCta.button')}
         </Button>
       </div>
     </div>

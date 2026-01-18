@@ -1,41 +1,52 @@
 ---
 import SocialLinks from './SocialLinks.astro';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = defaultLang } = Astro.props;
+const t = useTranslations(lang);
 
 const currentYear = new Date().getFullYear();
 const foundingYear = 1998;
 
 const footerLinks = [
   {
-    title: 'Navegação',
+    title: t('footer.navigation'),
     links: [
-      { label: 'Início', href: '/' },
-      { label: 'Sobre Nós', href: '/sobre' },
-      { label: 'Citadão', href: '/citadao' },
-      { label: 'Palmarés', href: '/palmares' },
+      { label: t('nav.home'), href: getLocalizedPath('/', lang) },
+      { label: t('nav.about'), href: getLocalizedPath('/sobre', lang) },
+      { label: t('nav.citadao'), href: getLocalizedPath('/citadao', lang) },
+      { label: t('nav.palmares'), href: getLocalizedPath('/palmares', lang) },
     ],
   },
   {
-    title: 'Conteúdo',
+    title: t('footer.content'),
     links: [
-      { label: 'Blog', href: '/blog' },
-      { label: 'Vídeos', href: '/videos' },
-      { label: 'Música', href: '/musica' },
-      { label: 'Contacto', href: '/contacto' },
+      { label: t('nav.blog'), href: getLocalizedPath('/blog', lang) },
+      { label: t('nav.videos'), href: getLocalizedPath('/videos', lang) },
+      { label: t('nav.music'), href: getLocalizedPath('/musica', lang) },
+      { label: t('nav.contact'), href: getLocalizedPath('/contacto', lang) },
     ],
   },
 ];
+
+const yearsText = lang === 'en' ? 'years of history' : 'anos de história';
+const sinceText = lang === 'en' ? 'Since' : 'Desde';
 ---
 
 <footer class="footer">
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
-        <a href="/" class="footer__logo">
+        <a href={getLocalizedPath('/', lang)} class="footer__logo">
           <span class="footer__logo-text">Tunadão</span>
           <span class="footer__logo-year">1998</span>
         </a>
-        <p class="footer__tagline">Tuna do Instituto Politécnico de Viseu</p>
-        <p class="footer__history">Desde {foundingYear} • {currentYear - foundingYear} anos de história</p>
+        <p class="footer__tagline">{t('home.subtitle')}</p>
+        <p class="footer__history">{sinceText} {foundingYear} • {currentYear - foundingYear} {yearsText}</p>
         <SocialLinks />
       </div>
 
@@ -57,7 +68,7 @@ const footerLinks = [
       }
 
       <div class="footer__section">
-        <h3 class="footer__title">Contacto</h3>
+        <h3 class="footer__title">{t('footer.contact')}</h3>
         <address class="footer__address">
           <p>Campus Politécnico de Viseu</p>
           <p>3504-510 Viseu</p>
@@ -73,7 +84,7 @@ const footerLinks = [
 
     <div class="footer__bottom">
       <p class="footer__copyright">
-        &copy; {currentYear} Tunadão 1998. Todos os direitos reservados.
+        &copy; {currentYear} Tunadão 1998. {t('footer.copyright')}.
       </p>
     </div>
   </div>
