@@ -460,46 +460,48 @@
 
 ### Fase 1: Setup
 
-- [ ] Inicializar projeto Astro
-- [ ] Configurar TypeScript, ESLint, Prettier
-- [ ] Configurar PayloadCMS com Turso
-- [ ] Setup GitHub Actions básico
+- [x] Inicializar projeto Astro
+- [x] Configurar TypeScript, ESLint, Prettier
+- [x] Configurar PayloadCMS com Turso (SQLite)
+- [x] Setup GitHub Actions básico
 
 ### Fase 2: CMS
 
-- [ ] Criar todas as collections
-- [ ] Configurar autenticação e roles
-- [ ] Importar dados existentes (Citadão e Palmarés)
+- [x] Criar todas as collections
+- [x] Configurar autenticação e roles
+- [x] Criar scripts de seed para dados existentes (Citadão e Palmarés)
 
 ### Fase 3: Frontend Base
 
-- [ ] Layout base (header, footer, navigation)
-- [ ] Sistema de design (tokens, componentes base)
-- [ ] Configurar dark mode
-- [ ] Configurar i18n
+- [x] Layout base (header, footer, navigation)
+- [x] Sistema de design (tokens, componentes base)
+- [x] Configurar dark mode
+- [x] Configurar i18n
 
 ### Fase 4: Páginas
 
-- [ ] Home
-- [ ] Sobre Nós
-- [ ] Citadão
-- [ ] Palmarés
-- [ ] Blog
-- [ ] Vídeos
-- [ ] Música
-- [ ] Contacto
+- [x] Home
+- [x] Sobre Nós
+- [x] Citadão
+- [x] Palmarés
+- [x] Blog
+- [x] Vídeos
+- [x] Música
+- [x] Contacto
 
 ### Fase 5: Polish
 
-- [ ] SEO (meta tags, sitemap, robots.txt)
-- [ ] Performance optimization
-- [ ] Acessibilidade
-- [ ] Testes E2E
+- [x] SEO (meta tags, sitemap, robots.txt)
+- [x] Performance optimization (build otimizado)
+- [x] Acessibilidade (skip links, ARIA labels)
+- [x] Testes unitários (Vitest)
+- [x] Testes E2E (Playwright configurado)
 
 ### Fase 6: Deploy
 
-- [ ] Deploy CMS
-- [ ] Deploy Frontend (GitHub Pages)
+- [x] Configurar deploy CMS (Render.com) - render.yaml criado
+- [x] Configurar deploy Frontend (GitHub Pages) - workflow criado
+- [ ] Deploy efetivo (requer push para GitHub)
 - [ ] Configurar webhooks para rebuild
 
 ---
@@ -510,3 +512,4 @@
 | ---------- | ------------------------------------------------------------------------ |
 | 2026-01-18 | Documento inicial criado                                                 |
 | 2026-01-18 | Adicionada toda a informação de contacto, redes sociais, cores, história |
+| 2026-01-18 | CI/CD configurado (GitHub Actions + Render.yaml)                         |

@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: tunadao-cms
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run serve
+    plan: free
+    healthCheckPath: /admin
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PAYLOAD_CONFIG_PATH
+        value: src/payload.config.ts
+      - key: PAYLOAD_PUBLIC_SERVER_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: PAYLOAD_SECRET
+        generateValue: true
