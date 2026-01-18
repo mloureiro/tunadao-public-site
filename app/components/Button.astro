@@ -107,6 +107,22 @@ const baseProps = href ? { href } : { type, disabled };
     color: var(--color-text-inverted);
   }
 
+  /* Outline button on colored/dark backgrounds (hero sections, CTAs) */
+  :global(.hero) .btn--outline,
+  :global(.cta) .btn--outline,
+  :global(.music-cta) .btn--outline {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  :global(.hero) .btn--outline:hover,
+  :global(.cta) .btn--outline:hover,
+  :global(.music-cta) .btn--outline:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #ffffff;
+    color: #ffffff;
+  }
+
   .btn--ghost {
     background-color: transparent;
     color: var(--color-text);
