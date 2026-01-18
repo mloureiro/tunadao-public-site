@@ -1,6 +1,7 @@
 ---
 import SocialLinks from './SocialLinks.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import { getContactInfo } from '@lib/cms';
 
 interface Props {
   lang?: Language;
@@ -11,6 +12,9 @@ const t = useTranslations(lang);
 
 const currentYear = new Date().getFullYear();
 const foundingYear = 1998;
+
+// Fetch contact info from CMS (with fallback)
+const contactInfo = await getContactInfo();
 
 const footerLinks = [
   {
@@ -70,14 +74,19 @@ const sinceText = lang === 'en' ? 'Since' : 'Desde';
       <div class="footer__section">
         <h3 class="footer__title">{t('footer.contact')}</h3>
         <address class="footer__address">
-          <p>Campus Politécnico de Viseu</p>
-          <p>3504-510 Viseu</p>
-          <p>
-            <a href="mailto:tunadao@gmail.com" class="footer__link">tunadao@gmail.com</a>
-          </p>
-          <p>
-            <a href="tel:+351928155399" class="footer__link">+351 928 155 399</a>
-          </p>
+          {contactInfo.address && contactInfo.address.split(', ').map((line) => (
+            <p>{line}</p>
+          ))}
+          {contactInfo.email && (
+            <p>
+              <a href={`mailto:${contactInfo.email}`} class="footer__link">{contactInfo.email}</a>
+            </p>
+          )}
+          {contactInfo.phone && (
+            <p>
+              <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} class="footer__link">{contactInfo.phone}</a>
+            </p>
+          )}
         </address>
       </div>
     </div>
