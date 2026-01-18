@@ -235,70 +235,60 @@ const milestones = [
   }
 
   .timeline__items {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
-    position: relative;
-  }
-
-  .timeline__items::before {
-    content: '';
-    position: absolute;
-    left: 50px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
   }
 
   .timeline__item {
-    display: flex;
-    gap: var(--space-4);
-    margin-bottom: var(--space-4);
-    animation: fadeIn 0.5s ease-out both;
-    animation-delay: var(--delay);
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+    display: grid;
+    grid-template-columns: 80px 20px 1fr;
+    gap: var(--space-3);
+    align-items: center;
   }
 
   .timeline__year {
-    flex-shrink: 0;
-    width: 100px;
     font-size: var(--text-lg);
     font-weight: 700;
     color: var(--color-primary);
     text-align: right;
-    padding-right: var(--space-4);
-    position: relative;
   }
 
-  .timeline__year::after {
+  .timeline__item::before {
     content: '';
-    position: absolute;
-    right: -6px;
-    top: 50%;
-    transform: translateY(-50%);
     width: 12px;
     height: 12px;
     background-color: var(--color-primary);
     border-radius: var(--radius-full);
-    border: 2px solid var(--color-surface);
+    border: 3px solid var(--color-surface);
+    box-shadow: 0 0 0 2px var(--color-primary);
+    justify-self: center;
   }
 
   .timeline__event {
-    flex: 1;
     padding: var(--space-3) var(--space-4);
     background-color: var(--color-background);
     border-radius: var(--radius-md);
     color: var(--color-text);
+    border-left: 3px solid var(--color-primary);
+  }
+
+  @media (max-width: 640px) {
+    .timeline__item {
+      grid-template-columns: 60px 16px 1fr;
+      gap: var(--space-2);
+    }
+
+    .timeline__year {
+      font-size: var(--text-base);
+    }
+
+    .timeline__event {
+      font-size: var(--text-sm);
+      padding: var(--space-2) var(--space-3);
+    }
   }
 
   /* Mission Section */
