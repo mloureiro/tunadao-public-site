@@ -2,7 +2,7 @@
 import Layout from '@layouts/Layout.astro';
 import Card from '@components/Card.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
-import { getAllPosts } from '@data/blog-posts';
+import { getBlogPosts } from '@lib/cms';
 
 export function getStaticPaths() {
   return [
@@ -16,8 +16,8 @@ const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
 const l = (path: string) => getLocalizedPath(path, currentLang);
 
-// Get posts from data file
-const posts = getAllPosts();
+// Fetch posts from CMS (with fallback)
+const posts = await getBlogPosts();
 
 const categories = [
   { key: 'all', label: t('blog.categories.all') },

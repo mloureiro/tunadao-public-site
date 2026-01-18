@@ -2,14 +2,17 @@
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
-import { postsData } from '@data/blog-posts';
+import { getBlogPostSlugs, getBlogPostBySlug } from '@lib/cms';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
   const languages: (string | undefined)[] = [undefined, 'en'];
   const paths: { params: { lang: string | undefined; slug: string } }[] = [];
 
+  // Fetch all post slugs from CMS (with fallback)
+  const slugs = await getBlogPostSlugs();
+
   for (const lang of languages) {
-    for (const slug of Object.keys(postsData)) {
+    for (const slug of slugs) {
       paths.push({ params: { lang, slug } });
     }
   }
@@ -22,7 +25,8 @@ const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
 const l = (path: string) => getLocalizedPath(path, currentLang);
 
-const post = postsData[slug as string];
+// Fetch the specific post from CMS (with fallback)
+const post = await getBlogPostBySlug(slug as string);
 
 if (!post) {
   return Astro.redirect(l('/blog'));

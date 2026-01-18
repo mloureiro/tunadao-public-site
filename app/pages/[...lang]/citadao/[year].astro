@@ -2,15 +2,18 @@
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
-import { editionsData } from '@data/citadao-editions';
+import { getCitadaoEditions, getCitadaoEditionByYear } from '@lib/cms';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
   const languages: (string | undefined)[] = [undefined, 'en'];
   const paths: { params: { lang: string | undefined; year: string } }[] = [];
 
+  // Fetch all editions from CMS (with fallback)
+  const editions = await getCitadaoEditions();
+
   for (const lang of languages) {
-    for (const year of Object.keys(editionsData)) {
-      paths.push({ params: { lang, year } });
+    for (const edition of editions) {
+      paths.push({ params: { lang, year: String(edition.year) } });
     }
   }
 
@@ -22,13 +25,16 @@ const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
 const l = (path: string) => getLocalizedPath(path, currentLang);
 
-const edition = editionsData[parseInt(year as string)];
+// Fetch the specific edition
+const edition = await getCitadaoEditionByYear(parseInt(year as string));
 
 if (!edition) {
   return Astro.redirect(l('/citadao'));
 }
 
-const allYears = Object.keys(editionsData).map(Number).sort((a, b) => b - a);
+// Fetch all editions for navigation
+const allEditions = await getCitadaoEditions();
+const allYears = allEditions.map(e => e.year).sort((a, b) => b - a);
 const currentIndex = allYears.indexOf(edition.year);
 const prevYear = currentIndex < allYears.length - 1 ? allYears[currentIndex + 1] : null;
 const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;

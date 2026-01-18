@@ -2,7 +2,7 @@
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
-import { editionsData } from '@data/citadao-editions';
+import { getCitadaoEditions } from '@lib/cms';
 
 export function getStaticPaths() {
   return [
@@ -16,8 +16,8 @@ const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
 const l = (path: string) => getLocalizedPath(path, currentLang);
 
-// Convert to array and sort by year descending
-const editions = Object.values(editionsData).sort((a, b) => b.year - a.year);
+// Fetch editions from CMS (with fallback)
+const editions = await getCitadaoEditions();
 const latestEdition = editions[0];
 ---
 

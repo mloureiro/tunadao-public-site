@@ -2,6 +2,7 @@
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import { getAlbums } from '@lib/cms';
 
 export function getStaticPaths() {
   return [
@@ -15,25 +16,22 @@ const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
 const l = (path: string) => getLocalizedPath(path, currentLang);
 
-// Album data - will be replaced with CMS data when connected
-const albums = [
-  {
-    id: 'de-capa-bem-tracada',
-    title: 'De Capa Bem Traçada',
-    year: 2008,
-    spotifyAlbumId: '5ljVRcZan9DLkFDm5aWAgt',
-    description: t('music.albumDescriptions.deCapaBemTracada'),
-    type: 'studio',
-  },
-  {
-    id: 'por-ruelas-e-calcadas',
-    title: 'Por Ruelas e Calçadas',
-    year: 2003,
-    spotifyAlbumId: '3xcpAOCKk7soUNfdnTC6Sn',
-    description: t('music.albumDescriptions.porRuelasECalcadas'),
-    type: 'live',
-  },
-];
+// Fetch albums from CMS (with fallback)
+const cmsAlbums = await getAlbums();
+
+// Map CMS albums to template format, using translations for descriptions
+const albums = cmsAlbums.map(album => ({
+  id: album.id,
+  title: album.title,
+  year: album.year,
+  spotifyAlbumId: album.spotifyAlbumId,
+  description: album.description || (album.id === 'de-capa-bem-tracada'
+    ? t('music.albumDescriptions.deCapaBemTracada')
+    : album.id === 'por-ruelas-e-calcadas'
+    ? t('music.albumDescriptions.porRuelasECalcadas')
+    : ''),
+  type: album.type,
+}));
 ---
 
 <Layout

@@ -2,6 +2,7 @@
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import { getVideos } from '@lib/cms';
 
 export function getStaticPaths() {
   return [
@@ -15,51 +16,8 @@ const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
 const l = (path: string) => getLocalizedPath(path, currentLang);
 
-// Sample videos - will be replaced with CMS data when connected
-const videos = [
-  {
-    id: 'video1',
-    title: 'CITADÃO 2024 - Melhores Momentos',
-    youtubeId: 'dQw4w9WgXcQ',
-    category: 'citadao',
-    year: 2024,
-  },
-  {
-    id: 'video2',
-    title: 'Serenata na Praça da República',
-    youtubeId: 'dQw4w9WgXcQ',
-    category: 'serenata',
-    year: 2023,
-  },
-  {
-    id: 'video3',
-    title: 'FITUA 2023 - Atuação Completa',
-    youtubeId: 'dQw4w9WgXcQ',
-    category: 'festival',
-    year: 2023,
-  },
-  {
-    id: 'video4',
-    title: 'Passacalles Queima das Fitas Viseu',
-    youtubeId: 'dQw4w9WgXcQ',
-    category: 'atuacao',
-    year: 2024,
-  },
-  {
-    id: 'video5',
-    title: 'CITADÃO 2023 - 17ª Edição',
-    youtubeId: 'dQw4w9WgXcQ',
-    category: 'citadao',
-    year: 2023,
-  },
-  {
-    id: 'video6',
-    title: 'Atuação Aniversário IPV',
-    youtubeId: 'dQw4w9WgXcQ',
-    category: 'atuacao',
-    year: 2023,
-  },
-];
+// Fetch videos from CMS (with fallback)
+const videos = await getVideos();
 
 const categories = [
   { key: 'all', label: t('videos.categories.all') },
