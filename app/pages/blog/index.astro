@@ -2,46 +2,10 @@
 import Layout from '@layouts/Layout.astro';
 import Card from '@components/Card.astro';
 import { t } from '@i18n/index';
+import { getAllPosts } from '@data/blog-posts';
 
-// Sample blog posts - will be replaced with CMS data when connected
-const posts = [
-  {
-    slug: 'citadao-2025',
-    title: 'CITADÃO 2025 - 19ª Edição',
-    excerpt: 'A 19ª edição do CITADÃO está a chegar! Descobre todas as novidades do maior certame de tunas académicas da região do Dão.',
-    date: '2025-01-15',
-    image: '/images/blog/citadao-2025.jpg',
-    category: 'Eventos',
-    readingTime: 3,
-  },
-  {
-    slug: 'aniversario-tunadao',
-    title: 'Tunadão celebra mais um aniversário',
-    excerpt: 'Mais um ano de história para a tuna mais antiga do Instituto Politécnico de Viseu. Celebramos com música e convívio.',
-    date: '2024-11-16',
-    image: '/images/blog/aniversario.jpg',
-    category: 'Notícias',
-    readingTime: 2,
-  },
-  {
-    slug: 'premio-fitua-2024',
-    title: 'Tunadão conquista prémios no FITUA',
-    excerpt: 'A Tunadão participou no Festival Internacional de Tunas da Universidade de Aveiro e trouxe prémios para casa.',
-    date: '2024-05-20',
-    image: '/images/blog/fitua.jpg',
-    category: 'Prémios',
-    readingTime: 4,
-  },
-  {
-    slug: 'novos-tunos-2024',
-    title: 'Bem-vindos novos tunos!',
-    excerpt: 'A Tunadão dá as boas-vindas aos novos membros que se juntaram à nossa família tunante este ano letivo.',
-    date: '2024-10-01',
-    image: '/images/blog/novos-tunos.jpg',
-    category: 'Notícias',
-    readingTime: 2,
-  },
-];
+// Get posts from data file
+const posts = getAllPosts();
 
 const categories = ['Todos', 'Notícias', 'Eventos', 'Prémios'];
 
