@@ -1,0 +1,39 @@
+{
+  "name": "tunadao-website",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Website for Tunadão 1998 - Tuna do Instituto Politécnico de Viseu",
+  "scripts": {
+    "dev": "astro dev",
+    "dev:cms": "payload serve",
+    "build": "astro build",
+    "build:cms": "payload build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint . --ext .ts,.tsx,.astro",
+    "lint:fix": "eslint . --ext .ts,.tsx,.astro --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "astro check && tsc --noEmit",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  },
+  "keywords": [
+    "tuna",
+    "tunadao",
+    "viseu",
+    "ipv",
+    "citadao"
+  ],
+  "author": "Tunadão 1998",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@astrojs/check": "^0.9.6",
+    "astro": "^5.16.11",
+    "typescript": "^5.9.3"
+  }
+}
