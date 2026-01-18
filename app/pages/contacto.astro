@@ -141,24 +141,18 @@ const contactInfo = {
             </div>
           </div>
 
-          <!-- Map placeholder -->
+          <!-- Map Embed -->
           <div class="map-container">
-            <div class="map-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-                <line x1="8" y1="2" x2="8" y2="18"></line>
-                <line x1="16" y1="6" x2="16" y2="22"></line>
-              </svg>
-              <p>Campus Politécnico de Viseu</p>
-              <a
-                href={`https://maps.google.com/?q=${encodeURIComponent(contactInfo.address)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="map-link"
-              >
-                Ver no Google Maps →
-              </a>
-            </div>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.8!2d-7.9215!3d40.6575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd2319c74c45f2e7%3A0x5e5d7c7c7c7c7c7c!2sInstituto%20Polit%C3%A9cnico%20de%20Viseu!5e0!3m2!1spt-PT!2spt!4v1234567890"
+              width="100%"
+              height="250"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Localização do Instituto Politécnico de Viseu"
+            ></iframe>
           </div>
         </div>
       </div>
@@ -367,37 +361,8 @@ const contactInfo = {
     overflow: hidden;
   }
 
-  .map-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-8);
-    background: linear-gradient(135deg, var(--color-background) 0%, var(--color-surface) 100%);
-    text-align: center;
-    min-height: 200px;
-  }
-
-  .map-placeholder svg {
-    color: var(--color-primary);
-    margin-bottom: var(--space-3);
-  }
-
-  .map-placeholder p {
-    font-size: var(--text-base);
-    color: var(--color-text);
-    margin-bottom: var(--space-3);
-  }
-
-  .map-link {
-    font-size: var(--text-sm);
-    color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  .map-link:hover {
-    text-decoration: underline;
+  .map-container iframe {
+    display: block;
   }
 </style>
 
