@@ -1,0 +1,381 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Button from '@components/Button.astro';
+import { t } from '@i18n/index';
+
+// Album data - will be replaced with CMS data when connected
+const albums = [
+  {
+    id: 'de-capa-bem-tracada',
+    title: 'De Capa Bem Traçada',
+    year: 2008,
+    spotifyId: '3s0Y6iyp0PQdBWrJ1jA9Dk',
+    coverImage: '/images/albums/de-capa-bem-tracada.jpg',
+    type: 'studio',
+    tracks: [
+      'Introdução',
+      'Fado da Saudade',
+      'Coimbra',
+      'Maria Lisboa',
+      'Balada de Despedida',
+      'Grândola Vila Morena',
+      'Por Ruelas e Calçadas',
+      'Uma Casa Portuguesa',
+      'Ó Minha Rica Vizinha',
+      'Vindimas',
+      'Postal dos Correios',
+      'Lisboa Antiga',
+    ],
+  },
+  {
+    id: 'por-ruelas-e-calcadas',
+    title: 'Por Ruelas e Calçadas',
+    year: 2003,
+    spotifyId: '6r5u3s7K0Xje5lRRv0mBWR',
+    coverImage: '/images/albums/por-ruelas-e-calcadas.jpg',
+    type: 'studio',
+    tracks: [
+      'A Portuguesa',
+      'Grândola Vila Morena',
+      'Fado da Saudade',
+      'Coimbra',
+      'Lisboa Antiga',
+      'Uma Casa Portuguesa',
+      'Vindimas',
+      'Por Ruelas e Calçadas',
+      'Canção do Soldado',
+    ],
+  },
+];
+---
+
+<Layout
+  title={`${t('music.title')} | Tunadão 1998`}
+  description="Discografia da Tunadão 1998 - Ouve os nossos álbuns no Spotify. Música tradicional portuguesa e composições originais."
+>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero__title">{t('music.title')}</h1>
+      <p class="hero__subtitle">{t('music.subtitle')}</p>
+    </div>
+  </section>
+
+  <!-- Spotify CTA -->
+  <section class="spotify-cta">
+    <div class="container">
+      <div class="spotify-cta__content">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+        </svg>
+        <div class="spotify-cta__text">
+          <p>Ouve toda a nossa discografia no Spotify</p>
+        </div>
+        <Button
+          href="https://open.spotify.com/artist/7HeYIxlV5Nb1KvZkBx00sH"
+          variant="primary"
+          size="lg"
+          target="_blank"
+        >
+          Abrir no Spotify
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Albums Section -->
+  <section class="albums">
+    <div class="container">
+      <h2 class="section-title">{t('music.albums')}</h2>
+      <div class="albums__grid">
+        {albums.map((album) => (
+          <div class="album-card">
+            <div class="album-card__cover">
+              <div class="album-card__placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </div>
+              <div class="album-card__overlay">
+                <a
+                  href={`https://open.spotify.com/album/${album.spotifyId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="album-card__play"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <div class="album-card__content">
+              <div class="album-card__header">
+                <h3 class="album-card__title">{album.title}</h3>
+                <span class="album-card__year">{album.year}</span>
+              </div>
+              <span class="album-card__type">
+                {album.type === 'studio' ? t('music.recordingTypes.studio') : t('music.recordingTypes.live')}
+              </span>
+              <div class="album-card__tracks">
+                <h4>{t('music.tracks')} ({album.tracks.length})</h4>
+                <ol class="album-card__track-list">
+                  {album.tracks.map((track) => (
+                    <li>{track}</li>
+                  ))}
+                </ol>
+              </div>
+              <Button
+                href={`https://open.spotify.com/album/${album.spotifyId}`}
+                variant="primary"
+                target="_blank"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem;">
+                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                </svg>
+                {t('music.listenOn')}
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Embedded Player -->
+  <section class="player">
+    <div class="container">
+      <h2 class="section-title">Ouve agora</h2>
+      <div class="player__embed">
+        <iframe
+          style="border-radius:12px"
+          src="https://open.spotify.com/embed/artist/7HeYIxlV5Nb1KvZkBx00sH?utm_source=generator&theme=0"
+          width="100%"
+          height="352"
+          frameBorder="0"
+          allowfullscreen=""
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-text-inverted);
+    padding: var(--space-12) 0;
+    text-align: center;
+  }
+
+  .hero__title {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+  }
+
+  .hero__subtitle {
+    font-size: var(--text-xl);
+    opacity: 0.9;
+  }
+
+  /* Spotify CTA */
+  .spotify-cta {
+    background-color: #1db954;
+    padding: var(--space-6) 0;
+  }
+
+  .spotify-cta__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    color: white;
+  }
+
+  .spotify-cta__text p {
+    font-size: var(--text-lg);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  /* Section Title */
+  .section-title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    margin-bottom: var(--space-8);
+    color: var(--color-text);
+    text-align: center;
+  }
+
+  /* Albums Section */
+  .albums {
+    padding: var(--space-12) 0;
+    background-color: var(--color-background);
+  }
+
+  .albums__grid {
+    display: grid;
+    gap: var(--space-8);
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    .albums__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Album Card */
+  .album-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  }
+
+  @media (min-width: 640px) {
+    .album-card {
+      flex-direction: row;
+    }
+  }
+
+  .album-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .album-card__cover {
+    position: relative;
+    flex-shrink: 0;
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  }
+
+  @media (min-width: 640px) {
+    .album-card__cover {
+      width: 250px;
+    }
+  }
+
+  .album-card__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .album-card__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+  }
+
+  .album-card:hover .album-card__overlay {
+    opacity: 1;
+  }
+
+  .album-card__play {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    background-color: #1db954;
+    color: white;
+    transition: transform var(--transition-fast);
+  }
+
+  .album-card__play:hover {
+    transform: scale(1.1);
+  }
+
+  .album-card__content {
+    flex: 1;
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .album-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-2);
+  }
+
+  .album-card__title {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .album-card__year {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .album-card__type {
+    display: inline-block;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    background-color: var(--color-background);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-4);
+    width: fit-content;
+  }
+
+  .album-card__tracks {
+    flex: 1;
+    margin-bottom: var(--space-4);
+  }
+
+  .album-card__tracks h4 {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .album-card__track-list {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    padding-left: var(--space-5);
+    line-height: 1.8;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  /* Player Section */
+  .player {
+    padding: var(--space-12) 0;
+    background-color: var(--color-surface);
+  }
+
+  .player__embed {
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+</style>

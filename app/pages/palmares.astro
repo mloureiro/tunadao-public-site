@@ -1,0 +1,435 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { t } from '@i18n/index';
+
+// Static data - will be replaced with CMS data when connected
+const palmaresData = [
+  {
+    year: 2019,
+    festivals: [
+      { name: 'XXIX FITUA', location: 'Aveiro', awards: ['Melhor Instrumental', 'Melhor Tuna', 'Tuna + Bebedoura'] },
+      { name: 'XXIX FITU Bracara Augusta', location: 'Braga', awards: ['Tuna do Público', 'Melhor Pandeireta', 'Melhor Tuna'] },
+      { name: 'XIII FITUCB', location: 'Castelo Branco', awards: ['Melhor Estandarte', '2ª Melhor Tuna'] },
+    ],
+  },
+  {
+    year: 2018,
+    festivals: [
+      { name: 'XXVIII Festuna', location: 'Coimbra', awards: ['2ª Melhor Tuna', 'Melhor Pandeireta'] },
+      { name: 'XII Cidade de Berço', location: 'Guimarães', awards: ['Melhor Solista', 'Melhor Instrumental', 'Tuna + Tuna', 'Melhor Interpretação Musical', 'Melhor Tuna', 'Melhor Serenata'] },
+    ],
+  },
+  {
+    year: 2017,
+    festivals: [
+      { name: 'XVI Oppidana', location: 'Guarda', awards: ['Tuna + Tuna'] },
+      { name: 'XII Barca Celi', location: 'Barcelos', awards: ['Melhor Tema Original', 'Melhor Tuna'] },
+      { name: 'XXVII FITU Bracara Augusta', location: 'Braga', awards: ['Melhor Pandeireta', '3ª Melhor Tuna'] },
+      { name: 'IX Cantar de Estudante', location: 'Coimbra', awards: ['Tuna + Tuna', 'Tuna do Público'] },
+    ],
+  },
+  {
+    year: 2016,
+    festivals: [
+      { name: 'VII Collipo', location: 'Leiria', awards: ['Melhor Passacalles', 'Tuna + Tuna', 'Tuna do Público', 'Melhor Solista'] },
+      { name: 'XXVI FITU Bracara Augusta', location: 'Braga', awards: ['Prémio Ibero-Americano', 'Tuna + Tuna', 'Melhor Pandeireta', 'Melhor Estandarte', 'Melhor Tuna'] },
+    ],
+  },
+  {
+    year: 2015,
+    festivals: [
+      { name: 'VI Collipo', location: 'Leiria', awards: ['Melhor Tuna', 'Melhor Serenata', 'Tuna do Público'] },
+      { name: 'III Herminius', location: 'Covilhã', awards: ['Melhor Tuna', 'Melhor Serenata', 'Tuna do Público'] },
+      { name: 'FITUCB', location: 'Castelo Branco', awards: ['Melhor Instrumental', 'Tuna + Tuna', '2ª Melhor Tuna'] },
+      { name: 'VII Cantar de Estudante', location: 'Coimbra', awards: ['Tuna + Tuna', 'Tuna do Público'] },
+    ],
+  },
+  {
+    year: 2014,
+    festivals: [
+      { name: 'XIX Alcatráz', location: 'Vila do Conde', awards: ['Melhor Tuna'] },
+      { name: 'IX Barca Celi', location: 'Barcelos', awards: ['2ª Melhor Tuna', 'Serenata', 'Melhor Instrumental', 'Melhor Porta-Estandarte', 'Melhor Solista', 'Tuna + Tuna'] },
+      { name: 'XXI Celta', location: 'Braga', awards: ['Melhor Instrumental'] },
+    ],
+  },
+  {
+    year: 2013,
+    festivals: [
+      { name: 'Portuscalle 13', location: 'Porto', awards: ['Tuna + Tuna'] },
+      { name: 'XXIII FITU Bracara Augusta', location: 'Braga', awards: ['3ª Melhor Tuna', 'Tuna + Tuna', 'Melhor Pandeireta'] },
+      { name: 'IX Ciclone', location: 'Angra do Heroísmo', awards: ['Melhor Tuna', 'Melhor Original', 'Melhor Pandeireta'] },
+    ],
+  },
+  {
+    year: 2012,
+    festivals: [
+      { name: 'XIX FITISEP', location: 'Porto', awards: ['2ª Melhor Tuna', 'Melhor Bandeira'] },
+      { name: 'Padrecos 2012', location: 'Porto', awards: ['Melhor Tuna', 'Tuna + Tuna', 'Melhor Pandeireta', 'Melhor Porta-Estandarte'] },
+      { name: 'XII Lethes', location: 'Viana do Castelo', awards: ['Melhor Pandeireta', 'Tuna + Tuna'] },
+      { name: 'I Noites de Ronda', location: 'Porto', awards: ['Melhor Serenata', 'Melhor Porta-Estandarte', 'Tuna + Tuna', '2ª Melhor Tuna'] },
+    ],
+  },
+  {
+    year: 2011,
+    festivals: [
+      { name: 'IX Terra de Cante', location: 'Beja', awards: ['Melhor Pandeireta', 'Tuna + Tuna', '2ª Melhor Tuna'] },
+      { name: 'XIV FITAFF', location: 'Figueira da Foz', awards: ['Melhor Tuna', 'Melhor Serenata', 'Melhor Pandeireta'] },
+      { name: 'XIII Fartuna', location: 'Faro', awards: ['Melhor Serenata', 'Melhor Pandeireta', 'Melhor Passacalles', 'Tuna + Marafada', 'Tuna + Tuna'] },
+      { name: 'IX Estudantino', location: 'Lisboa', awards: ['3ª Melhor Tuna', 'Tuna + Tuna', 'Tuna do Público', 'Melhor Serenata', 'Melhor Passacalles'] },
+    ],
+  },
+  {
+    year: 2010,
+    festivals: [
+      { name: 'XI El Açor', location: '', awards: ['3ª Melhor Tuna', 'Tuna + Tuna', 'Melhor Pandeireta', 'Melhor Estandarte'] },
+      { name: 'IX Templário', location: '', awards: ['2ª Melhor Tuna', 'Tuna + Tuna', 'Melhor Pandeireta', 'Tuna do Público', 'Melhor Passacalles'] },
+      { name: 'FITAFF 2010', location: '', awards: ['Melhor Tuna', 'Tuna + Tuna'] },
+    ],
+  },
+  {
+    year: 2009,
+    festivals: [
+      { name: 'Oppidana 09', location: 'Guarda', awards: ['Tuna + Tuna', 'Melhor Tuna'] },
+      { name: 'XIII FETUF', location: 'Porto', awards: ['Melhor Passacalles', 'Grande Prémio XII FETUF', 'Melhor Estandarte'] },
+      { name: 'XVI FITISEP', location: 'Porto', awards: ['Melhor Tuna', 'Melhor Pandeireta'] },
+      { name: 'XV FITUP-IDH', location: 'Porto', awards: ['Melhor Tuna', 'Melhor Pandeireta', 'Tuna + Tuna'] },
+      { name: 'FITAs 2009', location: 'Castelo Branco', awards: ['Melhor Tuna'] },
+      { name: 'XI Festilha', location: 'Ílhavo', awards: ['Melhor Tuna', 'Tuna + Tuna', 'Melhor Instrumental', 'Melhor Pandeireta', 'Melhor Passacalles'] },
+      { name: 'VI Cidade Berço', location: 'Guimarães', awards: ['2ª Melhor Tuna', 'Tuna + Tuna', 'Melhor Pandeireta'] },
+      { name: 'XVI Celta', location: 'Braga', awards: ['Tuna + Tuna'] },
+    ],
+  },
+  {
+    year: 2008,
+    festivals: [
+      { name: 'X FITAB 2008', location: 'Bragança', awards: ['Melhor Tuna', 'Tuna + Tuna', 'Melhor Pandeireta', 'Melhor Porta-Estandarte'] },
+      { name: 'V FITUIFF', location: 'Figueira da Foz', awards: ['Melhor Tuna', 'Instrumental', 'Serenata'] },
+      { name: 'XII FETUF', location: 'Porto', awards: ['Porta-Estandarte', 'Pandeireta', 'Passacalles', 'Instrumental', 'Tuna + Tuna', 'Grande Prémio XII FETUF'] },
+      { name: 'III Ulveira d\'Espital', location: 'Oliveira do Hospital', awards: ['Melhor Tuna', 'Melhor Pandeireta', 'Melhor Passacalles', 'Melhor Porta-Estandarte'] },
+      { name: 'II Festival Tunas da Raia', location: 'Sabugal', awards: ['Melhor Passacalles', 'Melhor Pandeireta'] },
+      { name: 'FITUCB\'08', location: 'Castelo Branco', awards: ['Tuna + Tuna', 'Melhor Tuna', 'Melhor Instrumental'] },
+      { name: 'VIII Festival Internacional de Tunas do Atlântico', location: 'Madeira', awards: ['Melhor Pandeireta', 'Melhor Tuna', 'Tuna + Tuna', 'Melhor Instrumental'] },
+    ],
+  },
+  {
+    year: 2007,
+    festivals: [
+      { name: 'II Festival de Tunas Académicas de Santa Comba Dão', location: 'Santa Comba Dão', awards: ['Melhor Porta-Estandarte'] },
+      { name: 'I Encontro de Tunas da ESEnfC', location: 'Coimbra', awards: ['Melhor Tuna', 'Tuna + Tuna'] },
+      { name: 'I Por Terras do Sado', location: 'Setúbal', awards: ['Melhor Instrumental', 'Melhor Serenata', 'Melhor Pandeireta', 'Tuna + Tuna'] },
+      { name: 'II FETUA - ESEnf', location: 'Oliveira de Azeméis', awards: ['Melhor Tuna'] },
+    ],
+  },
+  {
+    year: 2005,
+    festivals: [
+      { name: 'Festival de Tunas do 15º Aniversário do ISVOUGA', location: 'Santa Maria da Feira', awards: ['Melhor Pandeireta'] },
+      { name: 'Maltunas - Festival de Tunas Académicas', location: 'Guarda', awards: ['Melhor Solista'] },
+      { name: 'FITQFC 2005', location: 'Coimbra', awards: ['Melhor Tuna', 'Tuna + Tuna'] },
+      { name: 'VII FITAB 2005', location: 'Bragança', awards: ['Melhor Tuna', 'Melhor Serenata'] },
+      { name: 'III Festubi', location: 'Covilhã', awards: ['Instrumental'] },
+      { name: 'VI Vultos', location: 'Vila Nova de Gaia', awards: ['Tuna + Tuna'] },
+    ],
+  },
+  {
+    year: 2004,
+    festivals: [
+      { name: 'Festival de Tunas do Vale do Arda', location: 'Castelo de Paiva', awards: ['Melhor Instrumental', 'Melhor Solista'] },
+      { name: 'I FITACA', location: 'Mirandela', awards: ['Melhor Tuna', 'Melhor Instrumental', 'Tuna + Tuna'] },
+    ],
+  },
+  {
+    year: 2001,
+    festivals: [
+      { name: 'I CENTUP', location: 'Santarém', awards: ['Tuna + Tuna'] },
+    ],
+  },
+  {
+    year: 1999,
+    festivals: [
+      { name: '1º Festival de Tunas Académicas de Fornos', location: 'Freixo de Espada à Cinta', awards: ['3ª Melhor Tuna', 'Melhor Pandeireta'] },
+    ],
+  },
+];
+
+// Calculate statistics
+const totalAwards = palmaresData.reduce((total, year) => {
+  return total + year.festivals.reduce((festTotal, fest) => festTotal + fest.awards.length, 0);
+}, 0);
+
+const totalFestivals = palmaresData.reduce((total, year) => total + year.festivals.length, 0);
+
+const melhorTunaCount = palmaresData.reduce((total, year) => {
+  return total + year.festivals.reduce((festTotal, fest) => {
+    return festTotal + fest.awards.filter(a => a.toLowerCase().includes('melhor tuna') && !a.includes('2ª') && !a.includes('3ª')).length;
+  }, 0);
+}, 0);
+---
+
+<Layout
+  title={`${t('palmares.title')} | Tunadão 1998`}
+  description="Palmarés da Tunadão 1998 - Prémios conquistados em festivais de tunas por todo o país desde 1999."
+>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero__title">{t('palmares.title')}</h1>
+      <p class="hero__subtitle">{t('palmares.subtitle')}</p>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats__grid">
+        <div class="stats__item">
+          <span class="stats__value">{totalAwards}+</span>
+          <span class="stats__label">Prémios</span>
+        </div>
+        <div class="stats__item">
+          <span class="stats__value">{totalFestivals}</span>
+          <span class="stats__label">Festivais</span>
+        </div>
+        <div class="stats__item">
+          <span class="stats__value">{melhorTunaCount}</span>
+          <span class="stats__label">Melhor Tuna</span>
+        </div>
+        <div class="stats__item">
+          <span class="stats__value">{palmaresData.length}</span>
+          <span class="stats__label">Anos de Palmarés</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline Section -->
+  <section class="palmares-timeline">
+    <div class="container">
+      {palmaresData.map((yearData) => (
+        <div class="year-section" id={`year-${yearData.year}`}>
+          <div class="year-header">
+            <h2 class="year-title">{yearData.year}</h2>
+            <span class="year-count">
+              {yearData.festivals.reduce((t, f) => t + f.awards.length, 0)} prémios
+            </span>
+          </div>
+          <div class="festivals-grid">
+            {yearData.festivals.map((festival) => (
+              <div class="festival-card">
+                <div class="festival-card__header">
+                  <h3 class="festival-card__name">{festival.name}</h3>
+                  {festival.location && (
+                    <span class="festival-card__location">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      {festival.location}
+                    </span>
+                  )}
+                </div>
+                <div class="festival-card__awards">
+                  {festival.awards.map((award) => (
+                    <span class="award-badge" class:list={{
+                      'award-badge--gold': award.toLowerCase().includes('melhor tuna') && !award.includes('2ª') && !award.includes('3ª'),
+                      'award-badge--silver': award.includes('2ª'),
+                      'award-badge--bronze': award.includes('3ª'),
+                    }}>
+                      {award.toLowerCase().includes('melhor tuna') && !award.includes('2ª') && !award.includes('3ª') && '🏆 '}
+                      {award}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-text-inverted);
+    padding: var(--space-12) 0;
+    text-align: center;
+  }
+
+  .hero__title {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+  }
+
+  .hero__subtitle {
+    font-size: var(--text-xl);
+    opacity: 0.9;
+  }
+
+  /* Stats Section */
+  .stats {
+    background-color: var(--color-surface);
+    padding: var(--space-8) 0;
+    margin-top: -2rem;
+    position: relative;
+    z-index: 1;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .stats__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .stats__item {
+    text-align: center;
+  }
+
+  .stats__value {
+    display: block;
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .stats__label {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-1);
+  }
+
+  /* Palmares Timeline */
+  .palmares-timeline {
+    padding: var(--space-12) 0;
+    background-color: var(--color-background);
+  }
+
+  .year-section {
+    margin-bottom: var(--space-10);
+  }
+
+  .year-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .year-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-3);
+    border-bottom: 2px solid var(--color-primary);
+  }
+
+  .year-title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .year-count {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    background-color: var(--color-surface);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+  }
+
+  .festivals-grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    .festivals-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .festivals-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .festival-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  }
+
+  .festival-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .festival-card__header {
+    margin-bottom: var(--space-3);
+  }
+
+  .festival-card__name {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-1);
+  }
+
+  .festival-card__location {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .festival-card__location svg {
+    color: var(--color-primary);
+  }
+
+  .festival-card__awards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .award-badge {
+    display: inline-block;
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-2);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+  }
+
+  .award-badge--gold {
+    background: linear-gradient(135deg, #ffd700, #ffb700);
+    border-color: #ffd700;
+    color: #333;
+    font-weight: 600;
+  }
+
+  .award-badge--silver {
+    background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
+    border-color: #c0c0c0;
+    color: #333;
+  }
+
+  .award-badge--bronze {
+    background: linear-gradient(135deg, #cd7f32, #b87333);
+    border-color: #cd7f32;
+    color: #fff;
+  }
+</style>

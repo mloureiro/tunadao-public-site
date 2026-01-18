@@ -10,7 +10,8 @@
       "@styles/*": ["app/styles/*"],
       "@utils/*": ["app/utils/*"],
       "@i18n/*": ["app/i18n/*"],
-      "@assets/*": ["app/assets/*"]
+      "@assets/*": ["app/assets/*"],
+      "@data/*": ["app/data/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"

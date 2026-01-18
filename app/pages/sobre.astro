@@ -1,0 +1,459 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Button from '@components/Button.astro';
+import { t } from '@i18n/index';
+
+const hierarchy = [
+  {
+    title: t('about.hierarchy.tunoMestre'),
+    description: 'O líder máximo da tuna, responsável pela direção artística e musical.',
+    icon: '👑',
+  },
+  {
+    title: t('about.hierarchy.tunosIlustres'),
+    description: 'Tunos que se destacaram e foram reconhecidos pelo seu contributo excecional.',
+    icon: '⭐',
+  },
+  {
+    title: t('about.hierarchy.tunosDoutores'),
+    description: 'Tunos que concluíram os seus cursos superiores.',
+    icon: '🎓',
+  },
+  {
+    title: t('about.hierarchy.tunos'),
+    description: 'Membros plenos da tuna que completaram o seu percurso de aprendizagem.',
+    icon: '🎭',
+  },
+  {
+    title: t('about.hierarchy.caloiros'),
+    description: 'Novos membros em fase de integração na tuna.',
+    icon: '🌱',
+  },
+  {
+    title: t('about.hierarchy.aprendizes'),
+    description: 'Candidatos a tunos em processo de aprendizagem musical.',
+    icon: '📚',
+  },
+];
+
+const milestones = [
+  { year: '1998', event: 'Fundação da Tunadão no Instituto Politécnico de Viseu' },
+  { year: '1999', event: 'Primeira participação num festival de tunas' },
+  { year: '2003', event: 'Lançamento do primeiro álbum "Por Ruelas e Calçadas"' },
+  { year: '2004', event: 'Primeira edição do CITADÃO' },
+  { year: '2008', event: 'Lançamento do segundo álbum "De Capa Bem Traçada"' },
+  { year: '2023', event: 'Celebração dos 25 anos da Tunadão' },
+];
+---
+
+<Layout
+  title={`${t('about.title')} | Tunadão 1998`}
+  description="Conhece a história da Tunadão 1998, a tuna académica do Instituto Politécnico de Viseu. Mais de 25 anos de tradição e música."
+>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero__title">{t('about.title')}</h1>
+      <p class="hero__subtitle">{t('about.subtitle')}</p>
+    </div>
+  </section>
+
+  <!-- History Section -->
+  <section class="history">
+    <div class="container">
+      <div class="history__content">
+        <h2 class="section-title">{t('about.history')}</h2>
+        <div class="history__text">
+          <p>
+            A Tunadão nasceu em 1998, fruto da vontade de um grupo de estudantes do Instituto
+            Politécnico de Viseu em criar uma tuna académica que representasse a instituição e a
+            cidade de Viseu. O nome "Tunadão" surge da junção de "Tuna" com "Dão", a região vinícola
+            onde Viseu se insere, criando uma identidade única e representativa das suas raízes.
+          </p>
+          <p>
+            Desde a sua fundação, a Tunadão tem sido uma referência na vida académica viseense,
+            participando em dezenas de festivais por todo o país e além-fronteiras, conquistando
+            prémios e reconhecimento pelo seu trabalho musical e pela qualidade das suas atuações.
+          </p>
+          <p>
+            Em 2004, a Tunadão deu início a uma das suas maiores realizações: o CITADÃO - Certame
+            Internacional de Tunas Académicas do Dão. Este festival tornou-se um dos eventos mais
+            importantes do calendário tunante nacional, reunindo anualmente as melhores tunas do
+            país e convidados internacionais.
+          </p>
+          <p>
+            Com mais de 25 anos de história, a Tunadão continua a formar novos tunos, a preservar
+            tradições académicas e a levar a música portuguesa e a cultura tunante a palcos de norte
+            a sul do país. A tuna mantém um repertório diversificado que inclui músicas tradicionais
+            portuguesas, composições originais e adaptações de temas populares.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline Section -->
+  <section class="timeline">
+    <div class="container">
+      <h2 class="section-title">Marcos Históricos</h2>
+      <div class="timeline__items">
+        {milestones.map((item, index) => (
+          <div class="timeline__item" style={`--delay: ${index * 0.1}s`}>
+            <div class="timeline__year">{item.year}</div>
+            <div class="timeline__event">{item.event}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission Section -->
+  <section class="mission">
+    <div class="container">
+      <div class="mission__content">
+        <h2 class="section-title">{t('about.mission')}</h2>
+        <div class="mission__grid">
+          <div class="mission__item">
+            <div class="mission__icon">🎵</div>
+            <h3>Preservar a Tradição</h3>
+            <p>Manter viva a tradição das tunas académicas portuguesas, preservando e transmitindo este património cultural.</p>
+          </div>
+          <div class="mission__item">
+            <div class="mission__icon">🎓</div>
+            <h3>Formar Tunos</h3>
+            <p>Acolher e formar novos membros, transmitindo conhecimentos musicais e valores académicos.</p>
+          </div>
+          <div class="mission__item">
+            <div class="mission__icon">🌍</div>
+            <h3>Representar a Academia</h3>
+            <p>Levar o nome do Instituto Politécnico de Viseu e da cidade por todo o país e além-fronteiras.</p>
+          </div>
+          <div class="mission__item">
+            <div class="mission__icon">🤝</div>
+            <h3>Promover a Convivência</h3>
+            <p>Fomentar o espírito de camaradagem e amizade entre tunos, criando laços que perduram para a vida.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hierarchy Section -->
+  <section class="hierarchy-section">
+    <div class="container">
+      <h2 class="section-title">{t('about.hierarchy.title')}</h2>
+      <p class="hierarchy-section__intro">
+        A hierarquia da tuna segue uma estrutura tradicional, onde cada nível representa
+        uma etapa no percurso de cada membro.
+      </p>
+      <div class="hierarchy__grid">
+        {hierarchy.map((level) => (
+          <div class="hierarchy__item">
+            <span class="hierarchy__icon">{level.icon}</span>
+            <h3 class="hierarchy__title">{level.title}</h3>
+            <p class="hierarchy__description">{level.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta__content">
+        <h2>Queres conhecer mais?</h2>
+        <p>Descobre o nosso percurso nos festivais e os prémios conquistados ao longo dos anos.</p>
+        <div class="cta__buttons">
+          <Button href="/palmares" variant="primary" size="lg">
+            Ver Palmarés
+          </Button>
+          <Button href="/citadao" variant="outline" size="lg">
+            Conhecer o CITADÃO
+          </Button>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-text-inverted);
+    padding: var(--space-12) 0;
+    text-align: center;
+  }
+
+  .hero__title {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+  }
+
+  .hero__subtitle {
+    font-size: var(--text-xl);
+    opacity: 0.9;
+  }
+
+  /* Section Title */
+  .section-title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    margin-bottom: var(--space-6);
+    color: var(--color-text);
+    text-align: center;
+  }
+
+  /* History Section */
+  .history {
+    padding: var(--space-12) 0;
+    background-color: var(--color-background);
+  }
+
+  .history__content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .history__text p {
+    font-size: var(--text-lg);
+    line-height: 1.8;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .history__text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Timeline Section */
+  .timeline {
+    padding: var(--space-12) 0;
+    background-color: var(--color-surface);
+  }
+
+  .timeline__items {
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .timeline__items::before {
+    content: '';
+    position: absolute;
+    left: 50px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary));
+  }
+
+  .timeline__item {
+    display: flex;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+    animation: fadeIn 0.5s ease-out both;
+    animation-delay: var(--delay);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .timeline__year {
+    flex-shrink: 0;
+    width: 100px;
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: right;
+    padding-right: var(--space-4);
+    position: relative;
+  }
+
+  .timeline__year::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background-color: var(--color-primary);
+    border-radius: var(--radius-full);
+    border: 2px solid var(--color-surface);
+  }
+
+  .timeline__event {
+    flex: 1;
+    padding: var(--space-3) var(--space-4);
+    background-color: var(--color-background);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+  }
+
+  /* Mission Section */
+  .mission {
+    padding: var(--space-12) 0;
+    background-color: var(--color-background);
+  }
+
+  .mission__grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    .mission__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .mission__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .mission__item {
+    text-align: center;
+    padding: var(--space-6);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  }
+
+  .mission__item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .mission__icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .mission__item h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    color: var(--color-text);
+  }
+
+  .mission__item p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  /* Hierarchy Section */
+  .hierarchy-section {
+    padding: var(--space-12) 0;
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
+  }
+
+  .hierarchy-section__intro {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto var(--space-8);
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .hierarchy__grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(1, 1fr);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .hierarchy__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hierarchy__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .hierarchy__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-5);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    transition: transform var(--transition-normal);
+  }
+
+  .hierarchy__item:hover {
+    transform: scale(1.02);
+  }
+
+  .hierarchy__icon {
+    font-size: 2rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .hierarchy__title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .hierarchy__description {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  /* CTA Section */
+  .cta {
+    padding: var(--space-12) 0;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-text-inverted);
+  }
+
+  .cta__content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta__content h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    margin-bottom: var(--space-3);
+  }
+
+  .cta__content p {
+    font-size: var(--text-lg);
+    opacity: 0.9;
+    margin-bottom: var(--space-6);
+  }
+
+  .cta__buttons {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>
