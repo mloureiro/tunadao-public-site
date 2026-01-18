@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://tunadao1998.github.io',
   output: 'static',
+  srcDir: './app',
   build: {
     assets: '_assets',
   },

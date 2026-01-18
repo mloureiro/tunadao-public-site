@@ -3,18 +3,18 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@pages/*": ["src/pages/*"],
-      "@styles/*": ["src/styles/*"],
-      "@utils/*": ["src/utils/*"],
-      "@i18n/*": ["src/i18n/*"],
-      "@assets/*": ["src/assets/*"]
+      "@/*": ["app/*"],
+      "@components/*": ["app/components/*"],
+      "@layouts/*": ["app/layouts/*"],
+      "@pages/*": ["app/pages/*"],
+      "@styles/*": ["app/styles/*"],
+      "@utils/*": ["app/utils/*"],
+      "@i18n/*": ["app/i18n/*"],
+      "@assets/*": ["app/assets/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   },
-  "include": ["src/**/*", "astro.config.mjs"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["app/**/*", "astro.config.mjs"],
+  "exclude": ["node_modules", "dist", "cms"]
 }
