@@ -40,6 +40,6 @@ export default [
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '.astro/', '.payload/', 'cms/'],
+    ignores: ['dist/', 'node_modules/', '.astro/'],
   },
 ];

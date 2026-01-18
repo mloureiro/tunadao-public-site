@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://tunadao1998.github.io',
   output: 'static',
-  srcDir: './app',
+  srcDir: './src',
   integrations: [
     sitemap({
       changefreq: 'weekly',

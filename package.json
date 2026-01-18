@@ -1,54 +1,14 @@
 {
-  "name": "tunadao-website",
+  "name": "tunadao-monorepo",
   "type": "module",
   "version": "1.0.0",
-  "description": "Website for Tunadão 1998 - Tuna do Instituto Politécnico de Viseu",
+  "description": "Monorepo for Tunadão 1998 website",
+  "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "dev:cms": "payload serve",
-    "build": "astro build",
-    "build:cms": "payload build",
-    "preview": "astro preview",
-    "astro": "astro",
-    "lint": "eslint . --ext .ts,.tsx,.astro",
-    "lint:fix": "eslint . --ext .ts,.tsx,.astro --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "typecheck": "astro check && tsc --noEmit",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },
-  "keywords": [
-    "tuna",
-    "tunadao",
-    "viseu",
-    "ipv",
-    "citadao"
-  ],
-  "author": "Tunadão 1998",
-  "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {
-    "@astrojs/check": "^0.9.6",
-    "@astrojs/sitemap": "^3.7.0",
-    "astro": "^5.16.11",
-    "typescript": "^5.9.3"
-  },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@playwright/test": "^1.57.0",
-    "@testing-library/dom": "^10.4.1",
-    "@typescript-eslint/eslint-plugin": "^8.53.0",
-    "@typescript-eslint/parser": "^8.53.0",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-astro": "^1.5.0",
-    "happy-dom": "^20.3.1",
-    "prettier": "^3.8.0",
-    "prettier-plugin-astro": "^0.14.1",
-    "vitest": "^4.0.17"
+    "@playwright/test": "^1.57.0"
   }
 }
