@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import LanguageSelector from './LanguageSelector.astro';
 
 interface NavItem {
   label: string;
@@ -51,6 +52,7 @@ const currentPath = Astro.url.pathname;
     </nav>
 
     <div class="header__actions">
+      <LanguageSelector />
       <ThemeToggle />
       <button class="header__menu-btn" aria-label="Abrir menu" aria-expanded="false">
         <span class="header__menu-icon"></span>
