@@ -23,8 +23,13 @@ const currentPath = Astro.url.pathname;
 <header class="header">
   <div class="header__container container">
     <a href="/" class="header__logo">
-      <span class="header__logo-text">Tunadão</span>
-      <span class="header__logo-year">1998</span>
+      <img
+        src="/images/logo/tunadao-logo.png"
+        alt="Tunadão 1998"
+        class="header__logo-img"
+        width="120"
+        height="40"
+      />
     </a>
 
     <nav class="header__nav" aria-label="Navegação principal">
@@ -94,22 +99,20 @@ const currentPath = Astro.url.pathname;
   /* Logo */
   .header__logo {
     display: flex;
-    align-items: baseline;
-    gap: var(--space-1);
-    font-family: var(--font-family-heading);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text);
+    align-items: center;
     text-decoration: none;
   }
 
-  .header__logo-text {
-    font-size: var(--font-size-xl);
-    color: var(--color-primary);
+  .header__logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
   }
 
-  .header__logo-year {
-    font-size: var(--font-size-sm);
-    color: var(--color-secondary);
+  @media (min-width: 768px) {
+    .header__logo-img {
+      height: 48px;
+    }
   }
 
   /* Desktop Navigation */
