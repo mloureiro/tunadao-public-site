@@ -120,24 +120,25 @@
 [data-theme='dark'] {
   --color-background: #121218;
   --color-background-alt: #1a1a22;
-  --color-surface: #222230;
-  --color-surface-elevated: #2a2a3a;
+  --color-surface: #1e1e28;
+  --color-surface-elevated: #282835;
 
   --color-text: #f5f5f7;
-  --color-text-muted: #b8b8c0;
-  --color-text-inverted: #121218;
+  --color-text-muted: #a8a8b3;
+  /* Keep text-inverted white - used on colored backgrounds (buttons, hero) that stay dark */
+  --color-text-inverted: #ffffff;
 
   --color-border: #3a3a4a;
   --color-border-light: #2d2d3d;
 
-  /* Lighten primary colors for dark mode visibility */
-  --color-primary: #4a3a9f;
-  --color-primary-light: #6b5adf;
-  --color-primary-dark: #29166f;
+  /* Lighter primary colors for dark mode visibility */
+  --color-primary: #6b5adf;
+  --color-primary-light: #8b7aff;
+  --color-primary-dark: #4a3a9f;
 
-  /* Lighten secondary for dark mode */
-  --color-secondary: #e63354;
-  --color-secondary-light: #ff4d6d;
+  /* Lighter secondary for dark mode */
+  --color-secondary: #ff4d6d;
+  --color-secondary-light: #ff6b85;
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
