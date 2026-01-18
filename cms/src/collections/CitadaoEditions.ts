@@ -1,7 +1,18 @@
 import { CollectionConfig } from 'payload';
+import { triggerFrontendRebuild } from '../utils/triggerRebuild';
 
 export const CitadaoEditions: CollectionConfig = {
   slug: 'citadao-editions',
+  hooks: {
+    afterChange: [
+      async ({ doc, operation }) => {
+        if (doc.status === 'published') {
+          await triggerFrontendRebuild('citadao-editions', operation);
+        }
+        return doc;
+      },
+    ],
+  },
   admin: {
     useAsTitle: 'title',
     group: 'Content',

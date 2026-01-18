@@ -1,7 +1,18 @@
 import { CollectionConfig } from 'payload';
+import { triggerFrontendRebuild } from '../utils/triggerRebuild';
 
 export const PalmaresYears: CollectionConfig = {
   slug: 'palmares-years',
+  hooks: {
+    afterChange: [
+      async ({ doc, operation }) => {
+        if (doc.status === 'published') {
+          await triggerFrontendRebuild('palmares-years', operation);
+        }
+        return doc;
+      },
+    ],
+  },
   admin: {
     useAsTitle: 'yearTitle',
     group: 'Content',

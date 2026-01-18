@@ -1,7 +1,18 @@
 import { CollectionConfig } from 'payload';
+import { triggerFrontendRebuild } from '../utils/triggerRebuild';
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
+  hooks: {
+    afterChange: [
+      async ({ doc, operation }) => {
+        if (doc.status === 'published') {
+          await triggerFrontendRebuild('pages', operation);
+        }
+        return doc;
+      },
+    ],
+  },
   admin: {
     useAsTitle: 'title',
     group: 'Content',

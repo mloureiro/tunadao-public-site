@@ -3,6 +3,7 @@
 ## Overview
 
 This project consists of two parts:
+
 - **Frontend (Astro)**: Deployed to GitHub Pages
 - **CMS (PayloadCMS)**: Deployed to Render.com
 
@@ -52,16 +53,19 @@ The frontend automatically deploys to GitHub Pages when you push to the `main` b
 ### Configuration
 
 **Build Command:**
+
 ```bash
 npm install && npm run build
 ```
 
 **Start Command:**
+
 ```bash
 npm run serve
 ```
 
 **Root Directory:**
+
 ```
 cms
 ```
@@ -70,45 +74,97 @@ cms
 
 Set these in Render dashboard:
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `NODE_ENV` | Environment | `production` |
-| `PAYLOAD_CONFIG_PATH` | Config path | `src/payload.config.ts` |
-| `PAYLOAD_PUBLIC_SERVER_URL` | CMS public URL | `https://tunadao-cms.onrender.com` |
-| `FRONTEND_URL` | Frontend URL (CORS) | `https://tunadao.github.io` |
-| `DATABASE_URL` | Turso database URL | `libsql://db.turso.io?authToken=...` |
-| `RESEND_API_KEY` | Resend API key | `re_...` |
-| `PAYLOAD_SECRET` | Random secret | (auto-generated) |
+| Variable                    | Description         | Example                              |
+| --------------------------- | ------------------- | ------------------------------------ |
+| `NODE_ENV`                  | Environment         | `production`                         |
+| `PAYLOAD_CONFIG_PATH`       | Config path          | `src/payload.config.ts`               |
+| `PAYLOAD_PUBLIC_SERVER_URL` | CMS public URL      | `https://tunadao-cms.onrender.com`   |
+| `FRONTEND_URL`              | Frontend URL (CORS) | `https://tunadao.github.io`          |
+| `DATABASE_URL`              | Turso database URL  | `libsql://db.turso.io?authToken=...` |
+| `RESEND_API_KEY`            | Resend API key      | `re_...`                             |
+| `PAYLOAD_SECRET`            | Random secret       | (auto-generated)                     |
 
 ### Database - Turso
 
 1. Create a [Turso](https://turso.tech) account
 2. Create a new database:
+
    ```bash
    turso db create tunadao
    ```
+
 3. Get the connection URL:
+
    ```bash
    turso db show tunadao --url
    ```
+
 4. Create an auth token:
+
    ```bash
    turso db tokens create tunadao
    ```
+
 5. Set `DATABASE_URL` in Render as:
+
    ```
    libsql://[database-url]?authToken=[token]
    ```
 
 ---
 
-## Webhooks (optional)
+## Automatic Frontend Rebuilds
 
-To rebuild the frontend when CMS content changes:
+The CMS automatically triggers a frontend rebuild when content is published or updated.
 
-1. Create a GitHub Personal Access Token with `repo` scope
-2. In Render, add a Deploy Hook URL
-3. Configure PayloadCMS to call the webhook on content changes
+### How It Works
+
+1. When you save content in the CMS (blog posts, pages, videos, etc.)
+2. PayloadCMS `afterChange` hooks detect the change
+3. The CMS calls GitHub Actions API to trigger the `deploy.yml` workflow
+4. GitHub Actions rebuilds and deploys the static site to GitHub Pages
+5. Changes appear live in ~2-5 minutes
+
+**Debouncing**: If you make multiple rapid changes, only one rebuild is triggered after 30 seconds of inactivity. This prevents excessive builds when batch-editing content.
+
+### Setup
+
+1. **Create a GitHub Personal Access Token:**
+   - Go to GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens
+   - Create token with these permissions for your repo:
+     - `Actions: Read and write`
+   - Copy the token
+
+2. **Add Environment Variables in Render:**
+
+| Variable       | Description            | Example               |
+| -------------- | ---------------------- | --------------------- |
+| `GITHUB_TOKEN` | GitHub PAT from step 1 | `ghp_xxxx...`         |
+| `GITHUB_OWNER` | GitHub username or org | `tunadao1998`         |
+| `GITHUB_REPO`  | Repository name        | `tunadao-static-vibe` |
+
+3. **Verify:**
+   - Edit a blog post in CMS
+   - Check CMS logs for `[Rebuild] Triggered...`
+   - Check GitHub Actions tab for new workflow run
+
+### Troubleshooting
+
+- **"Skipping - GitHub credentials not configured"**: Environment variables not set
+- **"Failed (403)"**: Token doesn't have Actions permission
+- **"Failed (404)"**: Repository or workflow not found
+
+### Alternative: Scheduled Rebuilds
+
+If you prefer not to use webhooks, add a cron trigger to `.github/workflows/deploy.yml`:
+
+```yaml
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 */6 * * *' # Every 6 hours
+```
 
 ---
 
@@ -142,10 +198,10 @@ npm run dev
 
 The frontend uses these environment variables for CMS integration:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `CMS_URL` | PayloadCMS API URL | `http://localhost:3000` |
-| `USE_CMS` | Enable CMS fetching | `true` |
+| Variable  | Description         | Default                 |
+| --------- | ------------------- | ----------------------- |
+| `CMS_URL` | PayloadCMS API URL  | `http://localhost:3000` |
+| `USE_CMS` | Enable CMS fetching | `true`                  |
 
 **For production builds:**
 

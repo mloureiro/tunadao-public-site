@@ -1,7 +1,16 @@
 import { GlobalConfig } from 'payload';
+import { triggerFrontendRebuild } from '../utils/triggerRebuild';
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
+  hooks: {
+    afterChange: [
+      async ({ doc }) => {
+        await triggerFrontendRebuild('site-settings', 'update');
+        return doc;
+      },
+    ],
+  },
   admin: {
     group: 'Settings',
   },

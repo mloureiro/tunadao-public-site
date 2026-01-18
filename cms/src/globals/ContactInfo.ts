@@ -1,7 +1,16 @@
 import { GlobalConfig } from 'payload';
+import { triggerFrontendRebuild } from '../utils/triggerRebuild';
 
 export const ContactInfo: GlobalConfig = {
   slug: 'contact-info',
+  hooks: {
+    afterChange: [
+      async ({ doc }) => {
+        await triggerFrontendRebuild('contact-info', 'update');
+        return doc;
+      },
+    ],
+  },
   admin: {
     group: 'Settings',
   },
