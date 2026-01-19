@@ -13,7 +13,8 @@
       "@assets/*": ["src/assets/*"],
       "@data/*": ["src/data/*"],
       "@lib/*": ["src/lib/*"],
-      "@ui/*": ["src/ui/*"]
+      "@ui/*": ["src/ui/*"],
+      "@cms/types": ["../cms/src/payload-types"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"
