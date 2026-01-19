@@ -15,7 +15,7 @@ const { lang } = Astro.params;
 const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
 const l = (path: string) => getLocalizedPath(path, currentLang);
-const heroBackground = `${import.meta.env.BASE_URL}images/hero-bg.jpg`;
+const heroBackgroundStyle = `background-image: url(${import.meta.env.BASE_URL}images/hero-bg.jpg);`;
 
 const stats = [
   { value: '1998', label: t('stats.founded') },
@@ -49,7 +49,7 @@ const highlights: { title: string; description: string; href: string; icon: Icon
 <Layout title={`Tunadão 1998 - ${t('home.subtitle')}`}>
   <!-- Hero Section -->
   <section class="hero">
-    <div class="hero__background"></div>
+    <div class="hero__background" style={heroBackgroundStyle}></div>
     <div class="hero__content container">
       <h1 class="hero__title">{t('home.title')}</h1>
       <p class="hero__subtitle">{t('home.subtitle')}</p>
@@ -135,7 +135,7 @@ const highlights: { title: string; description: string; href: string; icon: Icon
   </section>
 </Layout>
 
-<style define:vars={{ heroBackground }}>
+<style>
   /* Hero Section */
   .hero {
     position: relative;
@@ -149,7 +149,6 @@ const highlights: { title: string; description: string; href: string; icon: Icon
   .hero__background {
     position: absolute;
     inset: 0;
-    background-image: url(var(--heroBackground));
     background-size: cover;
     background-position: center 30%;
     z-index: -1;
