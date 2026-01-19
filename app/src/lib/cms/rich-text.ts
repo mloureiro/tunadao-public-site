@@ -106,8 +106,7 @@ function renderNode(node: CMSRichTextNode): string {
 
     case 'upload': {
       // Handle uploaded images
-      // @ts-expect-error - value contains media data
-      const media = node.value;
+      const media = node.value as { url?: string; alt?: string } | undefined;
       if (media?.url) {
         const alt = media.alt || '';
         return `<img src="${escapeHtml(media.url)}" alt="${escapeHtml(alt)}" />`;
