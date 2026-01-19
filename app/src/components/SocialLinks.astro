@@ -4,9 +4,10 @@ import { Icon, type IconName } from '@ui/icons';
 
 interface Props {
   class?: string;
+  variant?: 'dark' | 'light';
 }
 
-const { class: className = '' } = Astro.props;
+const { class: className = '', variant = 'dark' } = Astro.props;
 
 // Fetch social links from CMS (with fallback)
 const cmsSocialLinks = await getSocialLinks();
@@ -41,7 +42,7 @@ const socialLinks = [
 ].filter(Boolean) as { name: string; href: string; icon: IconName }[];
 ---
 
-<div class:list={['social-links', className]}>
+<div class:list={['social-links', `social-links--${variant}`, className]}>
   {
     socialLinks.map((social) => (
       <a
@@ -72,17 +73,43 @@ const socialLinks = [
     width: 40px;
     height: 40px;
     border-radius: var(--radius-full);
-    background-color: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.85);
     transition:
       background-color var(--transition-fast),
       color var(--transition-fast),
       transform var(--transition-fast);
   }
 
-  .social-links__item:hover {
+  /* Dark variant - for dark backgrounds (e.g., footer) */
+  .social-links--dark .social-links__item {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .social-links--dark .social-links__item:hover {
     background-color: rgba(255, 255, 255, 0.2);
     color: var(--color-text-inverted);
     transform: translateY(-2px);
+  }
+
+  /* Light variant - for light backgrounds (e.g., contact page) */
+  .social-links--light .social-links__item {
+    background-color: var(--color-neutral-100);
+    color: var(--color-text-muted);
+  }
+
+  .social-links--light .social-links__item:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverted);
+    transform: translateY(-2px);
+  }
+
+  :global([data-theme='dark']) .social-links--light .social-links__item {
+    background-color: var(--color-surface-elevated);
+    color: var(--color-text-muted);
+  }
+
+  :global([data-theme='dark']) .social-links--light .social-links__item:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverted);
   }
 </style>

@@ -37,19 +37,19 @@ import { Icon } from '@ui/icons';
       opacity var(--transition-fast);
   }
 
-  .theme-toggle__icon--sun {
+  :global(.theme-toggle__icon--sun) {
     display: block;
   }
 
-  .theme-toggle__icon--moon {
+  :global(.theme-toggle__icon--moon) {
     display: none;
   }
 
-  :global([data-theme='dark']) .theme-toggle__icon--sun {
+  :global([data-theme='dark'] .theme-toggle__icon--sun) {
     display: none;
   }
 
-  :global([data-theme='dark']) .theme-toggle__icon--moon {
+  :global([data-theme='dark'] .theme-toggle__icon--moon) {
     display: block;
   }
 </style>
