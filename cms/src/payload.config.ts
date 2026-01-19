@@ -25,6 +25,7 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 export default buildConfig({
+  secret: process.env.PAYLOAD_SECRET || 'dev-secret-key-change-in-production',
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
 
   admin: {
@@ -63,10 +64,7 @@ export default buildConfig({
     ContactSubmissions,
   ],
 
-  globals: [
-    SiteSettings,
-    ContactInfo,
-  ],
+  globals: [SiteSettings, ContactInfo],
 
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

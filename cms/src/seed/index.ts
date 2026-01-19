@@ -12,10 +12,8 @@ const seed = async () => {
   console.log('Starting seed process...');
 
   // Initialize Payload
-  await payload.init({
-    secret: process.env.PAYLOAD_SECRET || 'your-secret-key-for-dev',
-    local: true,
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await payload.init({ local: true } as any);
 
   try {
     // Seed in order (award types first as they're referenced by others)

@@ -6,10 +6,7 @@ const DEBOUNCE_MS = 30_000; // 30 seconds
  * Triggers a frontend rebuild via GitHub Actions workflow_dispatch.
  * Debounces multiple rapid changes to prevent excessive rebuilds.
  */
-export async function triggerFrontendRebuild(
-  collection: string,
-  operation: string
-): Promise<void> {
+export async function triggerFrontendRebuild(collection: string, operation: string): Promise<void> {
   const token = process.env.GITHUB_TOKEN;
   const owner = process.env.GITHUB_OWNER;
   const repo = process.env.GITHUB_REPO;

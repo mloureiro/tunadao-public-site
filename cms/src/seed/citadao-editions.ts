@@ -44,7 +44,12 @@ const citadaoData = [
       'Tuna Bruna - Tuna Académica da Universidade Internacional da Figueira da Foz',
       'Tusófona - Real Tuna Lusófona',
     ],
-    guests: ['Orfeão Académico de Viseu', 'Infantuna Cidade Viseu', 'Real Tunel Académico', 'Viriatuna'],
+    guests: [
+      'Orfeão Académico de Viseu',
+      'Infantuna Cidade Viseu',
+      'Real Tunel Académico',
+      'Viriatuna',
+    ],
     awards: {
       melhorTuna: 'Semper Tesus',
       segundaMelhorTuna: 'Tuna de Loyola',
@@ -68,7 +73,7 @@ const citadaoData = [
     notes: '10º Aniversário da Tunadão 1998',
     tunas: [
       'Estudantina Académica de Castelo Branco',
-      'Copituna D\'Oppidana - Tuna Académica do Inst. Pol. da Guarda',
+      "Copituna D'Oppidana - Tuna Académica do Inst. Pol. da Guarda",
       'SemperTesus - Tuna da Escola Superior Agrária de Beja',
       'Tuna Académica da Universidade Portucalense',
       'T.U.S.A. - Tuna Universitas Scientiarum Agrariarum',
@@ -201,7 +206,13 @@ const citadaoData = [
     year: 2014,
     date: '2-3 Maio',
     venue: 'Aula Magna do I.P.V. / Rua Formosa',
-    tunas: ['TDUP - Tuna do Distrito Universitário do Porto', 'TAIPCA - Tuna Académica do Instituto Politécnico do Cávado e do Ave', 'TUSA', 'Copituna D\'Oppidana', 'Tuna Templária'],
+    tunas: [
+      'TDUP - Tuna do Distrito Universitário do Porto',
+      'TAIPCA - Tuna Académica do Instituto Politécnico do Cávado e do Ave',
+      'TUSA',
+      "Copituna D'Oppidana",
+      'Tuna Templária',
+    ],
     guests: ['Infantuna Cidade de Viseu', 'Real Tunel Académico'],
     awards: {
       melhorTuna: 'TAIPCA (Tuna Académica do Instituto Politécnico do Cávado e do Ave)',
@@ -209,9 +220,9 @@ const citadaoData = [
       melhorOriginal: 'TAIPCA',
       melhorInstrumental: 'TAIPCA',
       melhorSolista: 'TDUP',
-      melhorPandeireta: 'Copituna d\'Oppidana (Tuna Académica da Guarda)',
+      melhorPandeireta: "Copituna d'Oppidana (Tuna Académica da Guarda)",
       melhorEstandarte: 'TDUP',
-      melhorSerenata: 'Copituna d\'Oppidana',
+      melhorSerenata: "Copituna d'Oppidana",
       tunaMaisTuna: 'T.U.S.A. (Tuna Universitas Scientarium Agrariarum)',
       melhorPassacalles: 'T.U.S.A',
     },
@@ -446,9 +457,7 @@ export const seedCitadaoEditions = async (payload: Payload) => {
     limit: 100,
   });
 
-  const awardTypesBySlug = new Map(
-    awardTypesResult.docs.map((doc) => [doc.slug, doc.id])
-  );
+  const awardTypesBySlug = new Map(awardTypesResult.docs.map((doc) => [doc.slug, doc.id]));
 
   for (const edition of citadaoData) {
     try {
@@ -456,16 +465,15 @@ export const seedCitadaoEditions = async (payload: Payload) => {
       const existing = await payload.find({
         collection: 'citadao-editions',
         where: {
-          and: [
-            { edition: { equals: edition.edition } },
-            { year: { equals: edition.year } },
-          ],
+          and: [{ edition: { equals: edition.edition } }, { year: { equals: edition.year } }],
         },
         limit: 1,
       });
 
       if (existing.docs.length > 0) {
-        console.log(`  ⏭️  Citadão ${edition.edition}º (${edition.year}) already exists, skipping...`);
+        console.log(
+          `  ⏭️  Citadão ${edition.edition}º (${edition.year}) already exists, skipping...`
+        );
         continue;
       }
 

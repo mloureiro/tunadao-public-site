@@ -23,7 +23,8 @@ const awardTypes = [
     name: 'Tuna Mais Tuna',
     slug: 'tuna-mais-tuna',
     aliases: [{ alias: 'Tuna + Tuna' }, { alias: 'Mais Tunante' }, { alias: 'Espírito Tunante' }],
-    description: 'Prémio atribuído à tuna que melhor representa o espírito tunante - alegria, camaradagem e tradição.',
+    description:
+      'Prémio atribuído à tuna que melhor representa o espírito tunante - alegria, camaradagem e tradição.',
   },
   {
     name: 'Tuna do Público',
@@ -35,7 +36,8 @@ const awardTypes = [
     name: 'Melhor Serenata',
     slug: 'melhor-serenata',
     aliases: [{ alias: 'Serenata' }],
-    description: 'Prémio para a melhor interpretação de serenata, avaliando musicalidade, emoção e técnica vocal.',
+    description:
+      'Prémio para a melhor interpretação de serenata, avaliando musicalidade, emoção e técnica vocal.',
   },
   {
     name: 'Melhor Passacalles',
@@ -47,7 +49,8 @@ const awardTypes = [
     name: 'Melhor Pandeireta',
     slug: 'melhor-pandeireta',
     aliases: [{ alias: 'Pandeireta' }],
-    description: 'Prémio para o melhor executante de pandeireta, avaliando técnica, ritmo e presença.',
+    description:
+      'Prémio para o melhor executante de pandeireta, avaliando técnica, ritmo e presença.',
   },
   {
     name: 'Melhor Instrumental',

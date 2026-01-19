@@ -4,14 +4,16 @@ const albumsData = [
   {
     title: 'Por Ruelas e Calçadas',
     year: 2003,
-    description: 'O primeiro CD da Tunadão 1998, gravado ao vivo no espectáculo "Por Ruelas e Calçadas" realizado na Aula Magna do ISPV a 6 de Dezembro de 2003.',
+    description:
+      'O primeiro CD da Tunadão 1998, gravado ao vivo no espectáculo "Por Ruelas e Calçadas" realizado na Aula Magna do ISPV a 6 de Dezembro de 2003.',
     spotifyUrl: 'https://open.spotify.com/artist/7HeYIxlV5Nb1KvZkBx00sH',
     recordingType: 'live',
   },
   {
     title: 'De Capa Bem Traçada',
     year: 2008,
-    description: 'O segundo CD da Tunadão 1998, gravado em estúdio para comemorar os 10 anos da tuna. Lançado por exigência dos estudantes de toda a Academia.',
+    description:
+      'O segundo CD da Tunadão 1998, gravado em estúdio para comemorar os 10 anos da tuna. Lançado por exigência dos estudantes de toda a Academia.',
     spotifyUrl: 'https://open.spotify.com/artist/7HeYIxlV5Nb1KvZkBx00sH',
     recordingType: 'studio',
   },
