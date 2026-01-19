@@ -24,23 +24,31 @@ Website institucional da **Tunadão** - Tuna do Instituto Politécnico de Viseu.
 
 ## Project Structure
 
+This is a monorepo with two self-contained projects:
+
 ```
-├── app/                    # Astro frontend source
-│   ├── components/         # Reusable UI components
-│   ├── data/               # Fallback data (when CMS unavailable)
-│   ├── i18n/               # Translations
-│   ├── layouts/            # Page layouts
-│   ├── lib/                # CMS client & utilities
-│   ├── pages/              # Route pages
-│   └── styles/             # Global styles
-├── cms/                    # PayloadCMS backend
-│   └── src/
-│       ├── collections/    # Content types
-│       ├── globals/        # Site settings
-│       └── utils/          # Utilities (rebuild triggers)
+├── app/                    # Astro frontend (self-contained)
+│   ├── src/
+│   │   ├── components/     # Reusable UI components
+│   │   ├── data/           # Fallback data (when CMS unavailable)
+│   │   ├── i18n/           # Translations
+│   │   ├── layouts/        # Page layouts
+│   │   ├── lib/            # CMS client & utilities
+│   │   ├── pages/          # Route pages
+│   │   └── styles/         # Global styles
+│   ├── public/             # Static assets
+│   ├── package.json
+│   ├── astro.config.mjs
+│   └── tsconfig.json
+├── cms/                    # PayloadCMS backend (self-contained)
+│   ├── src/
+│   │   ├── collections/    # Content types
+│   │   ├── globals/        # Site settings
+│   │   └── utils/          # Utilities (rebuild triggers)
+│   └── package.json
 ├── e2e/                    # Playwright E2E tests
-├── public/                 # Static assets
-└── src/                    # Shared utilities
+├── package.json            # Root: workspaces + e2e
+└── playwright.config.ts
 ```
 
 ## Pages
@@ -64,27 +72,24 @@ Website institucional da **Tunadão** - Tuna do Instituto Politécnico de Viseu.
 ### Development
 
 ```bash
-# Install dependencies
+# Install all dependencies (uses npm workspaces)
 npm install
-cd cms && npm install && cd ..
 
 # Start frontend (http://localhost:4321)
-npm run dev
+npm run dev -w app
 
 # Start CMS in another terminal (http://localhost:3000)
-cd cms && npm run dev
+npm run dev -w cms
 ```
 
 ### Environment Variables
 
-Copy `.env.example` to `.env`:
-
 ```bash
-cp .env.example .env
-cd cms && cp .env.example .env
+cp app/.env.example app/.env
+cp cms/.env.example cms/.env
 ```
 
-**Frontend (.env):**
+**Frontend (app/.env):**
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `CMS_URL` | PayloadCMS API URL | `http://localhost:3000` |
@@ -94,22 +99,30 @@ cd cms && cp .env.example .env
 
 ## Scripts
 
+### Root (all workspaces)
+
 ```bash
-# Development
-npm run dev           # Start Astro dev server
-npm run dev:cms       # Start PayloadCMS
-
-# Build
-npm run build         # Build static site
-
-# Quality
-npm run lint          # Run ESLint
-npm run format        # Format with Prettier
+npm run lint          # Check linting in all workspaces
+npm run lint:fix      # Fix lint issues
+npm run format        # Check formatting
+npm run format:fix    # Fix formatting
 npm run typecheck     # TypeScript check
-
-# Testing
-npm run test          # Run Vitest unit tests
+npm run test          # Run unit tests
+npm run build         # Build all workspaces
 npm run test:e2e      # Run Playwright E2E tests
+```
+
+### Workspace-specific
+
+```bash
+# Frontend (app/)
+npm run dev -w app        # Start dev server
+npm run build -w app      # Build static site
+npm run preview -w app    # Preview build
+
+# CMS (cms/)
+npm run dev -w cms        # Start CMS server
+npm run build -w cms      # Build CMS
 ```
 
 ## Deployment
