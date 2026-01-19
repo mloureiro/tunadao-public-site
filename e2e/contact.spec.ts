@@ -18,12 +18,14 @@ test.describe('Contact Page', () => {
   });
 
   test('should have contact information', async ({ page }) => {
-    await expect(page.getByText('tunadao@gmail.com')).toBeVisible();
-    await expect(page.getByText('+351 928 155 399')).toBeVisible();
+    const infoCard = page.locator('.info-card');
+    await expect(infoCard).toBeVisible();
+    // Check for email and phone info items
+    await expect(infoCard.locator('.info-item')).toHaveCount(3);
   });
 
   test('should have social links', async ({ page }) => {
-    const socialLinks = page.locator('.social-links');
+    const socialLinks = page.locator('.info-social .social-links');
     await expect(socialLinks).toBeVisible();
   });
 

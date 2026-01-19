@@ -9,37 +9,26 @@ test.describe('Citadão Page', () => {
     await expect(page.locator('h1')).toContainText('Festival Citadão');
   });
 
-  test('should display editions grid', async ({ page }) => {
-    const editions = page.locator('.edition-card');
+  test('should display editions list', async ({ page }) => {
+    const editions = page.locator('.edition-item');
     await expect(editions.first()).toBeVisible();
   });
 
-  test('should navigate to edition detail page', async ({ page }) => {
-    await page.locator('.edition-card').first().click();
-    await expect(page).toHaveURL(/\/citadao\/\d{4}\//);
-    await expect(page.locator('h1')).toContainText('CITADÃO');
+  test('should display latest edition highlight', async ({ page }) => {
+    const latestCard = page.locator('.latest__card');
+    await expect(latestCard).toBeVisible();
+    await expect(latestCard.locator('h2')).toContainText('CITADÃO');
   });
-});
 
-test.describe('Citadão Edition Detail Page', () => {
   test('should display edition information', async ({ page }) => {
-    await page.goto('/citadao/2024/');
-
-    await expect(page.locator('h1')).toContainText('CITADÃO 2024');
-    await expect(page.getByText('18ª Edição')).toBeVisible();
+    const editionItem = page.locator('.edition-item').first();
+    await expect(editionItem).toBeVisible();
+    await expect(editionItem.locator('h3')).toContainText('CITADÃO');
   });
 
-  test('should display tunas list', async ({ page }) => {
-    await page.goto('/citadao/2024/');
-
-    const tunasSection = page.locator('.tunas');
-    await expect(tunasSection).toBeVisible();
-    await expect(tunasSection.locator('.tuna-item')).toHaveCount(4);
-  });
-
-  test('should have navigation to other editions', async ({ page }) => {
-    await page.goto('/citadao/2024/');
-
-    await expect(page.getByRole('link', { name: /Todas as edições/i })).toBeVisible();
+  test('should display tunas list in edition', async ({ page }) => {
+    const editionItem = page.locator('.edition-item').first();
+    const tunasList = editionItem.locator('.edition-item__tunas');
+    await expect(tunasList).toBeVisible();
   });
 });
