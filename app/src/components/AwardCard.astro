@@ -1,19 +1,5 @@
 ---
-import type { AwardVariant } from './AwardBadge.astro';
-
-export type AwardKey =
-  | 'melhorTuna'
-  | 'segundaMelhorTuna'
-  | 'terceiraMelhorTuna'
-  | 'tunaDoPublico'
-  | 'tunaMaisTuna'
-  | 'melhorSerenata'
-  | 'melhorPassacalles'
-  | 'melhorPandeireta'
-  | 'melhorInstrumental'
-  | 'melhorSolista'
-  | 'melhorOriginal'
-  | 'melhorEstandarte';
+import type { AwardVariant, AwardKey } from './types';
 
 interface Props {
   awardKey: AwardKey | string;

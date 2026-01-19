@@ -3,7 +3,8 @@ import Layout from '@layouts/Layout.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 import { getPalmaresYears } from '@lib/cms';
 import { Icon } from '@ui/icons';
-import AwardBadge, { type AwardVariant } from '@components/AwardBadge.astro';
+import AwardBadge from '@components/AwardBadge.astro';
+import type { AwardVariant } from '@components/types';
 
 function getAwardVariant(award: string): AwardVariant {
   const lowerAward = award.toLowerCase();
