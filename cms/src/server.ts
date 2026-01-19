@@ -3,6 +3,7 @@ import payload from 'payload';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import dotenv from 'dotenv';
+import config from './payload.config';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ const start = async () => {
   // Initialize Payload
 
   await payload.init({
+    config,
     express: app,
     onInit: async () => {
       payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`);
