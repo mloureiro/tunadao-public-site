@@ -12,7 +12,8 @@
       "@i18n/*": ["src/i18n/*"],
       "@assets/*": ["src/assets/*"],
       "@data/*": ["src/data/*"],
-      "@lib/*": ["src/lib/*"]
+      "@lib/*": ["src/lib/*"],
+      "@ui/*": ["src/ui/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"
