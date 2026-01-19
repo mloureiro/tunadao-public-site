@@ -4,6 +4,7 @@ import Button from '@components/Button.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 import { getCitadaoEditions } from '@lib/cms';
 import { Icon } from '@ui/icons';
+import AwardCard from '@components/AwardCard.astro';
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
@@ -113,45 +114,13 @@ const latestEdition = editions[0];
                   <div class="edition-item__section edition-item__awards">
                     <h4>{t('citadao.awards')}</h4>
                     <div class="awards-grid">
-                      {Object.entries(edition.awards).map(([key, winner]) => {
-                        const _isFirst =
-                          key === 'melhorTuna' ||
-                          (key.includes('melhor') &&
-                            !key.includes('segundo') &&
-                            !key.includes('terceiro'));
-                        const _isSecond = key === 'segundaMelhorTuna' || key.includes('segundo');
-                        const _isThird = key === 'terceiraMelhorTuna' || key.includes('terceiro');
-                        const awardClass =
-                          key === 'melhorTuna'
-                            ? 'award-item--gold'
-                            : key === 'segundaMelhorTuna'
-                              ? 'award-item--silver'
-                              : key === 'terceiraMelhorTuna'
-                                ? 'award-item--bronze'
-                                : key === 'tunaDoPublico'
-                                  ? 'award-item--special'
-                                  : '';
-                        return (
-                          <div class={`award-item ${awardClass}`}>
-                            <span class="award-item__icon">
-                              {key === 'melhorTuna' && '🏆'}
-                              {key === 'segundaMelhorTuna' && '🥈'}
-                              {key === 'terceiraMelhorTuna' && '🥉'}
-                              {key === 'tunaDoPublico' && '❤️'}
-                              {key === 'tunaMaisTuna' && '🎭'}
-                              {key === 'melhorSerenata' && '🎵'}
-                              {key === 'melhorPassacalles' && '🎺'}
-                              {key === 'melhorPandeireta' && '🥁'}
-                              {key === 'melhorInstrumental' && '🎸'}
-                              {key === 'melhorSolista' && '🎤'}
-                              {key === 'melhorOriginal' && '✨'}
-                              {key === 'melhorEstandarte' && '🏴'}
-                            </span>
-                            <span class="award-item__name">{t(`awards.${key}`)}</span>
-                            <span class="award-item__winner">{winner}</span>
-                          </div>
-                        );
-                      })}
+                      {Object.entries(edition.awards).map(([key, winner]) => (
+                        <AwardCard
+                          awardKey={key}
+                          name={t(`awards.${key}`)}
+                          winner={winner as string}
+                        />
+                      ))}
                     </div>
                   </div>
                 )}
@@ -406,94 +375,5 @@ const latestEdition = editions[0];
     display: grid;
     gap: var(--space-3);
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  }
-
-  .award-item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    padding: var(--space-3) var(--space-4);
-    background-color: var(--color-background);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    transition:
-      transform var(--transition-fast),
-      box-shadow var(--transition-fast);
-  }
-
-  .award-item:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .award-item__icon {
-    font-size: 1.5rem;
-    line-height: 1;
-  }
-
-  .award-item__name {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
-
-  .award-item__winner {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-text);
-  }
-
-  /* Award item variants */
-  .award-item--gold {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--color-gold) 15%, transparent), color-mix(in srgb, var(--color-gold-light) 10%, transparent));
-    border-color: var(--color-gold);
-    border-left: 4px solid var(--color-gold);
-  }
-
-  .award-item--gold .award-item__name {
-    color: var(--color-gold-dark);
-  }
-
-  [data-theme='dark'] .award-item--gold .award-item__name {
-    color: var(--color-gold);
-  }
-
-  .award-item--silver {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--color-silver) 15%, transparent), color-mix(in srgb, var(--color-silver-light) 10%, transparent));
-    border-color: var(--color-silver);
-    border-left: 4px solid var(--color-silver);
-  }
-
-  .award-item--silver .award-item__name {
-    color: var(--color-silver-dark);
-  }
-
-  [data-theme='dark'] .award-item--silver .award-item__name {
-    color: var(--color-silver);
-  }
-
-  .award-item--bronze {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--color-bronze) 15%, transparent), color-mix(in srgb, var(--color-bronze-light) 10%, transparent));
-    border-color: var(--color-bronze);
-    border-left: 4px solid var(--color-bronze);
-  }
-
-  .award-item--bronze .award-item__name {
-    color: var(--color-bronze-dark);
-  }
-
-  [data-theme='dark'] .award-item--bronze .award-item__name {
-    color: var(--color-bronze);
-  }
-
-  .award-item--special {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--color-secondary) 10%, transparent), color-mix(in srgb, var(--color-secondary-light) 5%, transparent));
-    border-color: var(--color-secondary);
-    border-left: 4px solid var(--color-secondary);
-  }
-
-  .award-item--special .award-item__name {
-    color: var(--color-secondary);
   }
 </style>

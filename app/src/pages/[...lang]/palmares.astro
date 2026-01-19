@@ -3,6 +3,17 @@ import Layout from '@layouts/Layout.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 import { getPalmaresYears } from '@lib/cms';
 import { Icon } from '@ui/icons';
+import AwardBadge, { type AwardVariant } from '@components/AwardBadge.astro';
+
+function getAwardVariant(award: string): AwardVariant {
+  const lowerAward = award.toLowerCase();
+  if (lowerAward.includes('melhor tuna') && !award.includes('2ª') && !award.includes('3ª')) {
+    return 'gold';
+  }
+  if (award.includes('2ª')) return 'silver';
+  if (award.includes('3ª')) return 'bronze';
+  return 'default';
+}
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
@@ -97,25 +108,14 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
                     )}
                   </div>
                   <div class="festival-card__awards">
-                    {festival.awards.map((award) => (
-                      <span
-                        class="award-badge"
-                        class:list={{
-                          'award-badge--gold':
-                            award.toLowerCase().includes('melhor tuna') &&
-                            !award.includes('2ª') &&
-                            !award.includes('3ª'),
-                          'award-badge--silver': award.includes('2ª'),
-                          'award-badge--bronze': award.includes('3ª'),
-                        }}
-                      >
-                        {award.toLowerCase().includes('melhor tuna') &&
-                          !award.includes('2ª') &&
-                          !award.includes('3ª') &&
-                          '🏆 '}
-                        {award}
-                      </span>
-                    ))}
+                    {festival.awards.map((award) => {
+                      const variant = getAwardVariant(award);
+                      return (
+                        <AwardBadge variant={variant} showIcon={variant === 'gold'}>
+                          {award}
+                        </AwardBadge>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
@@ -285,34 +285,5 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
-  }
-
-  .award-badge {
-    display: inline-block;
-    font-size: var(--text-xs);
-    padding: var(--space-1) var(--space-2);
-    background-color: var(--color-background);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    color: var(--color-text);
-  }
-
-  .award-badge--gold {
-    background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
-    border-color: var(--color-gold);
-    color: var(--color-neutral-800);
-    font-weight: 600;
-  }
-
-  .award-badge--silver {
-    background: linear-gradient(135deg, var(--color-silver), var(--color-silver-light));
-    border-color: var(--color-silver);
-    color: var(--color-neutral-800);
-  }
-
-  .award-badge--bronze {
-    background: linear-gradient(135deg, var(--color-bronze), var(--color-bronze-light));
-    border-color: var(--color-bronze);
-    color: var(--color-text-inverted);
   }
 </style>

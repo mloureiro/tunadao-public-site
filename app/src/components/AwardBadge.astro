@@ -1,0 +1,74 @@
+---
+export type AwardVariant = 'default' | 'gold' | 'silver' | 'bronze' | 'special';
+
+interface Props {
+  variant?: AwardVariant;
+  showIcon?: boolean;
+  class?: string;
+}
+
+const { variant = 'default', showIcon = false, class: className = '' } = Astro.props;
+
+const icons: Record<AwardVariant, string> = {
+  default: '',
+  gold: '🏆',
+  silver: '🥈',
+  bronze: '🥉',
+  special: '❤️',
+};
+---
+
+<span
+  class:list={[
+    'award-badge',
+    { [`award-badge--${variant}`]: variant !== 'default' },
+    className,
+  ]}
+>
+  {showIcon && icons[variant] && <span class="award-badge__icon">{icons[variant]}</span>}
+  <slot />
+</span>
+
+<style>
+  .award-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-2);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+  }
+
+  .award-badge__icon {
+    font-size: 1em;
+    line-height: 1;
+  }
+
+  .award-badge--gold {
+    background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+    border-color: var(--color-gold);
+    color: var(--color-neutral-800);
+    font-weight: 600;
+  }
+
+  .award-badge--silver {
+    background: linear-gradient(135deg, var(--color-silver), var(--color-silver-light));
+    border-color: var(--color-silver);
+    color: var(--color-neutral-800);
+  }
+
+  .award-badge--bronze {
+    background: linear-gradient(135deg, var(--color-bronze), var(--color-bronze-light));
+    border-color: var(--color-bronze);
+    color: var(--color-text-inverted);
+  }
+
+  .award-badge--special {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-secondary) 20%, var(--color-background)), var(--color-background));
+    border-color: var(--color-secondary);
+    color: var(--color-secondary);
+  }
+</style>
