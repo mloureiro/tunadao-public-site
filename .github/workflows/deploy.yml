@@ -21,9 +21,6 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
-    defaults:
-      run:
-        working-directory: ./app
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,13 +30,15 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: app/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm i @rollup/rollup-linux-x64-gnu
 
       - name: Build site
-        run: npm run build
+        run: npm run build -w app
         env:
           BASE_PATH: ${{ vars.BASE_PATH || '/tunadao-public-site/' }}
           SITE_URL: ${{ vars.SITE_URL || 'https://www.loureiro.me' }}

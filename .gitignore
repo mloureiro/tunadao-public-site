@@ -1,6 +1,10 @@
 # Dependencies
 node_modules/
 
+# Workspace lock files (only root package-lock.json should exist)
+app/package-lock.json
+cms/package-lock.json
+
 # Build output
 dist/
 .astro/
