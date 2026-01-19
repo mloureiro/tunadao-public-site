@@ -21,11 +21,31 @@ const socialIcons: Record<string, string> = {
 
 // Build social links array from CMS data
 const socialLinks = [
-  cmsSocialLinks.instagram && { name: 'Instagram', href: cmsSocialLinks.instagram, icon: socialIcons.instagram },
-  cmsSocialLinks.facebook && { name: 'Facebook', href: cmsSocialLinks.facebook, icon: socialIcons.facebook },
-  cmsSocialLinks.tiktok && { name: 'TikTok', href: cmsSocialLinks.tiktok, icon: socialIcons.tiktok },
-  cmsSocialLinks.youtube && { name: 'YouTube', href: cmsSocialLinks.youtube, icon: socialIcons.youtube },
-  cmsSocialLinks.spotify && { name: 'Spotify', href: cmsSocialLinks.spotify, icon: socialIcons.spotify },
+  cmsSocialLinks.instagram && {
+    name: 'Instagram',
+    href: cmsSocialLinks.instagram,
+    icon: socialIcons.instagram,
+  },
+  cmsSocialLinks.facebook && {
+    name: 'Facebook',
+    href: cmsSocialLinks.facebook,
+    icon: socialIcons.facebook,
+  },
+  cmsSocialLinks.tiktok && {
+    name: 'TikTok',
+    href: cmsSocialLinks.tiktok,
+    icon: socialIcons.tiktok,
+  },
+  cmsSocialLinks.youtube && {
+    name: 'YouTube',
+    href: cmsSocialLinks.youtube,
+    icon: socialIcons.youtube,
+  },
+  cmsSocialLinks.spotify && {
+    name: 'Spotify',
+    href: cmsSocialLinks.spotify,
+    icon: socialIcons.spotify,
+  },
 ].filter(Boolean) as { name: string; href: string; icon: string }[];
 ---
 

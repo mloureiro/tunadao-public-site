@@ -26,7 +26,7 @@ const navItemsConfig: NavItem[] = [
   { labelKey: 'nav.contact', href: '/contacto' },
 ];
 
-const navItems = navItemsConfig.map(item => ({
+const navItems = navItemsConfig.map((item) => ({
   label: t(item.labelKey),
   href: getLocalizedPath(item.href, lang),
 }));

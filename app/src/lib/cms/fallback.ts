@@ -24,9 +24,7 @@ export function getFallbackCitadaoEditions(): FrontendCitadaoEdition[] {
   return Object.values(editionsData).sort((a, b) => b.year - a.year);
 }
 
-export function getFallbackCitadaoEditionByYear(
-  year: number
-): FrontendCitadaoEdition | null {
+export function getFallbackCitadaoEditionByYear(year: number): FrontendCitadaoEdition | null {
   return editionsData[year] || null;
 }
 
@@ -183,12 +181,7 @@ export function getFallbackPalmaresYears(): FrontendPalmaresYear[] {
         {
           name: 'VII Collipo',
           location: 'Leiria',
-          awards: [
-            'Melhor Passacalles',
-            'Tuna + Tuna',
-            'Tuna do Público',
-            'Melhor Solista',
-          ],
+          awards: ['Melhor Passacalles', 'Tuna + Tuna', 'Tuna do Público', 'Melhor Solista'],
         },
         {
           name: 'XXVI FITU Bracara Augusta',
@@ -282,12 +275,7 @@ export function getFallbackPalmaresYears(): FrontendPalmaresYear[] {
         {
           name: 'Padrecos 2012',
           location: 'Porto',
-          awards: [
-            'Melhor Tuna',
-            'Tuna + Tuna',
-            'Melhor Pandeireta',
-            'Melhor Porta-Estandarte',
-          ],
+          awards: ['Melhor Tuna', 'Tuna + Tuna', 'Melhor Pandeireta', 'Melhor Porta-Estandarte'],
         },
         {
           name: 'XII Lethes',
@@ -297,12 +285,7 @@ export function getFallbackPalmaresYears(): FrontendPalmaresYear[] {
         {
           name: 'I Noites de Ronda',
           location: 'Porto',
-          awards: [
-            'Melhor Serenata',
-            'Melhor Porta-Estandarte',
-            'Tuna + Tuna',
-            '2ª Melhor Tuna',
-          ],
+          awards: ['Melhor Serenata', 'Melhor Porta-Estandarte', 'Tuna + Tuna', '2ª Melhor Tuna'],
         },
       ],
     },
@@ -349,12 +332,7 @@ export function getFallbackPalmaresYears(): FrontendPalmaresYear[] {
         {
           name: 'XI El Açor',
           location: '',
-          awards: [
-            '3ª Melhor Tuna',
-            'Tuna + Tuna',
-            'Melhor Pandeireta',
-            'Melhor Estandarte',
-          ],
+          awards: ['3ª Melhor Tuna', 'Tuna + Tuna', 'Melhor Pandeireta', 'Melhor Estandarte'],
         },
         {
           name: 'IX Templário',
@@ -419,12 +397,7 @@ export function getFallbackPalmaresYears(): FrontendPalmaresYear[] {
         {
           name: 'X FITAB 2008',
           location: 'Bragança',
-          awards: [
-            'Melhor Tuna',
-            'Tuna + Tuna',
-            'Melhor Pandeireta',
-            'Melhor Porta-Estandarte',
-          ],
+          awards: ['Melhor Tuna', 'Tuna + Tuna', 'Melhor Pandeireta', 'Melhor Porta-Estandarte'],
         },
         {
           name: 'V FITUIFF',
@@ -466,12 +439,7 @@ export function getFallbackPalmaresYears(): FrontendPalmaresYear[] {
         {
           name: 'VIII Festival Internacional de Tunas do Atlântico',
           location: 'Madeira',
-          awards: [
-            'Melhor Pandeireta',
-            'Melhor Tuna',
-            'Tuna + Tuna',
-            'Melhor Instrumental',
-          ],
+          awards: ['Melhor Pandeireta', 'Melhor Tuna', 'Tuna + Tuna', 'Melhor Instrumental'],
         },
       ],
     },
@@ -491,12 +459,7 @@ export function getFallbackPalmaresYears(): FrontendPalmaresYear[] {
         {
           name: 'I Por Terras do Sado',
           location: 'Setúbal',
-          awards: [
-            'Melhor Instrumental',
-            'Melhor Serenata',
-            'Melhor Pandeireta',
-            'Tuna + Tuna',
-          ],
+          awards: ['Melhor Instrumental', 'Melhor Serenata', 'Melhor Pandeireta', 'Tuna + Tuna'],
         },
         {
           name: 'II FETUA - ESEnf',

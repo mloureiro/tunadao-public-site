@@ -25,10 +25,7 @@ interface FetchOptions {
   page?: number;
 }
 
-async function fetchFromCMS<T>(
-  endpoint: string,
-  options: FetchOptions = {}
-): Promise<T | null> {
+async function fetchFromCMS<T>(endpoint: string, options: FetchOptions = {}): Promise<T | null> {
   const { depth = 2, where, sort, limit, page } = options;
 
   const params = new URLSearchParams();
@@ -94,14 +91,11 @@ async function fetchGlobal<T>(slug: string): Promise<T | null> {
 
 // Citadão Editions
 export async function getCitadaoEditions(): Promise<CMSCitadaoEdition[]> {
-  const response = await fetchFromCMS<CMSPaginatedResponse<CMSCitadaoEdition>>(
-    'citadao-editions',
-    {
-      where: { status: { equals: 'published' } },
-      sort: '-year',
-      limit: 100,
-    }
-  );
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSCitadaoEdition>>('citadao-editions', {
+    where: { status: { equals: 'published' } },
+    sort: '-year',
+    limit: 100,
+  });
 
   if (response?.docs) {
     console.log(`[CMS] Fetched ${response.docs.length} Citadão editions`);
@@ -111,18 +105,13 @@ export async function getCitadaoEditions(): Promise<CMSCitadaoEdition[]> {
   return [];
 }
 
-export async function getCitadaoEditionByYear(
-  year: number
-): Promise<CMSCitadaoEdition | null> {
-  const response = await fetchFromCMS<CMSPaginatedResponse<CMSCitadaoEdition>>(
-    'citadao-editions',
-    {
-      where: {
-        and: [{ status: { equals: 'published' } }, { year: { equals: year } }],
-      },
-      limit: 1,
-    }
-  );
+export async function getCitadaoEditionByYear(year: number): Promise<CMSCitadaoEdition | null> {
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSCitadaoEdition>>('citadao-editions', {
+    where: {
+      and: [{ status: { equals: 'published' } }, { year: { equals: year } }],
+    },
+    limit: 1,
+  });
 
   if (response?.docs && response.docs.length > 0) {
     console.log(`[CMS] Fetched Citadão edition ${year}`);
@@ -134,14 +123,11 @@ export async function getCitadaoEditionByYear(
 
 // Palmarés
 export async function getPalmaresYears(): Promise<CMSPalmaresYear[]> {
-  const response = await fetchFromCMS<CMSPaginatedResponse<CMSPalmaresYear>>(
-    'palmares-years',
-    {
-      where: { status: { equals: 'published' } },
-      sort: '-year',
-      limit: 100,
-    }
-  );
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSPalmaresYear>>('palmares-years', {
+    where: { status: { equals: 'published' } },
+    sort: '-year',
+    limit: 100,
+  });
 
   if (response?.docs) {
     console.log(`[CMS] Fetched ${response.docs.length} Palmarés years`);
@@ -153,12 +139,9 @@ export async function getPalmaresYears(): Promise<CMSPalmaresYear[]> {
 
 // Award Types
 export async function getAwardTypes(): Promise<CMSAwardType[]> {
-  const response = await fetchFromCMS<CMSPaginatedResponse<CMSAwardType>>(
-    'award-types',
-    {
-      limit: 100,
-    }
-  );
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSAwardType>>('award-types', {
+    limit: 100,
+  });
 
   if (response?.docs) {
     console.log(`[CMS] Fetched ${response.docs.length} award types`);
@@ -170,14 +153,11 @@ export async function getAwardTypes(): Promise<CMSAwardType[]> {
 
 // Blog Posts
 export async function getBlogPosts(): Promise<CMSBlogPost[]> {
-  const response = await fetchFromCMS<CMSPaginatedResponse<CMSBlogPost>>(
-    'blog-posts',
-    {
-      where: { status: { equals: 'published' } },
-      sort: '-publishedAt',
-      limit: 100,
-    }
-  );
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSBlogPost>>('blog-posts', {
+    where: { status: { equals: 'published' } },
+    sort: '-publishedAt',
+    limit: 100,
+  });
 
   if (response?.docs) {
     console.log(`[CMS] Fetched ${response.docs.length} blog posts`);
@@ -187,18 +167,13 @@ export async function getBlogPosts(): Promise<CMSBlogPost[]> {
   return [];
 }
 
-export async function getBlogPostBySlug(
-  slug: string
-): Promise<CMSBlogPost | null> {
-  const response = await fetchFromCMS<CMSPaginatedResponse<CMSBlogPost>>(
-    'blog-posts',
-    {
-      where: {
-        and: [{ status: { equals: 'published' } }, { slug: { equals: slug } }],
-      },
-      limit: 1,
-    }
-  );
+export async function getBlogPostBySlug(slug: string): Promise<CMSBlogPost | null> {
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSBlogPost>>('blog-posts', {
+    where: {
+      and: [{ status: { equals: 'published' } }, { slug: { equals: slug } }],
+    },
+    limit: 1,
+  });
 
   if (response?.docs && response.docs.length > 0) {
     console.log(`[CMS] Fetched blog post: ${slug}`);

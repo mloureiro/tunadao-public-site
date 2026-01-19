@@ -1,5 +1,11 @@
 ---
-import { languages, languageFlags, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import {
+  languages,
+  languageFlags,
+  getLocalizedPath,
+  type Language,
+  defaultLang,
+} from '@i18n/index';
 
 interface Props {
   lang?: Language;
@@ -9,32 +15,48 @@ interface Props {
 const { lang = defaultLang, currentPath = '/' } = Astro.props;
 
 // Generate URLs for each language
-const languageUrls = Object.keys(languages).reduce((acc, code) => {
-  acc[code] = getLocalizedPath(currentPath, code as Language, lang);
-  return acc;
-}, {} as Record<string, string>);
+const languageUrls = Object.keys(languages).reduce(
+  (acc, code) => {
+    acc[code] = getLocalizedPath(currentPath, code as Language, lang);
+    return acc;
+  },
+  {} as Record<string, string>
+);
 ---
 
 <div class="lang-selector">
   <button class="lang-selector__btn" aria-label="Selecionar idioma" aria-expanded="false">
     <span class="lang-selector__flag">{languageFlags[lang]}</span>
     <span class="lang-selector__current">{lang.toUpperCase()}</span>
-    <svg class="lang-selector__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg
+      class="lang-selector__icon"
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <polyline points="6 9 12 15 18 9"></polyline>
     </svg>
   </button>
   <div class="lang-selector__dropdown" aria-hidden="true">
-    {Object.entries(languages).map(([code, name]) => (
-      <a
-        href={languageUrls[code]}
-        class={`lang-selector__option ${code === lang ? 'active' : ''}`}
-        data-lang={code}
-      >
-        <span class="lang-selector__option-flag">{languageFlags[code]}</span>
-        <span class="lang-selector__code">{code.toUpperCase()}</span>
-        <span class="lang-selector__name">{name}</span>
-      </a>
-    ))}
+    {
+      Object.entries(languages).map(([code, name]) => (
+        <a
+          href={languageUrls[code]}
+          class={`lang-selector__option ${code === lang ? 'active' : ''}`}
+          data-lang={code}
+        >
+          <span class="lang-selector__option-flag">{languageFlags[code]}</span>
+          <span class="lang-selector__code">{code.toUpperCase()}</span>
+          <span class="lang-selector__name">{name}</span>
+        </a>
+      ))
+    }
   </div>
 </div>
 

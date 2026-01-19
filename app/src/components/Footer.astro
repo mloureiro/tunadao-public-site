@@ -50,7 +50,11 @@ const sinceText = lang === 'en' ? 'Since' : 'Desde';
           <span class="footer__logo-year">1998</span>
         </a>
         <p class="footer__tagline">{t('home.subtitle')}</p>
-        <p class="footer__history">{sinceText} {foundingYear} • {currentYear - foundingYear} {yearsText}</p>
+        <p class="footer__history">
+          {sinceText}
+          {foundingYear} • {currentYear - foundingYear}
+          {yearsText}
+        </p>
         <SocialLinks />
       </div>
 
@@ -74,19 +78,25 @@ const sinceText = lang === 'en' ? 'Since' : 'Desde';
       <div class="footer__section">
         <h3 class="footer__title">{t('footer.contact')}</h3>
         <address class="footer__address">
-          {contactInfo.address && contactInfo.address.split(', ').map((line) => (
-            <p>{line}</p>
-          ))}
-          {contactInfo.email && (
-            <p>
-              <a href={`mailto:${contactInfo.email}`} class="footer__link">{contactInfo.email}</a>
-            </p>
-          )}
-          {contactInfo.phone && (
-            <p>
-              <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} class="footer__link">{contactInfo.phone}</a>
-            </p>
-          )}
+          {contactInfo.address && contactInfo.address.split(', ').map((line) => <p>{line}</p>)}
+          {
+            contactInfo.email && (
+              <p>
+                <a href={`mailto:${contactInfo.email}`} class="footer__link">
+                  {contactInfo.email}
+                </a>
+              </p>
+            )
+          }
+          {
+            contactInfo.phone && (
+              <p>
+                <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} class="footer__link">
+                  {contactInfo.phone}
+                </a>
+              </p>
+            )
+          }
         </address>
       </div>
     </div>

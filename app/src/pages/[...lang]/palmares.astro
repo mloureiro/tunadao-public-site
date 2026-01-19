@@ -4,10 +4,7 @@ import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@
 import { getPalmaresYears } from '@lib/cms';
 
 export function getStaticPaths() {
-  return [
-    { params: { lang: undefined } },
-    { params: { lang: 'en' } },
-  ];
+  return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
 }
 
 const { lang } = Astro.params;
@@ -26,16 +23,21 @@ const totalAwards = palmaresData.reduce((total, year) => {
 const totalFestivals = palmaresData.reduce((total, year) => total + year.festivals.length, 0);
 
 const melhorTunaCount = palmaresData.reduce((total, year) => {
-  return total + year.festivals.reduce((festTotal, fest) => {
-    return festTotal + fest.awards.filter(a => a.toLowerCase().includes('melhor tuna') && !a.includes('2ª') && !a.includes('3ª')).length;
-  }, 0);
+  return (
+    total +
+    year.festivals.reduce((festTotal, fest) => {
+      return (
+        festTotal +
+        fest.awards.filter(
+          (a) => a.toLowerCase().includes('melhor tuna') && !a.includes('2ª') && !a.includes('3ª')
+        ).length
+      );
+    }, 0)
+  );
 }, 0);
 ---
 
-<Layout
-  title={`${t('palmares.title')} | Tunadão 1998`}
-  description={t('palmares.description')}
->
+<Layout title={`${t('palmares.title')} | Tunadão 1998`} description={t('palmares.description')}>
   <!-- Hero Section -->
   <section class="hero">
     <div class="container">
@@ -71,43 +73,68 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
   <!-- Timeline Section -->
   <section class="palmares-timeline">
     <div class="container">
-      {palmaresData.map((yearData) => (
-        <div class="year-section" id={`year-${yearData.year}`}>
-          <div class="year-header">
-            <h2 class="year-title">{yearData.year}</h2>
-            <span class="year-count">
-              {yearData.festivals.reduce((total, f) => total + f.awards.length, 0)} {t('palmares.awardsCount')}
-            </span>
-          </div>
-          <div class="festivals-grid">
-            {yearData.festivals.map((festival) => (
-              <div class="festival-card">
-                <div class="festival-card__header">
-                  <h3 class="festival-card__name">{festival.name}</h3>
-                  {festival.location && (
-                    <span class="festival-card__location">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                      {festival.location}
-                    </span>
-                  )}
+      {
+        palmaresData.map((yearData) => (
+          <div class="year-section" id={`year-${yearData.year}`}>
+            <div class="year-header">
+              <h2 class="year-title">{yearData.year}</h2>
+              <span class="year-count">
+                {yearData.festivals.reduce((total, f) => total + f.awards.length, 0)}{' '}
+                {t('palmares.awardsCount')}
+              </span>
+            </div>
+            <div class="festivals-grid">
+              {yearData.festivals.map((festival) => (
+                <div class="festival-card">
+                  <div class="festival-card__header">
+                    <h3 class="festival-card__name">{festival.name}</h3>
+                    {festival.location && (
+                      <span class="festival-card__location">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                          <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        {festival.location}
+                      </span>
+                    )}
+                  </div>
+                  <div class="festival-card__awards">
+                    {festival.awards.map((award) => (
+                      <span
+                        class="award-badge"
+                        class:list={{
+                          'award-badge--gold':
+                            award.toLowerCase().includes('melhor tuna') &&
+                            !award.includes('2ª') &&
+                            !award.includes('3ª'),
+                          'award-badge--silver': award.includes('2ª'),
+                          'award-badge--bronze': award.includes('3ª'),
+                        }}
+                      >
+                        {award.toLowerCase().includes('melhor tuna') &&
+                          !award.includes('2ª') &&
+                          !award.includes('3ª') &&
+                          '🏆 '}
+                        {award}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div class="festival-card__awards">
-                  {festival.awards.map((award) => (
-                    <span class="award-badge" class:list={{
-                      'award-badge--gold': award.toLowerCase().includes('melhor tuna') && !award.includes('2ª') && !award.includes('3ª'),
-                      'award-badge--silver': award.includes('2ª'),
-                      'award-badge--bronze': award.includes('3ª'),
-                    }}>
-                      {award.toLowerCase().includes('melhor tuna') && !award.includes('2ª') && !award.includes('3ª') && '🏆 '}
-                      {award}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      }
     </div>
   </section>
 </Layout>
@@ -233,7 +260,9 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: var(--space-4);
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    transition:
+      transform var(--transition-normal),
+      box-shadow var(--transition-normal);
   }
 
   .festival-card:hover {

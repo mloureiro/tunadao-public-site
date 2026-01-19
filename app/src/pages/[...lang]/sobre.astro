@@ -4,10 +4,7 @@ import Button from '@components/Button.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 
 export function getStaticPaths() {
-  return [
-    { params: { lang: undefined } },
-    { params: { lang: 'en' } },
-  ];
+  return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
 }
 
 const { lang } = Astro.params;
@@ -58,17 +55,30 @@ const milestones = [
 ];
 
 const missionItems = [
-  { icon: '🎵', title: t('about.missionItems.tradition.title'), description: t('about.missionItems.tradition.description') },
-  { icon: '🎓', title: t('about.missionItems.train.title'), description: t('about.missionItems.train.description') },
-  { icon: '🌍', title: t('about.missionItems.represent.title'), description: t('about.missionItems.represent.description') },
-  { icon: '🤝', title: t('about.missionItems.community.title'), description: t('about.missionItems.community.description') },
+  {
+    icon: '🎵',
+    title: t('about.missionItems.tradition.title'),
+    description: t('about.missionItems.tradition.description'),
+  },
+  {
+    icon: '🎓',
+    title: t('about.missionItems.train.title'),
+    description: t('about.missionItems.train.description'),
+  },
+  {
+    icon: '🌍',
+    title: t('about.missionItems.represent.title'),
+    description: t('about.missionItems.represent.description'),
+  },
+  {
+    icon: '🤝',
+    title: t('about.missionItems.community.title'),
+    description: t('about.missionItems.community.description'),
+  },
 ];
 ---
 
-<Layout
-  title={`${t('about.title')} | Tunadão 1998`}
-  description={t('about.description')}
->
+<Layout title={`${t('about.title')} | Tunadão 1998`} description={t('about.description')}>
   <!-- Hero Section -->
   <section class="hero">
     <div class="container">
@@ -102,13 +112,15 @@ const missionItems = [
     <div class="container">
       <h2 class="section-title">{t('about.milestones.title')}</h2>
       <div class="timeline__items">
-        {milestones.map((item) => (
-          <div class="timeline__item">
-            <div class="timeline__year">{item.year}</div>
-            <div class="timeline__dot"></div>
-            <div class="timeline__event">{item.event}</div>
-          </div>
-        ))}
+        {
+          milestones.map((item) => (
+            <div class="timeline__item">
+              <div class="timeline__year">{item.year}</div>
+              <div class="timeline__dot" />
+              <div class="timeline__event">{item.event}</div>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -119,13 +131,15 @@ const missionItems = [
       <div class="mission__content">
         <h2 class="section-title">{t('about.mission')}</h2>
         <div class="mission__grid">
-          {missionItems.map((item) => (
-            <div class="mission__item">
-              <div class="mission__icon">{item.icon}</div>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </div>
-          ))}
+          {
+            missionItems.map((item) => (
+              <div class="mission__item">
+                <div class="mission__icon">{item.icon}</div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
@@ -139,13 +153,15 @@ const missionItems = [
         {t('about.hierarchy.intro')}
       </p>
       <div class="hierarchy__grid">
-        {hierarchy.map((level) => (
-          <div class="hierarchy__item">
-            <span class="hierarchy__icon">{level.icon}</span>
-            <h3 class="hierarchy__title">{level.title}</h3>
-            <p class="hierarchy__description">{level.description}</p>
-          </div>
-        ))}
+        {
+          hierarchy.map((level) => (
+            <div class="hierarchy__item">
+              <span class="hierarchy__icon">{level.icon}</span>
+              <h3 class="hierarchy__title">{level.title}</h3>
+              <p class="hierarchy__description">{level.description}</p>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -349,7 +365,9 @@ const missionItems = [
     background-color: var(--color-surface);
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    transition:
+      transform var(--transition-normal),
+      box-shadow var(--transition-normal);
   }
 
   .mission__item:hover {

@@ -13,7 +13,8 @@ export const postsData: Record<string, BlogPost> = {
   'citadao-2025': {
     slug: 'citadao-2025',
     title: 'CITADÃO 2025 - 19ª Edição',
-    excerpt: 'A 19ª edição do CITADÃO está a chegar! Descobre todas as novidades do maior certame de tunas académicas da região do Dão.',
+    excerpt:
+      'A 19ª edição do CITADÃO está a chegar! Descobre todas as novidades do maior certame de tunas académicas da região do Dão.',
     content: `
       <p>É com enorme satisfação que anunciamos a <strong>19ª edição do CITADÃO</strong> - Certame Internacional de Tunas Académicas do Dão!</p>
 
@@ -38,7 +39,8 @@ export const postsData: Record<string, BlogPost> = {
   'aniversario-tunadao': {
     slug: 'aniversario-tunadao',
     title: 'Tunadão celebra mais um aniversário',
-    excerpt: 'Mais um ano de história para a tuna mais antiga do Instituto Politécnico de Viseu. Celebramos com música e convívio.',
+    excerpt:
+      'Mais um ano de história para a tuna mais antiga do Instituto Politécnico de Viseu. Celebramos com música e convívio.',
     content: `
       <p>A <strong>Tunadão 1998</strong> celebra mais um aniversário, reafirmando o seu compromisso com a tradição tunante e a vida académica de Viseu.</p>
 
@@ -57,7 +59,8 @@ export const postsData: Record<string, BlogPost> = {
   'premio-fitua-2024': {
     slug: 'premio-fitua-2024',
     title: 'Tunadão conquista prémios no FITUA',
-    excerpt: 'A Tunadão participou no Festival Internacional de Tunas da Universidade de Aveiro e trouxe prémios para casa.',
+    excerpt:
+      'A Tunadão participou no Festival Internacional de Tunas da Universidade de Aveiro e trouxe prémios para casa.',
     content: `
       <p>A Tunadão 1998 marcou presença no <strong>FITUA - Festival Internacional de Tunas da Universidade de Aveiro</strong>, um dos festivais mais prestigiados do calendário tunante nacional.</p>
 
@@ -81,7 +84,8 @@ export const postsData: Record<string, BlogPost> = {
   'novos-tunos-2024': {
     slug: 'novos-tunos-2024',
     title: 'Bem-vindos novos tunos!',
-    excerpt: 'A Tunadão dá as boas-vindas aos novos membros que se juntaram à nossa família tunante este ano letivo.',
+    excerpt:
+      'A Tunadão dá as boas-vindas aos novos membros que se juntaram à nossa família tunante este ano letivo.',
     content: `
       <p>É com grande alegria que damos as boas-vindas aos novos caloiros que se juntaram à <strong>Tunadão 1998</strong> neste ano letivo!</p>
 

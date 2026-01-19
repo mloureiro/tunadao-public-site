@@ -4,10 +4,7 @@ import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@
 import { getBlogPosts } from '@lib/cms';
 
 export function getStaticPaths() {
-  return [
-    { params: { lang: undefined } },
-    { params: { lang: 'en' } },
-  ];
+  return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
 }
 
 const { lang } = Astro.params;
@@ -36,10 +33,7 @@ function formatDate(dateStr: string): string {
 }
 ---
 
-<Layout
-  title={`${t('blog.title')} | Tunadão 1998`}
-  description={t('blog.description')}
->
+<Layout title={`${t('blog.title')} | Tunadão 1998`} description={t('blog.description')}>
   <!-- Hero Section -->
   <section class="hero">
     <div class="container">
@@ -52,15 +46,17 @@ function formatDate(dateStr: string): string {
   <section class="categories">
     <div class="container">
       <div class="categories__list">
-        {categories.map((category, index) => (
-          <button
-            class="category-btn"
-            class:list={{ 'category-btn--active': index === 0 }}
-            data-category={category.key}
-          >
-            {category.label}
-          </button>
-        ))}
+        {
+          categories.map((category, index) => (
+            <button
+              class="category-btn"
+              class:list={{ 'category-btn--active': index === 0 }}
+              data-category={category.key}
+            >
+              {category.label}
+            </button>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -69,37 +65,51 @@ function formatDate(dateStr: string): string {
   <section class="posts">
     <div class="container">
       <div class="posts__grid">
-        {posts.map((post) => (
-          <a href={l(`/blog/${post.slug}`)} class="post-card">
-            <div class="post-card__image">
-              <div class="post-card__placeholder">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
+        {
+          posts.map((post) => (
+            <a href={l(`/blog/${post.slug}`)} class="post-card">
+              <div class="post-card__image">
+                <div class="post-card__placeholder">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                </div>
+                <span class="post-card__category">{post.category}</span>
               </div>
-              <span class="post-card__category">{post.category}</span>
-            </div>
-            <div class="post-card__content">
-              <h2 class="post-card__title">{post.title}</h2>
-              <p class="post-card__excerpt">{post.excerpt}</p>
-              <div class="post-card__meta">
-                <time datetime={post.date}>{formatDate(post.date)}</time>
-                <span class="post-card__reading-time">
-                  {post.readingTime} {t('blog.readingTime')}
-                </span>
+              <div class="post-card__content">
+                <h2 class="post-card__title">{post.title}</h2>
+                <p class="post-card__excerpt">{post.excerpt}</p>
+                <div class="post-card__meta">
+                  <time datetime={post.date}>{formatDate(post.date)}</time>
+                  <span class="post-card__reading-time">
+                    {post.readingTime} {t('blog.readingTime')}
+                  </span>
+                </div>
               </div>
-            </div>
-          </a>
-        ))}
+            </a>
+          ))
+        }
       </div>
 
-      {posts.length === 0 && (
-        <div class="posts__empty">
-          <p>{t('common.noResults')}</p>
-        </div>
-      )}
+      {
+        posts.length === 0 && (
+          <div class="posts__empty">
+            <p>{t('common.noResults')}</p>
+          </div>
+        )
+      }
     </div>
   </section>
 </Layout>
@@ -201,7 +211,9 @@ function formatDate(dateStr: string): string {
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    transition:
+      transform var(--transition-normal),
+      box-shadow var(--transition-normal);
   }
 
   .post-card:hover {
@@ -293,7 +305,9 @@ function formatDate(dateStr: string): string {
 
         // Filter posts
         postCards.forEach((card) => {
-          const postCategory = card.querySelector('.post-card__category')?.textContent?.toLowerCase();
+          const postCategory = card
+            .querySelector('.post-card__category')
+            ?.textContent?.toLowerCase();
           if (category === 'all' || postCategory === category) {
             (card as HTMLElement).style.display = 'flex';
           } else {
