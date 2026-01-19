@@ -1,7 +1,19 @@
 ---
 import type { AwardVariant } from './AwardBadge.astro';
 
-export type AwardKey = 'melhorTuna' | 'segundaMelhorTuna' | 'terceiraMelhorTuna' | 'tunaDoPublico' | 'tunaMaisTuna' | 'melhorSerenata' | 'melhorPassacalles' | 'melhorPandeireta' | 'melhorInstrumental' | 'melhorSolista' | 'melhorOriginal' | 'melhorEstandarte';
+export type AwardKey =
+  | 'melhorTuna'
+  | 'segundaMelhorTuna'
+  | 'terceiraMelhorTuna'
+  | 'tunaDoPublico'
+  | 'tunaMaisTuna'
+  | 'melhorSerenata'
+  | 'melhorPassacalles'
+  | 'melhorPandeireta'
+  | 'melhorInstrumental'
+  | 'melhorSolista'
+  | 'melhorOriginal'
+  | 'melhorEstandarte';
 
 interface Props {
   awardKey: AwardKey | string;
@@ -39,13 +51,7 @@ const variant = getVariant(awardKey);
 const icon = awardIcons[awardKey] || '';
 ---
 
-<div
-  class:list={[
-    'award-card',
-    { [`award-card--${variant}`]: variant !== 'default' },
-    className,
-  ]}
->
+<div class:list={['award-card', { [`award-card--${variant}`]: variant !== 'default' }, className]}>
   {icon && <span class="award-card__icon">{icon}</span>}
   <span class="award-card__name">{name}</span>
   <span class="award-card__winner">{winner}</span>

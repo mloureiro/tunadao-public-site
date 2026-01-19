@@ -19,11 +19,7 @@ const icons: Record<AwardVariant, string> = {
 ---
 
 <span
-  class:list={[
-    'award-badge',
-    { [`award-badge--${variant}`]: variant !== 'default' },
-    className,
-  ]}
+  class:list={['award-badge', { [`award-badge--${variant}`]: variant !== 'default' }, className]}
 >
   {showIcon && icons[variant] && <span class="award-badge__icon">{icons[variant]}</span>}
   <slot />
@@ -67,7 +63,11 @@ const icons: Record<AwardVariant, string> = {
   }
 
   .award-badge--special {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--color-secondary) 20%, var(--color-background)), var(--color-background));
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-secondary) 20%, var(--color-background)),
+      var(--color-background)
+    );
     border-color: var(--color-secondary);
     color: var(--color-secondary);
   }
