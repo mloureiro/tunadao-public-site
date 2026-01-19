@@ -2,6 +2,7 @@
 import SocialLinks from './SocialLinks.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 import { getContactInfo } from '@lib/cms';
+import { footerSections } from '@data/navigation';
 
 interface Props {
   lang?: Language;
@@ -16,26 +17,13 @@ const foundingYear = 1998;
 // Fetch contact info from CMS (with fallback)
 const contactInfo = await getContactInfo();
 
-const footerLinks = [
-  {
-    title: t('footer.navigation'),
-    links: [
-      { label: t('nav.home'), href: getLocalizedPath('/', lang) },
-      { label: t('nav.about'), href: getLocalizedPath('/sobre', lang) },
-      { label: t('nav.citadao'), href: getLocalizedPath('/citadao', lang) },
-      { label: t('nav.palmares'), href: getLocalizedPath('/palmares', lang) },
-    ],
-  },
-  {
-    title: t('footer.content'),
-    links: [
-      { label: t('nav.blog'), href: getLocalizedPath('/blog', lang) },
-      { label: t('nav.videos'), href: getLocalizedPath('/videos', lang) },
-      { label: t('nav.music'), href: getLocalizedPath('/musica', lang) },
-      { label: t('nav.contact'), href: getLocalizedPath('/contacto', lang) },
-    ],
-  },
-];
+const footerLinks = footerSections.map((section) => ({
+  title: t(section.titleKey),
+  links: section.items.map((item) => ({
+    label: t(item.labelKey),
+    href: getLocalizedPath(item.href, lang),
+  })),
+}));
 
 const yearsText = lang === 'en' ? 'years of history' : 'anos de história';
 const sinceText = lang === 'en' ? 'Since' : 'Desde';

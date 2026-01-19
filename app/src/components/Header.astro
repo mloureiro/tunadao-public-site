@@ -2,6 +2,7 @@
 import ThemeToggle from './ThemeToggle.astro';
 import LanguageSelector from './LanguageSelector.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import { navItems as navItemsConfig } from '@data/navigation';
 
 interface Props {
   lang?: Language;
@@ -9,22 +10,6 @@ interface Props {
 
 const { lang = defaultLang } = Astro.props;
 const t = useTranslations(lang);
-
-interface NavItem {
-  labelKey: string;
-  href: string;
-}
-
-const navItemsConfig: NavItem[] = [
-  { labelKey: 'nav.home', href: '/' },
-  { labelKey: 'nav.about', href: '/sobre' },
-  { labelKey: 'nav.citadao', href: '/citadao' },
-  { labelKey: 'nav.palmares', href: '/palmares' },
-  { labelKey: 'nav.blog', href: '/blog' },
-  { labelKey: 'nav.videos', href: '/videos' },
-  { labelKey: 'nav.music', href: '/musica' },
-  { labelKey: 'nav.contact', href: '/contacto' },
-];
 
 const navItems = navItemsConfig.map((item) => ({
   label: t(item.labelKey),
