@@ -446,49 +446,49 @@ const latestEdition = editions[0];
 
   /* Award item variants */
   .award-item--gold {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 183, 0, 0.1));
-    border-color: #ffd700;
-    border-left: 4px solid #ffd700;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-gold) 15%, transparent), color-mix(in srgb, var(--color-gold-light) 10%, transparent));
+    border-color: var(--color-gold);
+    border-left: 4px solid var(--color-gold);
   }
 
   .award-item--gold .award-item__name {
-    color: #b8860b;
+    color: var(--color-gold-dark);
   }
 
   [data-theme='dark'] .award-item--gold .award-item__name {
-    color: #ffd700;
+    color: var(--color-gold);
   }
 
   .award-item--silver {
-    background: linear-gradient(135deg, rgba(192, 192, 192, 0.15), rgba(168, 168, 168, 0.1));
-    border-color: #c0c0c0;
-    border-left: 4px solid #c0c0c0;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-silver) 15%, transparent), color-mix(in srgb, var(--color-silver-light) 10%, transparent));
+    border-color: var(--color-silver);
+    border-left: 4px solid var(--color-silver);
   }
 
   .award-item--silver .award-item__name {
-    color: #707070;
+    color: var(--color-silver-dark);
   }
 
   [data-theme='dark'] .award-item--silver .award-item__name {
-    color: #c0c0c0;
+    color: var(--color-silver);
   }
 
   .award-item--bronze {
-    background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(184, 115, 51, 0.1));
-    border-color: #cd7f32;
-    border-left: 4px solid #cd7f32;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-bronze) 15%, transparent), color-mix(in srgb, var(--color-bronze-light) 10%, transparent));
+    border-color: var(--color-bronze);
+    border-left: 4px solid var(--color-bronze);
   }
 
   .award-item--bronze .award-item__name {
-    color: #8b4513;
+    color: var(--color-bronze-dark);
   }
 
   [data-theme='dark'] .award-item--bronze .award-item__name {
-    color: #cd7f32;
+    color: var(--color-bronze);
   }
 
   .award-item--special {
-    background: linear-gradient(135deg, rgba(191, 0, 41, 0.1), rgba(220, 20, 60, 0.05));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-secondary) 10%, transparent), color-mix(in srgb, var(--color-secondary-light) 5%, transparent));
     border-color: var(--color-secondary);
     border-left: 4px solid var(--color-secondary);
   }

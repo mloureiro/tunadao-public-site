@@ -34,9 +34,29 @@
   --color-border-light: #e9ecef;
 
   --color-success: #198754;
+  --color-success-light: #d4edda;
+  --color-success-dark: #155724;
   --color-warning: #ffc107;
   --color-error: #dc3545;
+  --color-error-light: #f8d7da;
+  --color-error-dark: #721c24;
   --color-info: #0dcaf0;
+
+  /* Brand Colors */
+  --color-youtube: #ff0000;
+  --color-youtube-dark: #cc0000;
+  --color-spotify: #1db954;
+
+  /* Award/Medal Colors */
+  --color-gold: #ffd700;
+  --color-gold-dark: #b8860b;
+  --color-gold-light: #ffb700;
+  --color-silver: #c0c0c0;
+  --color-silver-dark: #707070;
+  --color-silver-light: #a8a8a8;
+  --color-bronze: #cd7f32;
+  --color-bronze-dark: #8b4513;
+  --color-bronze-light: #b87333;
 
   /* Typography */
   --font-family-base:
