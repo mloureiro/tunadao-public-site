@@ -10,7 +10,7 @@ test.describe('Homepage', () => {
   });
 
   test('should have navigation', async ({ page }) => {
-    const nav = page.locator('header nav');
+    const nav = page.getByRole('navigation', { name: 'Navegação principal' });
     await expect(nav).toBeAttached();
   });
 
@@ -40,21 +40,21 @@ test.describe('Navigation via highlight cards', () => {
   test('should navigate to Sobre page via highlight card', async ({ page }) => {
     await page.goto('/');
     await page.locator('.highlight-card').filter({ hasText: /sobre/i }).click();
-    await expect(page).toHaveURL('/sobre/');
+    await expect(page).toHaveURL(/\/sobre\/?$/);
     await expect(page.locator('h1')).toContainText('Sobre Nós');
   });
 
   test('should navigate to Citadão page via highlight card', async ({ page }) => {
     await page.goto('/');
     await page.locator('.highlight-card').filter({ hasText: /citadão/i }).click();
-    await expect(page).toHaveURL('/citadao/');
+    await expect(page).toHaveURL(/\/citadao\/?$/);
     await expect(page.locator('h1')).toContainText('Festival Citadão');
   });
 
   test('should navigate to Palmarés page via highlight card', async ({ page }) => {
     await page.goto('/');
     await page.locator('.highlight-card').filter({ hasText: /palmarés/i }).click();
-    await expect(page).toHaveURL('/palmares/');
+    await expect(page).toHaveURL(/\/palmares\/?$/);
     await expect(page.locator('h1')).toContainText('Palmarés');
   });
 });
