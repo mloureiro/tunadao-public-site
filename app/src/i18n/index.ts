@@ -54,7 +54,15 @@ export function t(key: string, lang: Language = defaultLang): string {
  * Get the language from the URL path
  */
 export function getLangFromUrl(url: URL): Language {
-  const [, lang] = url.pathname.split('/');
+  const base = import.meta.env.BASE_URL || '/';
+  let pathname = url.pathname;
+
+  // Remove base path if present
+  if (base !== '/' && pathname.startsWith(base)) {
+    pathname = pathname.slice(base.length - 1); // Keep leading slash
+  }
+
+  const [, lang] = pathname.split('/');
   if (lang in translations) {
     return lang as Language;
   }
@@ -82,29 +90,46 @@ export function useTranslations(lang: Language) {
 }
 
 /**
+ * Get the base URL from Astro config, normalized (without trailing slash)
+ */
+function getBase(): string {
+  const base = import.meta.env.BASE_URL || '/';
+  // Remove trailing slash for consistent path building
+  return base.endsWith('/') ? base.slice(0, -1) : base;
+}
+
+/**
  * Get localized path - converts a path to the correct language version
+ * Includes the base URL from Astro config for subdirectory deployments
  * @param path - The path to localize (e.g., '/sobre')
  * @param lang - Target language
  * @param currentLang - Current language (to handle removing prefix)
  */
 export function getLocalizedPath(path: string, lang: Language, _currentLang?: Language): string {
-  // Remove any existing language prefix
+  const base = getBase();
+
+  // Remove base path if present (handles paths from Astro.url.pathname)
   let cleanPath = path;
+  if (base && cleanPath.startsWith(base)) {
+    cleanPath = cleanPath.slice(base.length) || '/';
+  }
+
+  // Remove any existing language prefix
   for (const l of Object.keys(languages)) {
-    if (path.startsWith(`/${l}/`)) {
-      cleanPath = path.slice(l.length + 1);
+    if (cleanPath.startsWith(`/${l}/`)) {
+      cleanPath = cleanPath.slice(l.length + 1);
       break;
-    } else if (path === `/${l}`) {
+    } else if (cleanPath === `/${l}`) {
       cleanPath = '/';
       break;
     }
   }
 
-  // Add language prefix for non-default languages
+  // Build the final path with base and language prefix
   if (lang === defaultLang) {
-    return cleanPath;
+    return cleanPath === '/' ? base || '/' : `${base}${cleanPath}`;
   }
-  return `/${lang}${cleanPath}`;
+  return `${base}/${lang}${cleanPath}`;
 }
 
 /**

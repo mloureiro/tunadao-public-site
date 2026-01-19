@@ -1,8 +1,12 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
+// Use BASE_PATH env var for deployments, defaults to '/' for local dev
+const base = process.env.BASE_PATH || '/';
+
 export default defineConfig({
-  site: 'https://tunadao1998.github.io',
+  site: process.env.SITE_URL || 'https://tunadao.pt',
+  base,
   output: 'static',
   srcDir: './src',
   integrations: [
