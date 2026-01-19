@@ -1,7 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
-import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getCitadaoEditions } from '@lib/cms';
 import { Icon } from '@ui/icons';
 import AwardCard from '@components/AwardCard.astro';
@@ -13,7 +13,6 @@ export function getStaticPaths() {
 const { lang } = Astro.params;
 const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
-const _l = (path: string) => getLocalizedPath(path, currentLang);
 
 // Fetch editions from CMS (with fallback)
 const editions = await getCitadaoEditions();

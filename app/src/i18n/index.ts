@@ -20,8 +20,6 @@ export const translations = {
   en,
 } as const;
 
-type _TranslationKeys = typeof pt;
-
 /**
  * Get a nested translation value by dot-separated path
  * e.g., t('nav.home') returns 'Início' for PT

@@ -1,7 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
-import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getAlbums } from '@lib/cms';
 import { Icon } from '@ui/icons';
 
@@ -12,7 +12,6 @@ export function getStaticPaths() {
 const { lang } = Astro.params;
 const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
-const _l = (path: string) => getLocalizedPath(path, currentLang);
 
 // Fetch albums from CMS (with fallback)
 const cmsAlbums = await getAlbums();
