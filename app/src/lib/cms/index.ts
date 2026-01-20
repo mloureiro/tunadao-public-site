@@ -1,5 +1,5 @@
 /**
- * CMS Public API - Main entry point with fallback handling and data transformation
+ * CMS Public API - Main entry point with data transformation
  */
 
 import type {
@@ -20,7 +20,6 @@ import type {
 } from './types';
 
 import * as client from './client';
-import * as fallback from './fallback';
 import { richTextToHtml, estimateReadingTime } from './rich-text';
 
 // Re-export types
@@ -28,10 +27,8 @@ export type * from './types';
 
 // Re-export utilities
 export { richTextToHtml, estimateReadingTime } from './rich-text';
-export { awardLabels } from './fallback';
+export { CMSError } from './client';
 
-// Check if CMS is enabled
-const USE_CMS = import.meta.env.USE_CMS !== 'false';
 const CMS_URL = import.meta.env.CMS_URL || 'http://localhost:3000';
 
 /**
@@ -93,29 +90,18 @@ function transformCitadaoEdition(cms: CMSCitadaoEdition): FrontendCitadaoEdition
 }
 
 export async function getCitadaoEditions(): Promise<FrontendCitadaoEdition[]> {
-  if (USE_CMS) {
-    const cmsEditions = await client.getCitadaoEditions();
-    if (cmsEditions.length > 0) {
-      return cmsEditions.map(transformCitadaoEdition);
-    }
-  }
-
-  console.log('[CMS] Using fallback data for Citadão editions');
-  return fallback.getFallbackCitadaoEditions();
+  const cmsEditions = await client.getCitadaoEditions();
+  return cmsEditions.map(transformCitadaoEdition);
 }
 
 export async function getCitadaoEditionByYear(
   year: number
 ): Promise<FrontendCitadaoEdition | null> {
-  if (USE_CMS) {
-    const cmsEdition = await client.getCitadaoEditionByYear(year);
-    if (cmsEdition) {
-      return transformCitadaoEdition(cmsEdition);
-    }
+  const cmsEdition = await client.getCitadaoEditionByYear(year);
+  if (cmsEdition) {
+    return transformCitadaoEdition(cmsEdition);
   }
-
-  console.log(`[CMS] Using fallback data for Citadão edition ${year}`);
-  return fallback.getFallbackCitadaoEditionByYear(year);
+  return null;
 }
 
 // =============================================================================
@@ -145,39 +131,21 @@ function transformBlogPost(cms: CMSBlogPost): FrontendBlogPost {
 }
 
 export async function getBlogPosts(): Promise<FrontendBlogPost[]> {
-  if (USE_CMS) {
-    const cmsPosts = await client.getBlogPosts();
-    if (cmsPosts.length > 0) {
-      return cmsPosts.map(transformBlogPost);
-    }
-  }
-
-  console.log('[CMS] Using fallback data for blog posts');
-  return fallback.getFallbackBlogPosts();
+  const cmsPosts = await client.getBlogPosts();
+  return cmsPosts.map(transformBlogPost);
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<FrontendBlogPost | null> {
-  if (USE_CMS) {
-    const cmsPost = await client.getBlogPostBySlug(slug);
-    if (cmsPost) {
-      return transformBlogPost(cmsPost);
-    }
+  const cmsPost = await client.getBlogPostBySlug(slug);
+  if (cmsPost) {
+    return transformBlogPost(cmsPost);
   }
-
-  console.log(`[CMS] Using fallback data for blog post: ${slug}`);
-  return fallback.getFallbackBlogPostBySlug(slug);
+  return null;
 }
 
 export async function getBlogPostSlugs(): Promise<string[]> {
-  if (USE_CMS) {
-    const cmsPosts = await client.getBlogPosts();
-    if (cmsPosts.length > 0) {
-      return cmsPosts.map((p) => p.slug);
-    }
-  }
-
-  console.log('[CMS] Using fallback data for blog post slugs');
-  return fallback.getFallbackBlogPosts().map((p) => p.slug);
+  const cmsPosts = await client.getBlogPosts();
+  return cmsPosts.map((p) => p.slug);
 }
 
 // =============================================================================
@@ -197,15 +165,8 @@ function transformVideo(cms: CMSVideo): FrontendVideo {
 }
 
 export async function getVideos(): Promise<FrontendVideo[]> {
-  if (USE_CMS) {
-    const cmsVideos = await client.getVideos();
-    if (cmsVideos.length > 0) {
-      return cmsVideos.map(transformVideo);
-    }
-  }
-
-  console.log('[CMS] Using fallback data for videos');
-  return fallback.getFallbackVideos();
+  const cmsVideos = await client.getVideos();
+  return cmsVideos.map(transformVideo);
 }
 
 // =============================================================================
@@ -235,15 +196,8 @@ function transformAlbum(cms: CMSAlbum): FrontendAlbum {
 }
 
 export async function getAlbums(): Promise<FrontendAlbum[]> {
-  if (USE_CMS) {
-    const cmsAlbums = await client.getAlbums();
-    if (cmsAlbums.length > 0) {
-      return cmsAlbums.map(transformAlbum);
-    }
-  }
-
-  console.log('[CMS] Using fallback data for albums');
-  return fallback.getFallbackAlbums();
+  const cmsAlbums = await client.getAlbums();
+  return cmsAlbums.map(transformAlbum);
 }
 
 // =============================================================================
@@ -280,25 +234,18 @@ function transformPalmaresYear(
 }
 
 export async function getPalmaresYears(): Promise<FrontendPalmaresYear[]> {
-  if (USE_CMS) {
-    const [cmsYears, cmsAwardTypes] = await Promise.all([
-      client.getPalmaresYears(),
-      client.getAwardTypes(),
-    ]);
+  const [cmsYears, cmsAwardTypes] = await Promise.all([
+    client.getPalmaresYears(),
+    client.getAwardTypes(),
+  ]);
 
-    if (cmsYears.length > 0) {
-      // Create a map of award type IDs to names
-      const awardTypesMap = new Map<string, string>();
-      for (const at of cmsAwardTypes) {
-        awardTypesMap.set(at.id, at.name);
-      }
-
-      return cmsYears.map((y) => transformPalmaresYear(y, awardTypesMap));
-    }
+  // Create a map of award type IDs to names
+  const awardTypesMap = new Map<string, string>();
+  for (const at of cmsAwardTypes) {
+    awardTypesMap.set(at.id, at.name);
   }
 
-  console.log('[CMS] Using fallback data for Palmarés');
-  return fallback.getFallbackPalmaresYears();
+  return cmsYears.map((y) => transformPalmaresYear(y, awardTypesMap));
 }
 
 // =============================================================================
@@ -306,19 +253,12 @@ export async function getPalmaresYears(): Promise<FrontendPalmaresYear[]> {
 // =============================================================================
 
 export async function getContactInfo(): Promise<FrontendContactInfo> {
-  if (USE_CMS) {
-    const cmsContact = await client.getContactInfo();
-    if (cmsContact) {
-      return {
-        email: cmsContact.email,
-        phone: cmsContact.phone || '',
-        address: cmsContact.address?.replace(/\n/g, ', ') || '',
-      };
-    }
-  }
-
-  console.log('[CMS] Using fallback data for contact info');
-  return fallback.getFallbackContactInfo();
+  const cmsContact = await client.getContactInfo();
+  return {
+    email: cmsContact.email,
+    phone: cmsContact.phone || '',
+    address: cmsContact.address?.replace(/\n/g, ', ') || '',
+  };
 }
 
 // =============================================================================
@@ -326,21 +266,14 @@ export async function getContactInfo(): Promise<FrontendContactInfo> {
 // =============================================================================
 
 export async function getSocialLinks(): Promise<FrontendSocialLinks> {
-  if (USE_CMS) {
-    const cmsSettings = await client.getSiteSettings();
-    if (cmsSettings) {
-      return {
-        instagram: cmsSettings.instagram,
-        facebook: cmsSettings.facebook,
-        tiktok: cmsSettings.tiktok,
-        youtube: cmsSettings.youtube,
-        spotify: cmsSettings.spotify,
-      };
-    }
-  }
-
-  console.log('[CMS] Using fallback data for social links');
-  return fallback.getFallbackSocialLinks();
+  const cmsSettings = await client.getSiteSettings();
+  return {
+    instagram: cmsSettings.instagram,
+    facebook: cmsSettings.facebook,
+    tiktok: cmsSettings.tiktok,
+    youtube: cmsSettings.youtube,
+    spotify: cmsSettings.spotify,
+  };
 }
 
 // =============================================================================
@@ -348,34 +281,20 @@ export async function getSocialLinks(): Promise<FrontendSocialLinks> {
 // =============================================================================
 
 export async function getSiteSettings() {
-  if (USE_CMS) {
-    const settings = await client.getSiteSettings();
-    if (settings) {
-      return {
-        siteName: settings.siteName,
-        siteDescription: settings.siteDescription,
-        logoUrl: getMediaUrl(settings.logo),
-        faviconUrl: getMediaUrl(settings.favicon),
-        socialLinks: {
-          instagram: settings.instagram,
-          facebook: settings.facebook,
-          tiktok: settings.tiktok,
-          youtube: settings.youtube,
-          spotify: settings.spotify,
-        },
-        googleAnalyticsId: settings.googleAnalyticsId,
-      };
-    }
-  }
-
-  console.log('[CMS] Using fallback data for site settings');
+  const settings = await client.getSiteSettings();
   return {
-    siteName: 'Tunadão 1998',
-    siteDescription: 'Tuna do Instituto Politécnico de Viseu',
-    logoUrl: '',
-    faviconUrl: '',
-    socialLinks: fallback.getFallbackSocialLinks(),
-    googleAnalyticsId: undefined,
+    siteName: settings.siteName,
+    siteDescription: settings.siteDescription,
+    logoUrl: getMediaUrl(settings.logo),
+    faviconUrl: getMediaUrl(settings.favicon),
+    socialLinks: {
+      instagram: settings.instagram,
+      facebook: settings.facebook,
+      tiktok: settings.tiktok,
+      youtube: settings.youtube,
+      spotify: settings.spotify,
+    },
+    googleAnalyticsId: settings.googleAnalyticsId,
   };
 }
 
@@ -383,7 +302,6 @@ export async function getSiteSettings() {
 // UTILITY
 // =============================================================================
 
-export async function checkCMSAvailable(): Promise<boolean> {
-  if (!USE_CMS) return false;
+export async function checkCMSAvailable(): Promise<void> {
   return client.checkCMSConnection();
 }
