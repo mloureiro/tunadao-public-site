@@ -165,6 +165,8 @@ See [DEPLOY.md](./DEPLOY.md) for detailed deployment instructions.
 |--------|-------------|
 | `CMS_URL` | Production PayloadCMS URL (e.g., `https://tunadao-cms.onrender.com`) |
 | `RENDER_DEPLOY_HOOK_URL` | (Optional) Render deploy hook for CMS deploys |
+| `TURSO_DB_NAME` | Turso database name (for backups) |
+| `TURSO_API_TOKEN` | Turso API token (for backups) |
 
 ### Required Environment Variables (Render)
 
@@ -172,12 +174,21 @@ See [DEPLOY.md](./DEPLOY.md) for detailed deployment instructions.
 |----------|-------------|
 | `PAYLOAD_PUBLIC_SERVER_URL` | CMS public URL |
 | `PAYLOAD_SECRET` | JWT secret (auto-generated) |
-| `DATABASE_URL` | Turso connection string |
+| `TURSO_DATABASE_URL` | Turso connection string (`libsql://...`) |
+| `TURSO_AUTH_TOKEN` | Turso auth token |
 | `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
 | `CLOUDINARY_API_KEY` | Cloudinary API key |
 | `CLOUDINARY_API_SECRET` | Cloudinary API secret |
 | `FRONTEND_URL` | Astro site URL (for CORS) |
 | `RESEND_API_KEY` | (Optional) For email notifications |
+
+## Backups
+
+Database backups run automatically via GitHub Actions (daily at 3 AM UTC).
+
+- **Retention**: 90 days (stored as GitHub artifacts)
+- **Manual trigger**: Go to Actions → Database Backup → Run workflow
+- **Restore**: Download artifact and run `turso db create restored-db --from-dump ./backup.sql`
 
 ## License
 

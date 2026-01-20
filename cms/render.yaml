@@ -13,11 +13,22 @@ services:
         value: src/payload.config.ts
       - key: PAYLOAD_PUBLIC_SERVER_URL
         sync: false
-      - key: FRONTEND_URL
-        sync: false
-      - key: DATABASE_URL
-        sync: false
-      - key: RESEND_API_KEY
-        sync: false
       - key: PAYLOAD_SECRET
         generateValue: true
+      - key: FRONTEND_URL
+        sync: false
+      # Turso Database
+      - key: TURSO_DATABASE_URL
+        sync: false
+      - key: TURSO_AUTH_TOKEN
+        sync: false
+      # Cloudinary Storage
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      # Optional
+      - key: RESEND_API_KEY
+        sync: false
