@@ -4,15 +4,14 @@ Website institucional da **Tunadão** - Tuna do Instituto Politécnico de Viseu.
 
 ## Stack
 
-| Component | Technology |
-|-----------|------------|
-| Frontend | [Astro](https://astro.build/) (SSG) |
-| CMS | [PayloadCMS](https://payloadcms.com/) 3.0 |
-| Database | [Turso](https://turso.tech/) (SQLite) |
-| Frontend Hosting | GitHub Pages |
-| CMS Hosting | Render.com |
-| CI/CD | GitHub Actions |
-| Tests | Vitest + Playwright |
+| Component | Technology | Hosting |
+|-----------|------------|---------|
+| Frontend | [Astro](https://astro.build/) (SSG) | [GitHub Pages](https://pages.github.com/) |
+| CMS | [PayloadCMS](https://payloadcms.com/) 3.0 | [Render.com](https://render.com/) |
+| Database | SQLite via [Turso](https://turso.tech/) | Turso (edge) |
+| Media Storage | Images & files | [Cloudinary](https://cloudinary.com/) |
+| CI/CD | [GitHub Actions](https://github.com/features/actions) | GitHub |
+| Tests | Vitest + Playwright | GitHub Actions |
 
 ## Features
 
@@ -30,16 +29,15 @@ This is a monorepo with two self-contained projects:
 ├── app/                    # Astro frontend (self-contained)
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
-│   │   ├── data/           # Fallback data (when CMS unavailable)
+│   │   ├── data/           # Static data (editions, etc.)
 │   │   ├── i18n/           # Translations
 │   │   ├── layouts/        # Page layouts
-│   │   ├── lib/            # CMS client & utilities
+│   │   ├── lib/cms/        # CMS client, types & fixtures
 │   │   ├── pages/          # Route pages
 │   │   └── styles/         # Global styles
 │   ├── public/             # Static assets
-│   ├── package.json
-│   ├── astro.config.mjs
-│   └── tsconfig.json
+│   ├── .env.development    # Dev defaults (auto-loaded)
+│   └── package.json
 ├── cms/                    # PayloadCMS backend (self-contained)
 │   ├── src/
 │   │   ├── collections/    # Content types
@@ -84,16 +82,18 @@ npm run dev -w cms
 
 ### Environment Variables
 
+Development defaults are in `app/.env.development` (auto-loaded by Astro).
+
+For CMS, copy the example:
 ```bash
-cp app/.env.example app/.env
 cp cms/.env.example cms/.env
 ```
 
-**Frontend (app/.env):**
+**Frontend (app/):**
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `CMS_URL` | PayloadCMS API URL | `http://localhost:3000` |
-| `USE_CMS` | Enable CMS fetching | `true` |
+| `USE_TEST_FIXTURES` | Use static fixtures instead of CMS | `false` |
 
 **CMS (cms/.env):** See [DEPLOY.md](./DEPLOY.md) for full list.
 
@@ -148,6 +148,36 @@ See [DEPLOY.md](./DEPLOY.md) for detailed deployment instructions.
 │  GitHub Actions │ ──► Rebuild & Deploy
 └─────────────────┘
 ```
+
+## Services
+
+| Service | Purpose | Free Tier |
+|---------|---------|-----------|
+| **GitHub Pages** | Host static Astro site | ✅ Unlimited |
+| **Render.com** | Host PayloadCMS backend | ✅ 750h/month |
+| **Turso** | SQLite database (edge) | ✅ 9GB storage |
+| **Cloudinary** | Image/media storage & CDN | ✅ 25GB storage |
+| **GitHub Actions** | CI/CD pipeline | ✅ 2000 min/month |
+
+### Required Secrets (GitHub)
+
+| Secret | Description |
+|--------|-------------|
+| `CMS_URL` | Production PayloadCMS URL (e.g., `https://tunadao-cms.onrender.com`) |
+| `RENDER_DEPLOY_HOOK_URL` | (Optional) Render deploy hook for CMS deploys |
+
+### Required Environment Variables (Render)
+
+| Variable | Description |
+|----------|-------------|
+| `PAYLOAD_PUBLIC_SERVER_URL` | CMS public URL |
+| `PAYLOAD_SECRET` | JWT secret (auto-generated) |
+| `DATABASE_URL` | Turso connection string |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Cloudinary API secret |
+| `FRONTEND_URL` | Astro site URL (for CORS) |
+| `RESEND_API_KEY` | (Optional) For email notifications |
 
 ## License
 
