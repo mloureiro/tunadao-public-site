@@ -2,6 +2,7 @@ import { buildConfig } from 'payload';
 import { sqliteAdapter } from '@payloadcms/db-sqlite';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { resendAdapter } from '@payloadcms/email-resend';
+import { payloadCloudinaryPlugin } from '@jhb.software/payload-cloudinary-plugin';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -39,7 +40,8 @@ export default buildConfig({
 
   db: sqliteAdapter({
     client: {
-      url: process.env.DATABASE_URL || 'file:./data/tunadao.db',
+      url: process.env.TURSO_DATABASE_URL || 'file:./data/tunadao.db',
+      authToken: process.env.TURSO_AUTH_TOKEN,
     },
   }),
 
@@ -65,6 +67,26 @@ export default buildConfig({
   ],
 
   globals: [SiteSettings, ContactInfo],
+
+  plugins: [
+    // Cloudinary storage for media files (only in production with credentials)
+    ...(process.env.CLOUDINARY_CLOUD_NAME
+      ? [
+          payloadCloudinaryPlugin({
+            collections: {
+              media: true,
+            },
+            cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+            credentials: {
+              apiKey: process.env.CLOUDINARY_API_KEY!,
+              apiSecret: process.env.CLOUDINARY_API_SECRET!,
+            },
+            folder: 'tunadao',
+            useFilename: true,
+          }),
+        ]
+      : []),
+  ],
 
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

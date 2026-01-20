@@ -16,13 +16,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@jhb.software/payload-cloudinary-plugin": "^0.3.1",
     "@payloadcms/db-sqlite": "^3.0.0",
-    "@payloadcms/richtext-lexical": "^3.0.0",
     "@payloadcms/email-resend": "^3.0.0",
-    "payload": "^3.0.0",
+    "@payloadcms/richtext-lexical": "^3.0.0",
     "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
     "express": "^4.21.0",
-    "dotenv": "^16.4.5"
+    "payload": "^3.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
