@@ -5,6 +5,17 @@ on:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'What to deploy'
+        type: choice
+        default: 'auto'
+        options:
+          - auto        # Deploy based on changed files
+          - app-only    # Deploy only the Astro app
+          - cms-only    # Deploy only the CMS (triggers Render)
+          - both        # Deploy both app and CMS
 
 permissions:
   contents: read
@@ -16,6 +27,72 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Determine what needs to be deployed based on changed files or manual input
+  determine-targets:
+    name: Determine Deploy Targets
+    runs-on: ubuntu-latest
+    outputs:
+      deploy_app: ${{ steps.check.outputs.deploy_app }}
+      deploy_cms: ${{ steps.check.outputs.deploy_cms }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check changed files and inputs
+        id: check
+        run: |
+          # Manual dispatch with specific target
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            case "${{ inputs.deploy_target }}" in
+              "app-only")
+                echo "deploy_app=true" >> $GITHUB_OUTPUT
+                echo "deploy_cms=false" >> $GITHUB_OUTPUT
+                ;;
+              "cms-only")
+                echo "deploy_app=false" >> $GITHUB_OUTPUT
+                echo "deploy_cms=true" >> $GITHUB_OUTPUT
+                ;;
+              "both")
+                echo "deploy_app=true" >> $GITHUB_OUTPUT
+                echo "deploy_cms=true" >> $GITHUB_OUTPUT
+                ;;
+              "auto"|*)
+                # Fall through to auto-detection
+                ;;
+            esac
+          fi
+
+          # Auto-detection based on changed files (for push events or auto mode)
+          if [[ -z "$(cat $GITHUB_OUTPUT 2>/dev/null)" ]] || [[ "${{ inputs.deploy_target }}" == "auto" ]]; then
+            # Get changed files
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
+
+            # Check for app changes
+            if echo "$CHANGED_FILES" | grep -qE "^app/|^package"; then
+              echo "deploy_app=true" >> $GITHUB_OUTPUT
+            else
+              echo "deploy_app=false" >> $GITHUB_OUTPUT
+            fi
+
+            # Check for CMS changes
+            if echo "$CHANGED_FILES" | grep -qE "^cms/"; then
+              echo "deploy_cms=true" >> $GITHUB_OUTPUT
+            else
+              echo "deploy_cms=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+          # For PRs, don't deploy anything
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "deploy_app=false" >> $GITHUB_OUTPUT
+            echo "deploy_cms=false" >> $GITHUB_OUTPUT
+          fi
+
+          echo "Deploy targets:"
+          cat $GITHUB_OUTPUT
+
   lint-and-typecheck:
     name: Lint & Type Check
     runs-on: ubuntu-latest
@@ -82,8 +159,10 @@ jobs:
           npm ci
           npm i @rollup/rollup-linux-x64-gnu
 
-      - name: Build site
+      - name: Build site (with test fixtures)
         run: npm run build -w app
+        env:
+          USE_TEST_FIXTURES: 'true'
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
@@ -99,11 +178,13 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-  deploy:
-    name: Deploy to GitHub Pages
+  deploy-app:
+    name: Deploy App to GitHub Pages
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, unit-tests, e2e-tests]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [determine-targets, lint-and-typecheck, unit-tests, e2e-tests]
+    if: |
+      needs.determine-targets.outputs.deploy_app == 'true' &&
+      github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -128,6 +209,7 @@ jobs:
         env:
           BASE_PATH: ${{ vars.BASE_PATH || '/tunadao-public-site/' }}
           SITE_URL: ${{ vars.SITE_URL || 'https://www.loureiro.me' }}
+          CMS_URL: ${{ secrets.CMS_URL }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -140,3 +222,21 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  deploy-cms:
+    name: Deploy CMS (Render)
+    runs-on: ubuntu-latest
+    needs: [determine-targets]
+    if: |
+      needs.determine-targets.outputs.deploy_cms == 'true' &&
+      github.ref == 'refs/heads/main'
+    steps:
+      - name: Trigger Render Deploy
+        run: |
+          if [[ -n "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" ]]; then
+            echo "Triggering Render deploy..."
+            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+          else
+            echo "RENDER_DEPLOY_HOOK_URL not configured - skipping CMS deploy"
+            echo "To enable: add RENDER_DEPLOY_HOOK_URL secret from Render dashboard"
+          fi
