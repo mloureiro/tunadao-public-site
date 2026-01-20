@@ -1,5 +1,8 @@
 /**
  * CMS Client - Raw fetch functions for PayloadCMS REST API
+ *
+ * Set USE_TEST_FIXTURES=true to use static fixtures instead of live CMS.
+ * This is useful for E2E tests and builds without a running CMS.
  */
 
 import type {
@@ -14,8 +17,15 @@ import type {
   CMSContactInfo,
   CMSPaginatedResponse,
 } from './types';
+import {
+  fixtures,
+  globalFixtures,
+  type FixtureEndpoint,
+  type GlobalFixtureEndpoint,
+} from './fixtures';
 
 const CMS_URL = import.meta.env.CMS_URL || 'http://localhost:3000';
+const USE_TEST_FIXTURES = import.meta.env.USE_TEST_FIXTURES === 'true';
 
 interface FetchOptions {
   depth?: number;
@@ -25,7 +35,28 @@ interface FetchOptions {
   page?: number;
 }
 
-async function fetchFromCMS<T>(endpoint: string, options: FetchOptions = {}): Promise<T | null> {
+export class CMSError extends Error {
+  constructor(
+    message: string,
+    public readonly endpoint: string,
+    public readonly statusCode?: number
+  ) {
+    super(message);
+    this.name = 'CMSError';
+  }
+}
+
+async function fetchFromCMS<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
+  // Use test fixtures if enabled
+  if (USE_TEST_FIXTURES) {
+    const fixtureKey = endpoint as FixtureEndpoint;
+    if (fixtureKey in fixtures) {
+      console.log(`[CMS:Fixtures] Using fixture for ${endpoint}`);
+      return fixtures[fixtureKey]() as T;
+    }
+    throw new CMSError(`No fixture found for endpoint: ${endpoint}`, endpoint);
+  }
+
   const { depth = 2, where, sort, limit, page } = options;
 
   const params = new URLSearchParams();
@@ -46,47 +77,69 @@ async function fetchFromCMS<T>(endpoint: string, options: FetchOptions = {}): Pr
 
   const url = `${CMS_URL}/api/${endpoint}?${params.toString()}`;
 
+  let response: Response;
   try {
-    const response = await fetch(url, {
+    response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
-
-    if (!response.ok) {
-      console.warn(`[CMS] Error fetching ${endpoint}: ${response.status}`);
-      return null;
-    }
-
-    const data = await response.json();
-    return data;
-  } catch {
-    // Silently fail - CMS is not available, will use fallback data
-    return null;
+  } catch (error) {
+    throw new CMSError(
+      `Failed to connect to CMS at ${CMS_URL}. Is the CMS running?`,
+      endpoint
+    );
   }
+
+  if (!response.ok) {
+    throw new CMSError(
+      `CMS returned error ${response.status} for ${endpoint}`,
+      endpoint,
+      response.status
+    );
+  }
+
+  const data = await response.json();
+  return data;
 }
 
-async function fetchGlobal<T>(slug: string): Promise<T | null> {
+async function fetchGlobal<T>(slug: string): Promise<T> {
+  // Use test fixtures if enabled
+  if (USE_TEST_FIXTURES) {
+    const fixtureKey = slug as GlobalFixtureEndpoint;
+    if (fixtureKey in globalFixtures) {
+      console.log(`[CMS:Fixtures] Using fixture for global ${slug}`);
+      return globalFixtures[fixtureKey]() as T;
+    }
+    throw new CMSError(`No fixture found for global: ${slug}`, `globals/${slug}`);
+  }
+
   const url = `${CMS_URL}/api/globals/${slug}?depth=2`;
 
+  let response: Response;
   try {
-    const response = await fetch(url, {
+    response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
-
-    if (!response.ok) {
-      console.warn(`[CMS] Error fetching global ${slug}: ${response.status}`);
-      return null;
-    }
-
-    const data = await response.json();
-    return data;
-  } catch {
-    // Silently fail - CMS is not available, will use fallback data
-    return null;
+  } catch (error) {
+    throw new CMSError(
+      `Failed to connect to CMS at ${CMS_URL}. Is the CMS running?`,
+      `globals/${slug}`
+    );
   }
+
+  if (!response.ok) {
+    throw new CMSError(
+      `CMS returned error ${response.status} for global ${slug}`,
+      `globals/${slug}`,
+      response.status
+    );
+  }
+
+  const data = await response.json();
+  return data;
 }
 
 // Citadão Editions
@@ -97,12 +150,8 @@ export async function getCitadaoEditions(): Promise<CMSCitadaoEdition[]> {
     limit: 100,
   });
 
-  if (response?.docs) {
-    console.log(`[CMS] Fetched ${response.docs.length} Citadão editions`);
-    return response.docs;
-  }
-
-  return [];
+  console.log(`[CMS] Fetched ${response.docs.length} Citadão editions`);
+  return response.docs;
 }
 
 export async function getCitadaoEditionByYear(year: number): Promise<CMSCitadaoEdition | null> {
@@ -113,7 +162,7 @@ export async function getCitadaoEditionByYear(year: number): Promise<CMSCitadaoE
     limit: 1,
   });
 
-  if (response?.docs && response.docs.length > 0) {
+  if (response.docs.length > 0) {
     console.log(`[CMS] Fetched Citadão edition ${year}`);
     return response.docs[0];
   }
@@ -129,12 +178,8 @@ export async function getPalmaresYears(): Promise<CMSPalmaresYear[]> {
     limit: 100,
   });
 
-  if (response?.docs) {
-    console.log(`[CMS] Fetched ${response.docs.length} Palmarés years`);
-    return response.docs;
-  }
-
-  return [];
+  console.log(`[CMS] Fetched ${response.docs.length} Palmarés years`);
+  return response.docs;
 }
 
 // Award Types
@@ -143,12 +188,8 @@ export async function getAwardTypes(): Promise<CMSAwardType[]> {
     limit: 100,
   });
 
-  if (response?.docs) {
-    console.log(`[CMS] Fetched ${response.docs.length} award types`);
-    return response.docs;
-  }
-
-  return [];
+  console.log(`[CMS] Fetched ${response.docs.length} award types`);
+  return response.docs;
 }
 
 // Blog Posts
@@ -159,12 +200,8 @@ export async function getBlogPosts(): Promise<CMSBlogPost[]> {
     limit: 100,
   });
 
-  if (response?.docs) {
-    console.log(`[CMS] Fetched ${response.docs.length} blog posts`);
-    return response.docs;
-  }
-
-  return [];
+  console.log(`[CMS] Fetched ${response.docs.length} blog posts`);
+  return response.docs;
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<CMSBlogPost | null> {
@@ -175,7 +212,7 @@ export async function getBlogPostBySlug(slug: string): Promise<CMSBlogPost | nul
     limit: 1,
   });
 
-  if (response?.docs && response.docs.length > 0) {
+  if (response.docs.length > 0) {
     console.log(`[CMS] Fetched blog post: ${slug}`);
     return response.docs[0];
   }
@@ -191,12 +228,8 @@ export async function getVideos(): Promise<CMSVideo[]> {
     limit: 100,
   });
 
-  if (response?.docs) {
-    console.log(`[CMS] Fetched ${response.docs.length} videos`);
-    return response.docs;
-  }
-
-  return [];
+  console.log(`[CMS] Fetched ${response.docs.length} videos`);
+  return response.docs;
 }
 
 // Albums
@@ -207,12 +240,8 @@ export async function getAlbums(): Promise<CMSAlbum[]> {
     limit: 100,
   });
 
-  if (response?.docs) {
-    console.log(`[CMS] Fetched ${response.docs.length} albums`);
-    return response.docs;
-  }
-
-  return [];
+  console.log(`[CMS] Fetched ${response.docs.length} albums`);
+  return response.docs;
 }
 
 // Pages
@@ -224,7 +253,7 @@ export async function getPageBySlug(slug: string): Promise<CMSPage | null> {
     limit: 1,
   });
 
-  if (response?.docs && response.docs.length > 0) {
+  if (response.docs.length > 0) {
     console.log(`[CMS] Fetched page: ${slug}`);
     return response.docs[0];
   }
@@ -233,36 +262,38 @@ export async function getPageBySlug(slug: string): Promise<CMSPage | null> {
 }
 
 // Globals
-export async function getSiteSettings(): Promise<CMSSiteSettings | null> {
+export async function getSiteSettings(): Promise<CMSSiteSettings> {
   const data = await fetchGlobal<CMSSiteSettings>('site-settings');
-
-  if (data) {
-    console.log('[CMS] Fetched site settings');
-    return data;
-  }
-
-  return null;
+  console.log('[CMS] Fetched site settings');
+  return data;
 }
 
-export async function getContactInfo(): Promise<CMSContactInfo | null> {
+export async function getContactInfo(): Promise<CMSContactInfo> {
   const data = await fetchGlobal<CMSContactInfo>('contact-info');
-
-  if (data) {
-    console.log('[CMS] Fetched contact info');
-    return data;
-  }
-
-  return null;
+  console.log('[CMS] Fetched contact info');
+  return data;
 }
 
-// Health check
-export async function checkCMSConnection(): Promise<boolean> {
+// Health check - throws if CMS is not reachable (skipped in fixtures mode)
+export async function checkCMSConnection(): Promise<void> {
+  if (USE_TEST_FIXTURES) {
+    console.log('[CMS:Fixtures] Using test fixtures - skipping CMS connection check');
+    return;
+  }
+
   try {
     const response = await fetch(`${CMS_URL}/api/users/me`, {
       method: 'GET',
     });
-    return response.status !== 404;
-  } catch {
-    return false;
+    if (response.status === 404) {
+      throw new CMSError('CMS API not found', 'users/me', 404);
+    }
+    console.log(`[CMS] Connected to ${CMS_URL}`);
+  } catch (error) {
+    if (error instanceof CMSError) throw error;
+    throw new CMSError(
+      `Failed to connect to CMS at ${CMS_URL}. Is the CMS running?`,
+      'users/me'
+    );
   }
 }
