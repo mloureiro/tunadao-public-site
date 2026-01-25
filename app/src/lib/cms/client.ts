@@ -84,7 +84,7 @@ async function fetchFromCMS<T>(endpoint: string, options: FetchOptions = {}): Pr
         'Content-Type': 'application/json',
       },
     });
-  } catch (error) {
+  } catch {
     throw new CMSError(
       `Failed to connect to CMS at ${CMS_URL}. Is the CMS running?`,
       endpoint
@@ -123,7 +123,7 @@ async function fetchGlobal<T>(slug: string): Promise<T> {
         'Content-Type': 'application/json',
       },
     });
-  } catch (error) {
+  } catch {
     throw new CMSError(
       `Failed to connect to CMS at ${CMS_URL}. Is the CMS running?`,
       `globals/${slug}`
