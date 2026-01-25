@@ -25,7 +25,9 @@ import {
 } from './fixtures';
 
 const CMS_URL = import.meta.env.CMS_URL || 'http://localhost:3000';
-const USE_TEST_FIXTURES = import.meta.env.USE_TEST_FIXTURES === 'true';
+// Use process.env directly to avoid Vite tree-shaking the fixture code
+// This works because SSG runs in Node.js context
+const USE_TEST_FIXTURES = process.env.USE_TEST_FIXTURES === 'true';
 
 interface FetchOptions {
   depth?: number;
