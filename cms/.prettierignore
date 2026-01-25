@@ -1,6 +1,6 @@
 dist/
 node_modules/
 build/
-.payload/
+.next/
 *.db
 *.db-journal

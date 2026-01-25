@@ -5,6 +5,7 @@ import { resendAdapter } from '@payloadcms/email-resend';
 import { payloadCloudinaryPlugin } from '@jhb.software/payload-cloudinary-plugin';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import sharp from 'sharp';
 
 // Collections
 import { Users } from './collections/Users';
@@ -31,8 +32,11 @@ export default buildConfig({
 
   admin: {
     user: Users.slug,
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
     meta: {
-      titleSuffix: ' - Tunadão CMS',
+      titleSuffix: ' - Tunadao CMS',
     },
   },
 
@@ -48,7 +52,7 @@ export default buildConfig({
   email: process.env.RESEND_API_KEY
     ? resendAdapter({
         defaultFromAddress: 'noreply@tunadao.pt',
-        defaultFromName: 'Tunadão 1998',
+        defaultFromName: 'Tunadao 1998',
         apiKey: process.env.RESEND_API_KEY,
       })
     : undefined,
@@ -86,11 +90,14 @@ export default buildConfig({
           }),
         ]
       : []),
-  ],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ] as any, // Type assertion needed due to monorepo payload version mismatch
 
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
+
+  sharp,
 
   cors: [
     'http://localhost:4321', // Astro dev server
