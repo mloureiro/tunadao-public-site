@@ -1,9 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import Button from '@components/Button.astro';
 import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getCitadaoEditions } from '@lib/cms';
-import { Icon } from '@ui/icons';
 import AwardCard from '@components/AwardCard.astro';
 
 export function getStaticPaths() {
@@ -16,7 +14,6 @@ const t = useTranslations(currentLang);
 
 // Fetch editions from CMS (with fallback)
 const editions = await getCitadaoEditions();
-const latestEdition = editions[0];
 ---
 
 <Layout title={`${t('citadao.title')} | Tunadão 1998`} description={t('citadao.description')}>
@@ -28,28 +25,6 @@ const latestEdition = editions[0];
     </div>
   </section>
 
-  <!-- Latest Edition Highlight -->
-  <section class="latest">
-    <div class="container">
-      <div class="latest__card">
-        <div class="latest__badge">{latestEdition.edition}{t('citadao.edition')}</div>
-        <h2 class="latest__title">CITADÃO {latestEdition.year}</h2>
-        <div class="latest__info">
-          <div class="latest__info-item">
-            <Icon name="calendar" size={20} />
-            <span>{latestEdition.date}</span>
-          </div>
-          <div class="latest__info-item">
-            <Icon name="map-pin" size={20} />
-            <span>{latestEdition.venue}</span>
-          </div>
-        </div>
-        <Button href="#citadao-${latestEdition.year}" variant="primary" size="lg">
-          {t('citadao.viewDetails')}
-        </Button>
-      </div>
-    </div>
-  </section>
 
   <!-- About CITADÃO Section -->
   <section class="about-citadao">
@@ -85,44 +60,60 @@ const latestEdition = editions[0];
                 {edition.notes && <span class="edition-item__badge">{edition.notes}</span>}
               </div>
 
-              <div class="edition-item__content">
-                {/* Tunas Participantes */}
-                <div class="edition-item__section">
-                  <h4>{t('citadao.participatingTunas')}</h4>
-                  <ul class="edition-item__tunas">
-                    {edition.tunas.map((tuna) => (
-                      <li>{tuna}</li>
-                    ))}
-                  </ul>
-                </div>
+              <div class={`edition-item__content ${edition.posterUrl ? 'has-poster' : ''}`}>
+                {/* Poster */}
+                {edition.posterUrl && (
+                  <div class="edition-item__poster">
+                    <a href={edition.posterUrl} target="_blank" rel="noopener noreferrer" class="poster-link">
+                      <img
+                        src={edition.posterUrl}
+                        alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
+                        class="poster-image"
+                        loading="lazy"
+                      />
+                    </a>
+                  </div>
+                )}
 
-                {/* Convidados */}
-                {edition.guests && edition.guests.length > 0 && (
+                <div class="edition-item__info">
+                  {/* Tunas Participantes */}
                   <div class="edition-item__section">
-                    <h4>{t('citadao.guests')}</h4>
-                    <ul class="edition-item__guests">
-                      {edition.guests.map((guest) => (
-                        <li>{guest}</li>
+                    <h4>{t('citadao.participatingTunas')}</h4>
+                    <ul class="edition-item__tunas">
+                      {edition.tunas.map((tuna) => (
+                        <li>{tuna}</li>
                       ))}
                     </ul>
                   </div>
-                )}
 
-                {/* Prémios */}
-                {edition.awards && Object.keys(edition.awards).length > 0 && (
-                  <div class="edition-item__section edition-item__awards">
-                    <h4>{t('citadao.awards')}</h4>
-                    <div class="awards-grid">
-                      {Object.entries(edition.awards).map(([key, winner]) => (
-                        <AwardCard
-                          awardKey={key}
-                          name={t(`awards.${key}`)}
-                          winner={winner as string}
-                        />
-                      ))}
+                  {/* Convidados */}
+                  {edition.guests && edition.guests.length > 0 && (
+                    <div class="edition-item__section">
+                      <h4>{t('citadao.guests')}</h4>
+                      <ul class="edition-item__guests">
+                        {edition.guests.map((guest) => (
+                          <li>{guest}</li>
+                        ))}
+                      </ul>
                     </div>
-                  </div>
-                )}
+                  )}
+
+                  {/* Prémios */}
+                  {edition.awards && Object.keys(edition.awards).length > 0 && (
+                    <div class="edition-item__section edition-item__awards">
+                      <h4>{t('citadao.awards')}</h4>
+                      <div class="awards-grid">
+                        {Object.entries(edition.awards).map(([key, winner]) => (
+                          <AwardCard
+                            awardKey={key}
+                            name={t(`awards.${key}`)}
+                            winner={winner as string}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </article>
           ))
@@ -138,9 +129,6 @@ const latestEdition = editions[0];
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     color: var(--color-text-inverted);
     padding: var(--space-12) 0;
-    padding-bottom: calc(
-      var(--space-12) + 4rem
-    ); /* Extra padding to compensate for .latest negative margin */
     text-align: center;
   }
 
@@ -153,71 +141,6 @@ const latestEdition = editions[0];
   .hero__subtitle {
     font-size: var(--text-xl);
     opacity: 0.9;
-  }
-
-  /* Latest Edition */
-  .latest {
-    padding: var(--space-8) 0;
-    background-color: var(--color-background);
-    margin-top: -4rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .latest__card {
-    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
-    border: 2px solid var(--color-primary);
-    border-radius: var(--radius-xl);
-    padding: var(--space-8);
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
-    box-shadow: var(--shadow-lg);
-  }
-
-  .latest__badge {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    color: var(--color-text-inverted);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-full);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    margin-bottom: var(--space-3);
-  }
-
-  .latest__title {
-    font-size: var(--text-3xl);
-    font-weight: 700;
-    color: var(--color-text);
-    margin-bottom: var(--space-4);
-  }
-
-  .latest__info {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    margin-bottom: var(--space-6);
-  }
-
-  @media (min-width: 480px) {
-    .latest__info {
-      flex-direction: row;
-      justify-content: center;
-      gap: var(--space-6);
-    }
-  }
-
-  .latest__info-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-    color: var(--color-text-muted);
-  }
-
-  .latest__info-item svg {
-    color: var(--color-primary);
   }
 
   /* About CITADÃO */
@@ -327,18 +250,73 @@ const latestEdition = editions[0];
 
   .edition-item__content {
     padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .edition-item__content.has-poster {
+    flex-direction: column;
+  }
+
+  @media (min-width: 768px) {
+    .edition-item__content.has-poster {
+      flex-direction: row;
+    }
+
+    .edition-item__content.has-poster .edition-item__poster {
+      flex-shrink: 0;
+      width: 200px;
+    }
+
+    .edition-item__content.has-poster .edition-item__info {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  /* Info Section */
+  .edition-item__info {
     display: grid;
     gap: var(--space-5);
   }
 
   @media (min-width: 768px) {
-    .edition-item__content {
+    .edition-item__info {
       grid-template-columns: 1fr 1fr;
     }
 
     .edition-item__awards {
       grid-column: 1 / -1;
     }
+  }
+
+  /* Poster Section */
+  .edition-item__poster {
+    display: flex;
+    justify-content: center;
+  }
+
+  .poster-link {
+    display: block;
+    max-width: 200px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .poster-link:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .poster-image {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 
   .edition-item__section h4 {

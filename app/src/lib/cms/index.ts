@@ -168,6 +168,9 @@ function transformCitadaoEdition(
     }
   }
 
+  // Get poster URL if available
+  const posterUrl = getMediaUrl(cms.poster) || undefined;
+
   return {
     edition: cms.editionNumber,
     year,
@@ -177,6 +180,7 @@ function transformCitadaoEdition(
     guests,
     awards: awardsRecord,
     notes: cms.notes,
+    posterUrl,
   };
 }
 

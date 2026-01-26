@@ -88,6 +88,13 @@ const citadaoEditions: CMSCitadaoEdition[] = [
     startDate: '2024-05-04',
     endDate: '2024-05-04',
     schedule: [{ date: '2024-05-04', venue: venues[0] }],
+    poster: {
+      id: 10,
+      url: '/placeholder-poster.jpg',
+      filename: 'citadao-2024-18-poster.jpg',
+      mimeType: 'image/jpeg',
+      alt: 'Cartaz do 18º Citadão (2024)',
+    },
     status: 'published',
   },
   {
@@ -100,6 +107,13 @@ const citadaoEditions: CMSCitadaoEdition[] = [
       { date: '2023-05-05', venue: venues[2] },
       { date: '2023-05-06', venue: venues[1] },
     ],
+    poster: {
+      id: 11,
+      url: '/placeholder-poster.jpg',
+      filename: 'citadao-2023-17-poster.jpg',
+      mimeType: 'image/jpeg',
+      alt: 'Cartaz do 17º Citadão (2023)',
+    },
     status: 'published',
   },
 ];

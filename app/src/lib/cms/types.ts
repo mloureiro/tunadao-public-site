@@ -246,6 +246,7 @@ export interface FrontendCitadaoEdition {
   guests: string[];
   awards: Record<string, string> | null;
   notes?: string;
+  posterUrl?: string;
 }
 
 export interface FrontendBlogPost {
