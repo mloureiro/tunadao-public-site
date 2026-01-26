@@ -151,6 +151,7 @@ const palmaresYears: CMSPalmaresYear[] = [
       {
         name: 'Festival Exemplo',
         location: 'Lisboa',
+        organizingTuna: tunas[2], // EUL
         awards: [{ awardType: awardTypes[0] }, { awardType: awardTypes[3] }],
       },
     ],
@@ -164,6 +165,7 @@ const palmaresYears: CMSPalmaresYear[] = [
       {
         name: 'Outro Festival',
         location: 'Porto',
+        organizingTuna: tunas[1], // TUP
         awards: [{ awardType: awardTypes[1] }],
       },
     ],
