@@ -98,6 +98,7 @@ export interface CMSPalmaresYear {
 export interface CMSPalmaresFestival {
   name: string;
   location?: string;
+  organizingTuna?: CMSTuna | number;
   awards?: CMSPalmaresAward[];
 }
 
@@ -280,9 +281,17 @@ export interface FrontendPalmaresYear {
   festivals: FrontendPalmaresFestival[];
 }
 
+export interface FrontendPalmaresOrganizingTuna {
+  shortName: string;
+  fullName: string;
+  city?: string;
+  website?: string;
+}
+
 export interface FrontendPalmaresFestival {
   name: string;
   location: string;
+  organizingTuna?: FrontendPalmaresOrganizingTuna;
   awards: string[];
 }
 
