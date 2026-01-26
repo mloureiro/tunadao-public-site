@@ -1,5 +1,88 @@
 import type { Payload } from 'payload';
 
+// Festival organizing tunas mapping
+// Key: festival pattern (lowercase), Value: { shortName, fullName, city }
+const festivalOrganizers: Record<string, { shortName: string; fullName: string; city?: string; website?: string }> = {
+  // Aveiro
+  fitua: { shortName: 'TUA', fullName: 'TUA - Tuna Universitária de Aveiro', city: 'Aveiro', website: 'https://www.facebook.com/tunauniversitariadeaveiro/' },
+  festilha: { shortName: 'TUA', fullName: 'TUA - Tuna Universitária de Aveiro', city: 'Aveiro' },
+  // Braga
+  'fitu bracara': { shortName: 'TUM', fullName: 'Tuna Universitária do Minho', city: 'Braga', website: 'https://tum.pt/' },
+  celta: { shortName: 'Azeituna', fullName: 'Azeituna - Tuna da Universidade do Minho', city: 'Braga', website: 'https://azeituna.pt/' },
+  // Guimarães
+  'cidade berço': { shortName: 'Afonsina', fullName: 'Afonsina - Tuna de Engenharia da Universidade do Minho', city: 'Guimarães', website: 'https://afonsina.com/' },
+  'cidade de berço': { shortName: 'Afonsina', fullName: 'Afonsina - Tuna de Engenharia da Universidade do Minho', city: 'Guimarães' },
+  // Castelo Branco
+  fitucb: { shortName: 'Estudantina CB', fullName: 'Estudantina Académica de Castelo Branco', city: 'Castelo Branco', website: 'https://estudantinacb.pt/' },
+  fitas: { shortName: 'Estudantina CB', fullName: 'Estudantina Académica de Castelo Branco', city: 'Castelo Branco' },
+  // Coimbra
+  festuna: { shortName: 'EUC', fullName: 'Estudantina Universitária de Coimbra', city: 'Coimbra' },
+  'cantar de estudante': { shortName: 'TMUC', fullName: 'Tuna de Medicina da Universidade de Coimbra', city: 'Coimbra', website: 'https://www.instagram.com/tunamedicinacoimbra/' },
+  fitqfc: { shortName: 'EUC', fullName: 'Estudantina Universitária de Coimbra', city: 'Coimbra' },
+  // Guarda
+  oppidana: { shortName: "Copituna d'Oppidana", fullName: "Copituna d'Oppidana - Tuna Académica da Guarda", city: 'Guarda', website: 'https://tagcopituna.wixsite.com/copituna-d-oppidana' },
+  maltunas: { shortName: "Copituna d'Oppidana", fullName: "Copituna d'Oppidana - Tuna Académica da Guarda", city: 'Guarda' },
+  // Barcelos
+  'barca celi': { shortName: 'TAIPCA', fullName: 'TAIPCA - Tuna Académica do Instituto Politécnico do Cávado e do Ave', city: 'Barcelos' },
+  // Viana do Castelo
+  lethes: { shortName: 'Hinoportuna', fullName: 'Hinoportuna - Tuna Académica do Instituto Politécnico de Viana do Castelo', city: 'Viana do Castelo', website: 'https://hinoportuna.ipvc.pt/' },
+  // Leiria
+  collipo: { shortName: 'Trovantina', fullName: 'Trovantina - Tuna Masculina do Instituto Politécnico de Leiria', city: 'Leiria' },
+  // Covilhã
+  herminius: { shortName: 'Tuna-MUs', fullName: 'Tuna-MUs - Tuna Médica da Universidade da Beira Interior', city: 'Covilhã' },
+  festubi: { shortName: 'Desertuna', fullName: 'Desertuna - Tuna Académica da Universidade da Beira Interior', city: 'Covilhã', website: 'https://www.portugaltunas.com/directorio/desertuna/' },
+  // Porto
+  fitisep: { shortName: 'TAISEP', fullName: 'TAISEP - Tuna Académica do Instituto Superior de Engenharia do Porto', city: 'Porto', website: 'https://en.taisep.com/' },
+  fetuf: { shortName: 'TFISCAP', fullName: 'Tuna Feminina do ISCAP', city: 'Porto' },
+  portuscalle: { shortName: 'TEUP', fullName: 'TEUP - Tuna de Engenharia da Universidade do Porto', city: 'Porto', website: 'https://fe.up.pt/teup/' },
+  fitup: { shortName: 'TAUP', fullName: 'Tuna Académica da Universidade Portucalense', city: 'Porto' },
+  'fitu cidade do porto': { shortName: 'OUP', fullName: 'Orfeão Universitário do Porto', city: 'Porto', website: 'https://orfeao.up.pt/' },
+  padrecos: { shortName: 'TUCP', fullName: 'TUCP - Tuna da Universidade Católica Portuguesa do Porto', city: 'Porto' },
+  'noites de ronda': { shortName: 'TMP', fullName: 'Tuna de Medicina do Porto', city: 'Porto' },
+  alcatraz: { shortName: 'Gatunos', fullName: 'Gatunos - Tuna Académica do Politécnico do Porto', city: 'Vila do Conde', website: 'https://alcatraz.gatunos.pt/' },
+  alcatr: { shortName: 'Gatunos', fullName: 'Gatunos - Tuna Académica do Politécnico do Porto', city: 'Vila do Conde' },
+  fardas: { shortName: 'TAEP', fullName: 'TAEP - Tuna Académica de Enfermagem do Porto', city: 'Porto' },
+  // Açores
+  ciclone: { shortName: 'TUSA', fullName: 'T.U.S.A. - Tuna Universitas Scientiarum Agrariarum', city: 'Angra do Heroísmo', website: 'https://www.tunas.es/tunas/portugal/tusa-acores.asp' },
+  'el açor': { shortName: 'Tunídeos', fullName: 'Tunídeos - Tuna Masculina da Universidade dos Açores', city: 'Ponta Delgada', website: 'https://www.tunideos.com/' },
+  // Faro
+  fartuna: { shortName: 'Versus Tuna', fullName: 'Versus Tuna - Tuna Académica da Universidade do Algarve', city: 'Faro', website: 'https://www.versustuna.pt/' },
+  // Figueira da Foz
+  fituff: { shortName: 'Bruna', fullName: 'Bruna - Tuna Universitária da Figueira da Foz', city: 'Figueira da Foz' },
+  fitaff: { shortName: 'Bruna', fullName: 'Bruna - Tuna Universitária da Figueira da Foz', city: 'Figueira da Foz' },
+  fituiff: { shortName: 'Bruna', fullName: 'Bruna - Tuna Universitária da Figueira da Foz', city: 'Figueira da Foz' },
+  // Bragança
+  fitab: { shortName: 'RTUB', fullName: 'RTUB - Real Tuna Universitária de Bragança', city: 'Bragança' },
+  // Beja
+  'terras de cante': { shortName: 'TUB', fullName: 'Tuna Universitária de Beja', city: 'Beja' },
+  'terra de cante': { shortName: 'TUB', fullName: 'Tuna Universitária de Beja', city: 'Beja' },
+  'fital pax julia': { shortName: 'Semper Tesus', fullName: 'Semper Tesus - Tuna Académica da Escola Superior Agrária de Beja', city: 'Beja' },
+  // Lisboa
+  estudantino: { shortName: 'Estudantina ISEL', fullName: 'Estudantina Académica do ISEL', city: 'Lisboa' },
+  // Tomar
+  templario: { shortName: 'Tuna Templária', fullName: 'Tuna Templária do Instituto Politécnico de Tomar', city: 'Tomar' },
+  templário: { shortName: 'Tuna Templária', fullName: 'Tuna Templária do Instituto Politécnico de Tomar', city: 'Tomar' },
+  // Setúbal
+  'por terras do sado': { shortName: 'TASCA', fullName: 'TASCA - Tuna Académica de Setúbal Cidade Amada', city: 'Setúbal' },
+  // Madeira
+  'festival internacional de tunas do atlântico': { shortName: 'TUM-Madeira', fullName: 'Tuna Universitária da Madeira', city: 'Funchal' },
+  // Santarém
+  centup: { shortName: 'Scalabituna', fullName: 'Scalabituna - Tuna do Instituto Politécnico de Santarém', city: 'Santarém' },
+};
+
+// Helper function to find organizing tuna by festival name
+function findOrganizingTuna(festivalName: string): { shortName: string; fullName: string; city?: string; website?: string } | null {
+  const normalized = festivalName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  for (const [pattern, organizer] of Object.entries(festivalOrganizers)) {
+    const normalizedPattern = pattern.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (normalized.includes(normalizedPattern)) {
+      return organizer;
+    }
+  }
+  return null;
+}
+
 // Data from palmares.json
 const palmaresData = [
   {
@@ -422,7 +505,76 @@ const palmaresData = [
   },
 ];
 
+// Helper to normalize for comparison
+function normalizeForComparison(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '');
+}
+
 export const seedPalmaresYears = async (payload: Payload) => {
+  // Cache for organizing tunas: normalized fullName -> id
+  const tunaCache = new Map<string, string>();
+
+  // Pre-load existing tunas
+  const existingTunas = await payload.find({
+    collection: 'tunas',
+    limit: 1000,
+  });
+  for (const tuna of existingTunas.docs) {
+    const normalizedKey = normalizeForComparison(tuna.fullName || tuna.shortName);
+    if (!tunaCache.has(normalizedKey)) {
+      tunaCache.set(normalizedKey, tuna.id);
+    }
+    // Also cache by shortName
+    const shortKey = normalizeForComparison(tuna.shortName);
+    if (!tunaCache.has(shortKey)) {
+      tunaCache.set(shortKey, tuna.id);
+    }
+  }
+  console.log(`  📋 Loaded ${existingTunas.docs.length} existing tunas into cache`);
+
+  // Helper to get or create organizing tuna
+  const getOrCreateOrganizingTuna = async (festivalName: string): Promise<string | null> => {
+    const organizer = findOrganizingTuna(festivalName);
+    if (!organizer) return null;
+
+    // Check cache first
+    const normalizedKey = normalizeForComparison(organizer.fullName);
+    if (tunaCache.has(normalizedKey)) {
+      return tunaCache.get(normalizedKey)!;
+    }
+
+    // Check by shortName too
+    const shortKey = normalizeForComparison(organizer.shortName);
+    if (tunaCache.has(shortKey)) {
+      return tunaCache.get(shortKey)!;
+    }
+
+    // Create new tuna
+    try {
+      const newTuna = await payload.create({
+        collection: 'tunas',
+        data: {
+          shortName: organizer.shortName,
+          fullName: organizer.fullName,
+          city: organizer.city || '',
+          website: organizer.website || '',
+        },
+      });
+      tunaCache.set(normalizedKey, newTuna.id);
+      tunaCache.set(shortKey, newTuna.id);
+      console.log(`    ✅ Created organizing tuna: ${organizer.shortName}`);
+      return newTuna.id;
+    } catch (error) {
+      // Might already exist with different casing
+      console.log(`    ⚠️  Could not create tuna ${organizer.shortName}:`, error);
+      return null;
+    }
+  };
+
   for (const yearData of palmaresData) {
     try {
       // Check if already exists
@@ -437,14 +589,20 @@ export const seedPalmaresYears = async (payload: Payload) => {
         continue;
       }
 
-      // Prepare festivals array
-      const festivals = yearData.festivals.map((festival) => ({
-        name: festival.name,
-        location: festival.location || '',
-        awards: festival.awards.map((award) => ({
-          customName: award,
-        })),
-      }));
+      // Prepare festivals array with organizing tuna
+      const festivals = await Promise.all(
+        yearData.festivals.map(async (festival) => {
+          const organizingTunaId = await getOrCreateOrganizingTuna(festival.name);
+          return {
+            name: festival.name,
+            location: festival.location || '',
+            organizingTuna: organizingTunaId,
+            awards: festival.awards.map((award) => ({
+              customName: award,
+            })),
+          };
+        })
+      );
 
       await payload.create({
         collection: 'palmares-years',
