@@ -4,39 +4,47 @@
 
 // Base types
 export interface CMSMedia {
-  id: string;
-  url: string;
+  id: number;
+  url?: string;
   filename: string;
-  mimeType: string;
-  filesize: number;
+  mimeType?: string;
+  filesize?: number;
   width?: number;
   height?: number;
   alt: string;
   caption?: string;
-  sizes?: {
-    thumbnail?: CMSMediaSize;
-    card?: CMSMediaSize;
-    hero?: CMSMediaSize;
-  };
-}
-
-export interface CMSMediaSize {
-  url: string;
-  width: number;
-  height: number;
-  filename: string;
+  publicId?: string;
 }
 
 export interface CMSUser {
-  id: string;
+  id: number;
   email: string;
   name?: string;
   role: 'admin' | 'editor';
 }
 
+// Venues
+export interface CMSVenue {
+  id: number;
+  name: string;
+  address?: string;
+  photo?: CMSMedia | number;
+}
+
+// Tunas
+export interface CMSTuna {
+  id: number;
+  shortName: string;
+  fullName: string;
+  logo?: CMSMedia | number;
+  city?: string;
+  website?: string;
+  description?: string;
+}
+
 // Award Types
 export interface CMSAwardType {
-  id: string;
+  id: number | string;
   name: string;
   slug: string;
   aliases?: { alias: string }[];
@@ -45,31 +53,43 @@ export interface CMSAwardType {
   icon?: string;
 }
 
-// Citadão Editions
+// Citadão Editions (new schema)
 export interface CMSCitadaoEdition {
-  id: string;
-  title: string;
-  edition: number;
-  year: number;
-  date?: string;
-  venue?: string;
-  poster?: CMSMedia | string;
-  tunas: { name: string }[];
-  guests?: { name: string }[];
-  awards?: CMSCitadaoAward[];
+  id: number;
+  title?: string;
+  editionNumber: number;
+  startDate: string;
+  endDate: string;
+  poster?: CMSMedia | number;
+  schedule?: {
+    date: string;
+    venue: CMSVenue | number;
+  }[];
+  description?: string;
   notes?: string;
   status: 'draft' | 'published';
 }
 
+// Citadão Participants (links edition + tuna + type)
+export interface CMSCitadaoParticipant {
+  id: number;
+  edition: CMSCitadaoEdition | number;
+  tuna: CMSTuna | number;
+  type: 'contestant' | 'guest';
+}
+
+// Citadão Awards (links edition + award + tuna)
 export interface CMSCitadaoAward {
-  awardType: CMSAwardType | string;
-  winner: string;
+  id: number;
+  edition: CMSCitadaoEdition | number;
+  award: CMSAwardType | number;
+  tuna: CMSTuna | number;
 }
 
 // Palmarés Years
 export interface CMSPalmaresYear {
-  id: string;
-  yearTitle: string;
+  id: number;
+  yearTitle?: string;
   year: number;
   festivals: CMSPalmaresFestival[];
   status: 'draft' | 'published';
@@ -78,23 +98,23 @@ export interface CMSPalmaresYear {
 export interface CMSPalmaresFestival {
   name: string;
   location?: string;
-  awards: CMSPalmaresAward[];
+  awards?: CMSPalmaresAward[];
 }
 
 export interface CMSPalmaresAward {
-  awardType?: CMSAwardType | string;
+  awardType?: CMSAwardType | number;
   customName?: string;
 }
 
 // Blog Posts
 export interface CMSBlogPost {
-  id: string;
+  id: number;
   title: string;
   slug: string;
   excerpt: string;
   content: CMSRichText;
-  featuredImage: CMSMedia | string;
-  author: CMSUser | string;
+  featuredImage: CMSMedia | number;
+  author: CMSUser | number;
   tags?: { tag: string }[];
   publishedAt: string;
   status: 'draft' | 'published';
@@ -102,23 +122,23 @@ export interface CMSBlogPost {
 
 // Videos
 export interface CMSVideo {
-  id: string;
+  id: number;
   title: string;
   youtubeUrl: string;
-  youtubeId: string;
+  youtubeId?: string;
   description?: string;
   category: 'atuacao' | 'festival' | 'serenata' | 'citadao' | 'outro';
-  featured: boolean;
+  featured?: boolean;
   publishedAt: string;
   status: 'draft' | 'published';
 }
 
 // Albums
 export interface CMSAlbum {
-  id: string;
+  id: number;
   title: string;
   year: number;
-  coverImage: CMSMedia | string;
+  coverImage: CMSMedia | number;
   description?: CMSRichText;
   spotifyUrl?: string;
   tracks?: CMSAlbumTrack[];
@@ -134,30 +154,34 @@ export interface CMSAlbumTrack {
 
 // Pages (generic)
 export interface CMSPage {
-  id: string;
+  id: number;
   title: string;
   slug: string;
   content: CMSRichText;
+  seoTitle?: string;
   seoDescription?: string;
+  seoImage?: CMSMedia | number;
   status: 'draft' | 'published';
 }
 
 // Globals
 export interface CMSSiteSettings {
+  id: number;
   siteName: string;
   siteDescription: string;
-  logo?: CMSMedia | string;
-  favicon?: CMSMedia | string;
+  logo?: CMSMedia | number;
+  favicon?: CMSMedia | number;
   instagram?: string;
   facebook?: string;
   tiktok?: string;
   youtube?: string;
   spotify?: string;
-  defaultSeoImage?: CMSMedia | string;
+  defaultSeoImage?: CMSMedia | number;
   googleAnalyticsId?: string;
 }
 
 export interface CMSContactInfo {
+  id: number;
   email: string;
   phone?: string;
   address?: string;
