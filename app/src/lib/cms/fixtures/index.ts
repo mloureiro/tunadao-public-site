@@ -7,6 +7,10 @@
 
 import type {
   CMSCitadaoEdition,
+  CMSCitadaoParticipant,
+  CMSCitadaoAward,
+  CMSTuna,
+  CMSVenue,
   CMSPalmaresYear,
   CMSAwardType,
   CMSBlogPost,
@@ -38,11 +42,38 @@ function paginate<T>(docs: T[]): CMSPaginatedResponse<T> {
 // =============================================================================
 
 const awardTypes: CMSAwardType[] = [
-  { id: 'at1', name: 'Melhor Tuna', slug: 'melhor-tuna' },
-  { id: 'at2', name: 'Melhor Serenata', slug: 'melhor-serenata' },
-  { id: 'at3', name: 'Tuna Mais Tuna', slug: 'tuna-mais-tuna' },
-  { id: 'at4', name: 'Melhor Pandeireta', slug: 'melhor-pandeireta' },
-  { id: 'at5', name: 'Melhor Instrumental', slug: 'melhor-instrumental' },
+  { id: 1, name: 'Melhor Tuna', slug: 'melhorTuna' },
+  { id: 2, name: 'Melhor Serenata', slug: 'melhorSerenata' },
+  { id: 3, name: 'Tuna Mais Tuna', slug: 'tunaMaisTuna' },
+  { id: 4, name: 'Melhor Pandeireta', slug: 'melhorPandeireta' },
+  { id: 5, name: 'Melhor Instrumental', slug: 'melhorInstrumental' },
+  { id: 6, name: 'Melhor Estandarte', slug: 'melhorEstandarte' },
+  { id: 7, name: 'Melhor Solista', slug: 'melhorSolista' },
+  { id: 8, name: 'Melhor Tema Original', slug: 'melhorOriginal' },
+  { id: 9, name: 'Tuna do Público', slug: 'tunaDoPublico' },
+];
+
+// =============================================================================
+// VENUES
+// =============================================================================
+
+const venues: CMSVenue[] = [
+  { id: 1, name: 'Teatro Viriato, Viseu' },
+  { id: 2, name: 'Aula Magna IPV' },
+  { id: 3, name: 'Solar Vinhos do Dão' },
+];
+
+// =============================================================================
+// TUNAS
+// =============================================================================
+
+const tunas: CMSTuna[] = [
+  { id: 1, shortName: 'TUM', fullName: 'Tuna Universitária do Minho' },
+  { id: 2, shortName: 'TUP', fullName: 'Tuna Universitária do Porto' },
+  { id: 3, shortName: 'EUL', fullName: 'Estudantina Universitária de Lisboa' },
+  { id: 4, shortName: 'Desertuna', fullName: 'Desertuna - Tuna Académica da UBI' },
+  { id: 5, shortName: 'Afonsina', fullName: 'Afonsina - Tuna Académica da UC' },
+  { id: 6, shortName: 'Viriatuna', fullName: 'Viriatuna - Tuna Académica ESSU' },
 ];
 
 // =============================================================================
@@ -51,34 +82,60 @@ const awardTypes: CMSAwardType[] = [
 
 const citadaoEditions: CMSCitadaoEdition[] = [
   {
-    id: 'ce1',
+    id: 1,
     title: 'XVIII CITADÃO',
-    edition: 18,
-    year: 2024,
-    date: '2024-05-15',
-    venue: 'Teatro Viriato, Viseu',
-    tunas: [
-      { name: 'Tuna Exemplo 1' },
-      { name: 'Tuna Exemplo 2' },
-      { name: 'Tuna Exemplo 3' },
-    ],
-    guests: [{ name: 'Artista Convidado' }],
-    awards: [
-      { awardType: awardTypes[0], winner: 'Tuna Exemplo 1' },
-      { awardType: awardTypes[1], winner: 'Tuna Exemplo 2' },
-    ],
+    editionNumber: 18,
+    startDate: '2024-05-04',
+    endDate: '2024-05-04',
+    schedule: [{ date: '2024-05-04', venue: venues[0] }],
     status: 'published',
   },
   {
-    id: 'ce2',
+    id: 2,
     title: 'XVII CITADÃO',
-    edition: 17,
-    year: 2023,
-    date: '2023-05-10',
-    venue: 'Teatro Viriato, Viseu',
-    tunas: [{ name: 'Tuna Teste A' }, { name: 'Tuna Teste B' }],
+    editionNumber: 17,
+    startDate: '2023-05-05',
+    endDate: '2023-05-06',
+    schedule: [
+      { date: '2023-05-05', venue: venues[2] },
+      { date: '2023-05-06', venue: venues[1] },
+    ],
     status: 'published',
   },
+];
+
+// =============================================================================
+// CITADÃO PARTICIPANTS
+// =============================================================================
+
+const citadaoParticipants: CMSCitadaoParticipant[] = [
+  // 2024 edition contestants
+  { id: 1, edition: citadaoEditions[0], tuna: tunas[4], type: 'contestant' }, // Afonsina
+  { id: 2, edition: citadaoEditions[0], tuna: tunas[3], type: 'contestant' }, // Desertuna
+  { id: 3, edition: citadaoEditions[0], tuna: tunas[0], type: 'contestant' }, // TUM
+  // 2024 edition guests
+  { id: 4, edition: citadaoEditions[0], tuna: tunas[5], type: 'guest' }, // Viriatuna
+  // 2023 edition contestants
+  { id: 5, edition: citadaoEditions[1], tuna: tunas[2], type: 'contestant' }, // EUL
+  { id: 6, edition: citadaoEditions[1], tuna: tunas[0], type: 'contestant' }, // TUM
+  { id: 7, edition: citadaoEditions[1], tuna: tunas[1], type: 'contestant' }, // TUP
+  // 2023 edition guests
+  { id: 8, edition: citadaoEditions[1], tuna: tunas[5], type: 'guest' }, // Viriatuna
+];
+
+// =============================================================================
+// CITADÃO AWARDS
+// =============================================================================
+
+const citadaoAwards: CMSCitadaoAward[] = [
+  // 2024 awards
+  { id: 1, edition: citadaoEditions[0], award: awardTypes[0], tuna: tunas[4] }, // Melhor Tuna - Afonsina
+  { id: 2, edition: citadaoEditions[0], award: awardTypes[2], tuna: tunas[3] }, // Tuna Mais Tuna - Desertuna
+  { id: 3, edition: citadaoEditions[0], award: awardTypes[5], tuna: tunas[4] }, // Melhor Estandarte - Afonsina
+  // 2023 awards
+  { id: 4, edition: citadaoEditions[1], award: awardTypes[0], tuna: tunas[1] }, // Melhor Tuna - TUP
+  { id: 5, edition: citadaoEditions[1], award: awardTypes[2], tuna: tunas[2] }, // Tuna Mais Tuna - EUL
+  { id: 6, edition: citadaoEditions[1], award: awardTypes[1], tuna: tunas[1] }, // Melhor Serenata - TUP
 ];
 
 // =============================================================================
@@ -87,7 +144,7 @@ const citadaoEditions: CMSCitadaoEdition[] = [
 
 const palmaresYears: CMSPalmaresYear[] = [
   {
-    id: 'py1',
+    id: 1,
     yearTitle: '2024',
     year: 2024,
     festivals: [
@@ -100,7 +157,7 @@ const palmaresYears: CMSPalmaresYear[] = [
     status: 'published',
   },
   {
-    id: 'py2',
+    id: 2,
     yearTitle: '2023',
     year: 2023,
     festivals: [
@@ -120,7 +177,7 @@ const palmaresYears: CMSPalmaresYear[] = [
 
 const blogPosts: CMSBlogPost[] = [
   {
-    id: 'bp1',
+    id: 1,
     title: 'Notícia de Teste',
     slug: 'noticia-de-teste',
     excerpt: 'Esta é uma notícia de teste para E2E.',
@@ -136,14 +193,14 @@ const blogPosts: CMSBlogPost[] = [
       },
     },
     featuredImage: {
-      id: 'img1',
+      id: 1,
       url: '/placeholder.jpg',
       filename: 'placeholder.jpg',
       mimeType: 'image/jpeg',
       filesize: 1000,
       alt: 'Imagem de teste',
     },
-    author: { id: 'u1', email: 'test@test.com', role: 'admin' },
+    author: { id: 1, email: 'test@test.com', role: 'admin' },
     tags: [{ tag: 'Notícias' }],
     publishedAt: '2024-01-15T10:00:00.000Z',
     status: 'published',
@@ -156,7 +213,7 @@ const blogPosts: CMSBlogPost[] = [
 
 const videos: CMSVideo[] = [
   {
-    id: 'v1',
+    id: 1,
     title: 'Vídeo de Teste',
     youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     youtubeId: 'dQw4w9WgXcQ',
@@ -166,7 +223,7 @@ const videos: CMSVideo[] = [
     status: 'published',
   },
   {
-    id: 'v2',
+    id: 2,
     title: 'CITADÃO 2024',
     youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     youtubeId: 'dQw4w9WgXcQ',
@@ -183,11 +240,11 @@ const videos: CMSVideo[] = [
 
 const albums: CMSAlbum[] = [
   {
-    id: 'a1',
+    id: 1,
     title: 'Álbum de Teste',
     year: 2020,
     coverImage: {
-      id: 'img2',
+      id: 2,
       url: '/placeholder.jpg',
       filename: 'album-cover.jpg',
       mimeType: 'image/jpeg',
@@ -205,6 +262,7 @@ const albums: CMSAlbum[] = [
 // =============================================================================
 
 const siteSettings: CMSSiteSettings = {
+  id: 1,
   siteName: 'Tunadão 1998',
   siteDescription: 'Tuna Académica do Instituto Politécnico de Viseu',
   instagram: 'https://www.instagram.com/tunadao1998/',
@@ -215,6 +273,7 @@ const siteSettings: CMSSiteSettings = {
 };
 
 const contactInfo: CMSContactInfo = {
+  id: 1,
   email: 'tunadao@gmail.com',
   phone: '+351 928 155 399',
   address: 'Campus Politécnico de Viseu, 3504-510 Viseu',
@@ -226,6 +285,10 @@ const contactInfo: CMSContactInfo = {
 
 export const fixtures = {
   'citadao-editions': () => paginate(citadaoEditions),
+  'citadao-participants': () => paginate(citadaoParticipants),
+  'citadao-awards': () => paginate(citadaoAwards),
+  tunas: () => paginate(tunas),
+  venues: () => paginate(venues),
   'palmares-years': () => paginate(palmaresYears),
   'award-types': () => paginate(awardTypes),
   'blog-posts': () => paginate(blogPosts),
