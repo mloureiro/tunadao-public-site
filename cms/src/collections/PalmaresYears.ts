@@ -73,6 +73,14 @@ export const PalmaresYears: CollectionConfig = {
           },
         },
         {
+          name: 'organizingTuna',
+          type: 'relationship',
+          relationTo: 'tunas',
+          admin: {
+            description: 'Tuna organizadora do festival (opcional)',
+          },
+        },
+        {
           name: 'awards',
           type: 'array',
           admin: {
