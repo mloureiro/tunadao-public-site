@@ -1,5 +1,6 @@
 import { getPayload } from 'payload';
 import config from '../payload.config';
+import { seedAdminUser } from './admin-user';
 import { seedAwardTypes } from './award-types';
 import { seedCitadaoEditions } from './citadao-editions';
 import { seedCitadaoPosters } from './citadao-posters';
@@ -8,25 +9,29 @@ import { seedSiteSettings } from './site-settings';
 
 const seed = async () => {
   console.log('Starting seed process...');
+  console.log(`Database: ${process.env.TURSO_DATABASE_URL?.substring(0, 50)}...`);
 
   // Initialize Payload v3
   const payload = await getPayload({ config });
 
   try {
-    // Seed in order (award types first as they're referenced by others)
-    console.log('\n1. Seeding award types...');
+    // Seed in order (dependencies first)
+    console.log('\n1. Seeding admin user...');
+    await seedAdminUser(payload);
+
+    console.log('\n2. Seeding award types...');
     await seedAwardTypes(payload);
 
-    console.log('\n2. Seeding Citadão editions...');
+    console.log('\n3. Seeding Citadão editions (includes venues, tunas, participants, awards)...');
     await seedCitadaoEditions(payload);
 
-    console.log('\n3. Seeding Citadão posters (from Cloudinary)...');
+    console.log('\n4. Seeding Citadão posters (from Cloudinary)...');
     await seedCitadaoPosters(payload);
 
-    console.log('\n4. Seeding Palmarés years...');
+    console.log('\n5. Seeding Palmarés years...');
     await seedPalmaresYears(payload);
 
-    console.log('\n5. Seeding site settings...');
+    console.log('\n6. Seeding site settings...');
     await seedSiteSettings(payload);
 
     console.log('\n✅ Seed completed successfully!');

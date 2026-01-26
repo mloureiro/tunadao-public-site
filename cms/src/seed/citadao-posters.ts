@@ -109,10 +109,7 @@ export const seedCitadaoPosters = async (payload: Payload) => {
       const edition = await payload.find({
         collection: 'citadao-editions',
         where: {
-          and: [
-            { edition: { equals: parsed.edition } },
-            { year: { equals: parsed.year } },
-          ],
+          editionNumber: { equals: parsed.edition },
         },
         limit: 1,
       });
