@@ -100,12 +100,33 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
                 <div class="festival-card">
                   <div class="festival-card__header">
                     <h3 class="festival-card__name">{festival.name}</h3>
-                    {festival.location && (
-                      <span class="festival-card__location">
-                        <Icon name="map-pin" size={14} />
-                        {festival.location}
-                      </span>
-                    )}
+                    <div class="festival-card__meta">
+                      {festival.location && (
+                        <span class="festival-card__location">
+                          <Icon name="map-pin" size={14} />
+                          {festival.location}
+                        </span>
+                      )}
+                      {festival.organizingTuna && (
+                        <span class="festival-card__organizer">
+                          <Icon name="users" size={14} />
+                          {festival.organizingTuna.website ? (
+                            <a
+                              href={festival.organizingTuna.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={festival.organizingTuna.fullName}
+                            >
+                              {festival.organizingTuna.shortName}
+                            </a>
+                          ) : (
+                            <span title={festival.organizingTuna.fullName}>
+                              {festival.organizingTuna.shortName}
+                            </span>
+                          )}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div class="festival-card__awards">
                     {festival.awards.map((award) => {
@@ -269,7 +290,14 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
     margin-bottom: var(--space-1);
   }
 
-  .festival-card__location {
+  .festival-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+  }
+
+  .festival-card__location,
+  .festival-card__organizer {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
@@ -277,7 +305,21 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
     color: var(--color-text-muted);
   }
 
-  .festival-card__location svg {
+  .festival-card__location svg,
+  .festival-card__organizer svg {
+    color: var(--color-primary);
+    flex-shrink: 0;
+  }
+
+  .festival-card__organizer a {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 2px;
+    transition: color var(--transition-fast);
+  }
+
+  .festival-card__organizer a:hover {
     color: var(--color-primary);
   }
 
