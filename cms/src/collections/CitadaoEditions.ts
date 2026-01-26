@@ -88,31 +88,21 @@ export const CitadaoEditions: CollectionConfig = {
     },
     {
       name: 'tunas',
-      type: 'array',
+      type: 'relationship',
+      relationTo: 'tunas',
+      hasMany: true,
       admin: {
         description: 'Tunas participantes (a concurso)',
       },
-      fields: [
-        {
-          name: 'name',
-          type: 'text',
-          required: true,
-        },
-      ],
     },
     {
       name: 'guests',
-      type: 'array',
+      type: 'relationship',
+      relationTo: 'tunas',
+      hasMany: true,
       admin: {
         description: 'Tunas/grupos convidados',
       },
-      fields: [
-        {
-          name: 'name',
-          type: 'text',
-          required: true,
-        },
-      ],
     },
     {
       name: 'awards',
@@ -129,10 +119,11 @@ export const CitadaoEditions: CollectionConfig = {
         },
         {
           name: 'winner',
-          type: 'text',
+          type: 'relationship',
+          relationTo: 'tunas',
           required: true,
           admin: {
-            description: 'Nome da tuna vencedora',
+            description: 'Tuna vencedora',
           },
         },
       ],
