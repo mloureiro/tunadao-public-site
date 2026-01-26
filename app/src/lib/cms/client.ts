@@ -7,6 +7,10 @@
 
 import type {
   CMSCitadaoEdition,
+  CMSCitadaoParticipant,
+  CMSCitadaoAward,
+  CMSTuna,
+  CMSVenue,
   CMSPalmaresYear,
   CMSAwardType,
   CMSBlogPost,
@@ -148,7 +152,7 @@ async function fetchGlobal<T>(slug: string): Promise<T> {
 export async function getCitadaoEditions(): Promise<CMSCitadaoEdition[]> {
   const response = await fetchFromCMS<CMSPaginatedResponse<CMSCitadaoEdition>>('citadao-editions', {
     where: { status: { equals: 'published' } },
-    sort: '-year',
+    sort: '-startDate',
     limit: 100,
   });
 
@@ -156,20 +160,98 @@ export async function getCitadaoEditions(): Promise<CMSCitadaoEdition[]> {
   return response.docs;
 }
 
-export async function getCitadaoEditionByYear(year: number): Promise<CMSCitadaoEdition | null> {
+export async function getCitadaoEditionById(id: number): Promise<CMSCitadaoEdition | null> {
   const response = await fetchFromCMS<CMSPaginatedResponse<CMSCitadaoEdition>>('citadao-editions', {
     where: {
-      and: [{ status: { equals: 'published' } }, { year: { equals: year } }],
+      and: [{ status: { equals: 'published' } }, { id: { equals: id } }],
     },
     limit: 1,
   });
 
   if (response.docs.length > 0) {
-    console.log(`[CMS] Fetched Citadão edition ${year}`);
+    console.log(`[CMS] Fetched Citadão edition ${id}`);
     return response.docs[0];
   }
 
   return null;
+}
+
+export async function getCitadaoEditionByYear(year: number): Promise<CMSCitadaoEdition | null> {
+  // Extract year from startDate
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSCitadaoEdition>>('citadao-editions', {
+    where: { status: { equals: 'published' } },
+    sort: '-startDate',
+    limit: 100,
+  });
+
+  const edition = response.docs.find((e) => {
+    const editionYear = new Date(e.startDate).getFullYear();
+    return editionYear === year;
+  });
+
+  if (edition) {
+    console.log(`[CMS] Fetched Citadão edition for year ${year}`);
+    return edition;
+  }
+
+  return null;
+}
+
+// Citadão Participants
+export async function getCitadaoParticipants(editionId?: number): Promise<CMSCitadaoParticipant[]> {
+  const where: Record<string, unknown> = {};
+  if (editionId !== undefined) {
+    where.edition = { equals: editionId };
+  }
+
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSCitadaoParticipant>>(
+    'citadao-participants',
+    {
+      where: Object.keys(where).length > 0 ? where : undefined,
+      limit: 500,
+      depth: 2,
+    }
+  );
+
+  console.log(`[CMS] Fetched ${response.docs.length} Citadão participants`);
+  return response.docs;
+}
+
+// Citadão Awards
+export async function getCitadaoAwards(editionId?: number): Promise<CMSCitadaoAward[]> {
+  const where: Record<string, unknown> = {};
+  if (editionId !== undefined) {
+    where.edition = { equals: editionId };
+  }
+
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSCitadaoAward>>('citadao-awards', {
+    where: Object.keys(where).length > 0 ? where : undefined,
+    limit: 500,
+    depth: 2,
+  });
+
+  console.log(`[CMS] Fetched ${response.docs.length} Citadão awards`);
+  return response.docs;
+}
+
+// Tunas
+export async function getTunas(): Promise<CMSTuna[]> {
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSTuna>>('tunas', {
+    limit: 500,
+  });
+
+  console.log(`[CMS] Fetched ${response.docs.length} tunas`);
+  return response.docs;
+}
+
+// Venues
+export async function getVenues(): Promise<CMSVenue[]> {
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSVenue>>('venues', {
+    limit: 100,
+  });
+
+  console.log(`[CMS] Fetched ${response.docs.length} venues`);
+  return response.docs;
 }
 
 // Palmarés
