@@ -1,6 +1,6 @@
 import type { Payload } from 'payload';
 
-// Data from citadao-editions.json
+// Data from citadao-editions.json backup
 const citadaoData = [
   {
     edition: 1,
@@ -64,7 +64,6 @@ const citadaoData = [
       tunaDoPublico: 'Semper Tesus',
     },
   },
-  // ... continuing with all editions
   {
     edition: 4,
     year: 2008,
@@ -450,15 +449,147 @@ const awardKeyToSlug: Record<string, string> = {
   mencaoHonrosa: 'mencao-honrosa',
 };
 
+// Normalize tuna names for slug generation
+function normalizeForSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove diacritics
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+// Extract the short name/acronym from a full tuna name
+// "Tunídeos - Tuna Masculina da Universidade dos Açores" → "Tunídeos"
+// "TEUP - Tuna de Engenharia da Universidade do Porto" → "TEUP"
+// "Afonsina" → "Afonsina"
+function extractShortName(name: string): string {
+  const parts = name.split(' - ').map((p) => p.trim()).filter(Boolean);
+  if (parts.length === 0) return name;
+  // Return the shortest non-empty part
+  return parts.reduce((shortest, current) =>
+    current.length < shortest.length ? current : shortest
+  );
+}
+
+// Aggressive normalization for comparing names (to detect duplicates)
+// Uses short name extraction + removes diacritics and non-alphanumeric
+// "Tunídeos - Tuna Masculina..." and "Tunideos" → "tunideos"
+// "Luz & Tuna - Tuna da Universidade Lusíada" and "Luz&Tuna" → "luztuna"
+function normalizeForComparison(name: string): string {
+  const shortName = extractShortName(name);
+  return shortName
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove diacritics
+    .replace(/[^a-z0-9]/g, ''); // remove ALL non-alphanumeric
+}
+
+// Extract all unique tuna/group names from the data
+function extractAllTunaNames(): Set<string> {
+  const names = new Set<string>();
+
+  for (const edition of citadaoData) {
+    edition.tunas.forEach((name) => names.add(name));
+    edition.guests.forEach((name) => names.add(name));
+
+    if (edition.awards) {
+      Object.values(edition.awards).forEach((winner) => {
+        if (winner) names.add(winner);
+      });
+    }
+  }
+
+  return names;
+}
+
+// Create or find a tuna by name
+// Uses aggressive normalization to match variations like "Luz & Tuna" = "Luz&Tuna"
+async function getOrCreateTuna(
+  payload: Payload,
+  name: string,
+  tunaCache: Map<string, { id: string; canonicalName: string }>
+): Promise<string | null> {
+  // Check cache first using aggressive normalization
+  const normalizedKey = normalizeForComparison(name);
+  if (tunaCache.has(normalizedKey)) {
+    const cached = tunaCache.get(normalizedKey)!;
+    if (cached.canonicalName !== name) {
+      console.log(`    🔗 Matched "${name}" → "${cached.canonicalName}"`);
+    }
+    return cached.id;
+  }
+
+  // Try to find existing tuna by searching all and comparing normalized names
+  const allTunas = await payload.find({
+    collection: 'tunas',
+    limit: 1000,
+  });
+
+  for (const tuna of allTunas.docs) {
+    if (normalizeForComparison(tuna.name) === normalizedKey) {
+      tunaCache.set(normalizedKey, { id: tuna.id, canonicalName: tuna.name });
+      if (tuna.name !== name) {
+        console.log(`    🔗 Matched "${name}" → "${tuna.name}" (existing)`);
+      }
+      return tuna.id;
+    }
+  }
+
+  // Create new tuna (use the first encountered name as canonical)
+  const slug = normalizeForSlug(name);
+  try {
+    const newTuna = await payload.create({
+      collection: 'tunas',
+      data: {
+        name,
+        slug: `${slug}-${Date.now()}`, // Ensure unique slug
+        status: 'published',
+      },
+    });
+    console.log(`    ✅ Created tuna: ${name}`);
+    tunaCache.set(normalizedKey, { id: newTuna.id, canonicalName: name });
+    return newTuna.id;
+  } catch (error) {
+    console.error(`    ❌ Failed to create tuna "${name}":`, error);
+    return null;
+  }
+}
+
 export const seedCitadaoEditions = async (payload: Payload) => {
+  // Cache for normalized tuna name -> {id, canonicalName} mapping
+  const tunaCache = new Map<string, { id: string; canonicalName: string }>();
+
+  // Pre-load existing tunas into cache using aggressive normalization
+  const existingTunas = await payload.find({
+    collection: 'tunas',
+    limit: 1000,
+  });
+  for (const tuna of existingTunas.docs) {
+    const normalizedKey = normalizeForComparison(tuna.name);
+    // Only add if not already in cache (first one wins)
+    if (!tunaCache.has(normalizedKey)) {
+      tunaCache.set(normalizedKey, { id: tuna.id, canonicalName: tuna.name });
+    }
+  }
+  console.log(`  📋 Loaded ${existingTunas.docs.length} existing tunas into cache`);
+
   // Get all award types for reference
   const awardTypesResult = await payload.find({
     collection: 'award-types',
     limit: 100,
   });
-
   const awardTypesBySlug = new Map(awardTypesResult.docs.map((doc) => [doc.slug, doc.id]));
 
+  // First pass: create all tunas
+  console.log('\n  📝 Creating tunas from Citadão data...');
+  const allTunaNames = extractAllTunaNames();
+  for (const name of allTunaNames) {
+    await getOrCreateTuna(payload, name, tunaCache);
+  }
+
+  // Second pass: create editions
+  console.log('\n  📝 Creating Citadão editions...');
   for (const edition of citadaoData) {
     try {
       // Check if already exists
@@ -477,23 +608,45 @@ export const seedCitadaoEditions = async (payload: Payload) => {
         continue;
       }
 
-      // Prepare awards array
-      const awards = edition.awards
-        ? Object.entries(edition.awards)
-            .map(([key, winner]) => {
-              const slug = awardKeyToSlug[key];
-              const awardTypeId = slug ? awardTypesBySlug.get(slug) : null;
-              if (!awardTypeId) {
-                console.log(`    ⚠️  Award type not found for key: ${key}`);
-                return null;
-              }
-              return {
-                awardType: awardTypeId,
-                winner: winner as string,
-              };
-            })
-            .filter(Boolean)
-        : [];
+      // Get tuna IDs for participants
+      const tunaIds: string[] = [];
+      for (const name of edition.tunas) {
+        const id = await getOrCreateTuna(payload, name, tunaCache);
+        if (id) tunaIds.push(id);
+      }
+
+      // Get tuna IDs for guests
+      const guestIds: string[] = [];
+      for (const name of edition.guests) {
+        const id = await getOrCreateTuna(payload, name, tunaCache);
+        if (id) guestIds.push(id);
+      }
+
+      // Prepare awards array with proper relations
+      const awards: Array<{ awardType: string; winner: string }> = [];
+      if (edition.awards) {
+        for (const [key, winnerName] of Object.entries(edition.awards)) {
+          if (!winnerName) continue;
+
+          const slug = awardKeyToSlug[key];
+          const awardTypeId = slug ? awardTypesBySlug.get(slug) : null;
+          if (!awardTypeId) {
+            console.log(`    ⚠️  Award type not found for key: ${key}`);
+            continue;
+          }
+
+          const winnerId = await getOrCreateTuna(payload, winnerName, tunaCache);
+          if (!winnerId) {
+            console.log(`    ⚠️  Could not find/create tuna for winner: ${winnerName}`);
+            continue;
+          }
+
+          awards.push({
+            awardType: awardTypeId,
+            winner: winnerId,
+          });
+        }
+      }
 
       await payload.create({
         collection: 'citadao-editions',
@@ -502,8 +655,8 @@ export const seedCitadaoEditions = async (payload: Payload) => {
           year: edition.year,
           date: edition.date || '',
           venue: edition.venue || '',
-          tunas: edition.tunas.map((name) => ({ name })),
-          guests: edition.guests.map((name) => ({ name })),
+          tunas: tunaIds,
+          guests: guestIds,
           awards,
           notes: (edition as { notes?: string }).notes || '',
           status: 'published',

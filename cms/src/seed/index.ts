@@ -1,19 +1,16 @@
-import payload from 'payload';
+import { getPayload } from 'payload';
+import config from '../payload.config';
 import { seedAwardTypes } from './award-types';
 import { seedCitadaoEditions } from './citadao-editions';
+import { seedCitadaoPosters } from './citadao-posters';
 import { seedPalmaresYears } from './palmares-years';
-import { seedAlbums } from './albums';
 import { seedSiteSettings } from './site-settings';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const seed = async () => {
   console.log('Starting seed process...');
 
-  // Initialize Payload
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await payload.init({ local: true } as any);
+  // Initialize Payload v3
+  const payload = await getPayload({ config });
 
   try {
     // Seed in order (award types first as they're referenced by others)
@@ -23,11 +20,11 @@ const seed = async () => {
     console.log('\n2. Seeding Citadão editions...');
     await seedCitadaoEditions(payload);
 
-    console.log('\n3. Seeding Palmarés years...');
-    await seedPalmaresYears(payload);
+    console.log('\n3. Seeding Citadão posters (from Cloudinary)...');
+    await seedCitadaoPosters(payload);
 
-    console.log('\n4. Seeding albums...');
-    await seedAlbums(payload);
+    console.log('\n4. Seeding Palmarés years...');
+    await seedPalmaresYears(payload);
 
     console.log('\n5. Seeding site settings...');
     await seedSiteSettings(payload);
