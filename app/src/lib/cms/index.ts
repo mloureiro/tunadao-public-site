@@ -72,13 +72,23 @@ export function getMediaUrl(media: CMSMedia | number | string | undefined | null
 // =============================================================================
 
 /**
- * Helper to get tuna display name from participant/award
+ * Helper to get tuna full name (for participants list)
  */
 function getTunaName(tuna: CMSTuna | number): string {
   if (typeof tuna === 'number') {
     return `Tuna #${tuna}`;
   }
   return tuna.fullName || tuna.shortName;
+}
+
+/**
+ * Helper to get tuna short name (for awards)
+ */
+function getTunaShortName(tuna: CMSTuna | number): string {
+  if (typeof tuna === 'number') {
+    return `Tuna #${tuna}`;
+  }
+  return tuna.shortName || tuna.fullName;
 }
 
 /**
@@ -163,7 +173,7 @@ function transformCitadaoEdition(
     awardsRecord = {};
     for (const award of editionAwards) {
       const slug = getAwardSlug(award.award);
-      const winner = getTunaName(award.tuna);
+      const winner = getTunaShortName(award.tuna);
       awardsRecord[slug] = winner;
     }
   }
