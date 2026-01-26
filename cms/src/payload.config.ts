@@ -80,7 +80,13 @@ export default buildConfig({
   sharp,
 
   cors: [
+    'http://localhost:3000',
     'http://localhost:4321', // Astro dev server
+    process.env.FRONTEND_URL || '',
+  ].filter(Boolean),
+  csrf: [
+    'http://localhost:3000',
+    'http://localhost:4321',
     process.env.FRONTEND_URL || '',
   ].filter(Boolean),
 });
