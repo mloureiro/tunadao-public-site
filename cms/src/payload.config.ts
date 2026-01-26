@@ -10,8 +10,11 @@ import sharp from 'sharp';
 import { Users } from './collections/Users';
 import { Media } from './collections/Media';
 import { AwardTypes } from './collections/AwardTypes';
+import { Venues } from './collections/Venues';
 import { Tunas } from './collections/Tunas';
 import { CitadaoEditions } from './collections/CitadaoEditions';
+import { CitadaoParticipants } from './collections/CitadaoParticipants';
+import { CitadaoAwards } from './collections/CitadaoAwards';
 import { PalmaresYears } from './collections/PalmaresYears';
 import { BlogPosts } from './collections/BlogPosts';
 import { Videos } from './collections/Videos';
@@ -61,8 +64,11 @@ export default buildConfig({
     Users,
     Media,
     AwardTypes,
+    Venues,
     Tunas,
     CitadaoEditions,
+    CitadaoParticipants,
+    CitadaoAwards,
     PalmaresYears,
     BlogPosts,
     Videos,

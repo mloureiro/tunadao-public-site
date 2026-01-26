@@ -1,8 +1,11 @@
 export { Users } from './Users';
 export { Media } from './Media';
 export { AwardTypes } from './AwardTypes';
+export { Venues } from './Venues';
 export { Tunas } from './Tunas';
 export { CitadaoEditions } from './CitadaoEditions';
+export { CitadaoParticipants } from './CitadaoParticipants';
+export { CitadaoAwards } from './CitadaoAwards';
 export { PalmaresYears } from './PalmaresYears';
 export { BlogPosts } from './BlogPosts';
 export { Videos } from './Videos';

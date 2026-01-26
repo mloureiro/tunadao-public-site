@@ -3,10 +3,10 @@ import { CollectionConfig } from 'payload';
 export const Tunas: CollectionConfig = {
   slug: 'tunas',
   admin: {
-    useAsTitle: 'name',
+    useAsTitle: 'fullName',
     group: 'Content',
     description: 'Tunas académicas e grupos similares',
-    defaultColumns: ['name', 'city', 'website', 'status'],
+    defaultColumns: ['shortName', 'fullName', 'city'],
   },
   access: {
     read: () => true,
@@ -16,27 +16,20 @@ export const Tunas: CollectionConfig = {
   },
   fields: [
     {
-      name: 'name',
-      type: 'text',
-      required: true,
-      admin: {
-        description: 'Nome oficial da tuna',
-      },
-    },
-    {
-      name: 'slug',
+      name: 'shortName',
       type: 'text',
       required: true,
       unique: true,
       admin: {
-        description: 'Identificador único (ex: tunadao-1998)',
+        description: 'Nome abreviado/sigla (ex: TDK, TEUP) - identificador único',
       },
     },
     {
-      name: 'shortName',
+      name: 'fullName',
       type: 'text',
+      required: true,
       admin: {
-        description: 'Nome abreviado/sigla (ex: TDK, TEUP)',
+        description: 'Nome completo oficial',
       },
     },
     {
@@ -48,25 +41,11 @@ export const Tunas: CollectionConfig = {
       },
     },
     {
-      type: 'row',
-      fields: [
-        {
-          name: 'city',
-          type: 'text',
-          admin: {
-            description: 'Cidade de origem',
-            width: '50%',
-          },
-        },
-        {
-          name: 'foundedYear',
-          type: 'number',
-          admin: {
-            description: 'Ano de fundação',
-            width: '50%',
-          },
-        },
-      ],
+      name: 'city',
+      type: 'text',
+      admin: {
+        description: 'Cidade de origem',
+      },
     },
     {
       name: 'website',
@@ -76,21 +55,11 @@ export const Tunas: CollectionConfig = {
       },
     },
     {
-      name: 'shortDescription',
+      name: 'description',
       type: 'textarea',
       admin: {
-        description: 'Descrição curta (aparece em hover/tooltip)',
+        description: 'Descrição da tuna',
       },
-    },
-    {
-      name: 'status',
-      type: 'select',
-      required: true,
-      defaultValue: 'published',
-      options: [
-        { label: 'Rascunho', value: 'draft' },
-        { label: 'Publicado', value: 'published' },
-      ],
     },
   ],
 };

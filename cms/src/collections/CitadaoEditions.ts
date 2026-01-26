@@ -17,7 +17,7 @@ export const CitadaoEditions: CollectionConfig = {
     useAsTitle: 'title',
     group: 'Content',
     description: 'Edições do Festival Citadão',
-    defaultColumns: ['edition', 'year', 'date', 'status'],
+    defaultColumns: ['editionNumber', 'startDate', 'endDate', 'status'],
   },
   access: {
     read: () => true,
@@ -35,48 +35,53 @@ export const CitadaoEditions: CollectionConfig = {
       hooks: {
         beforeChange: [
           ({ siblingData }) => {
-            return `${siblingData.edition}º Citadão (${siblingData.year})`;
+            const year = siblingData.startDate
+              ? new Date(siblingData.startDate).getFullYear()
+              : '?';
+            return `${siblingData.editionNumber}º Citadão (${year})`;
           },
         ],
+      },
+    },
+    {
+      name: 'editionNumber',
+      type: 'number',
+      required: true,
+      unique: true,
+      admin: {
+        description: 'Número da edição',
       },
     },
     {
       type: 'row',
       fields: [
         {
-          name: 'edition',
-          type: 'number',
+          name: 'startDate',
+          type: 'date',
           required: true,
           admin: {
-            description: 'Número da edição',
-            width: '25%',
-          },
-        },
-        {
-          name: 'year',
-          type: 'number',
-          required: true,
-          admin: {
-            description: 'Ano',
-            width: '25%',
-          },
-        },
-        {
-          name: 'date',
-          type: 'text',
-          admin: {
-            description: 'Data (ex: 4-5 Maio)',
+            description: 'Data de início',
             width: '50%',
+            date: {
+              pickerAppearance: 'dayOnly',
+              displayFormat: 'd MMM yyyy',
+            },
+          },
+        },
+        {
+          name: 'endDate',
+          type: 'date',
+          required: true,
+          admin: {
+            description: 'Data de fim',
+            width: '50%',
+            date: {
+              pickerAppearance: 'dayOnly',
+              displayFormat: 'd MMM yyyy',
+            },
           },
         },
       ],
-    },
-    {
-      name: 'venue',
-      type: 'text',
-      admin: {
-        description: 'Local do evento',
-      },
     },
     {
       name: 'poster',
@@ -87,52 +92,43 @@ export const CitadaoEditions: CollectionConfig = {
       },
     },
     {
-      name: 'tunas',
-      type: 'relationship',
-      relationTo: 'tunas',
-      hasMany: true,
-      admin: {
-        description: 'Tunas participantes (a concurso)',
-      },
-    },
-    {
-      name: 'guests',
-      type: 'relationship',
-      relationTo: 'tunas',
-      hasMany: true,
-      admin: {
-        description: 'Tunas/grupos convidados',
-      },
-    },
-    {
-      name: 'awards',
+      name: 'schedule',
       type: 'array',
       admin: {
-        description: 'Prémios atribuídos',
+        description: 'Programação por dia/local',
       },
       fields: [
         {
-          name: 'awardType',
-          type: 'relationship',
-          relationTo: 'award-types',
-          required: true,
-        },
-        {
-          name: 'winner',
-          type: 'relationship',
-          relationTo: 'tunas',
+          name: 'date',
+          type: 'date',
           required: true,
           admin: {
-            description: 'Tuna vencedora',
+            date: {
+              pickerAppearance: 'dayOnly',
+              displayFormat: 'd MMM yyyy',
+            },
           },
         },
+        {
+          name: 'venue',
+          type: 'relationship',
+          relationTo: 'venues',
+          required: true,
+        },
       ],
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+      admin: {
+        description: 'Descrição pública do evento',
+      },
     },
     {
       name: 'notes',
       type: 'textarea',
       admin: {
-        description: 'Notas especiais (ex: 10º Aniversário)',
+        description: 'Notas internas (ex: 10º Aniversário)',
       },
     },
     {
