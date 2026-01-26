@@ -11,25 +11,25 @@ interface Props {
 const { awardKey, name, winner, class: className = '' } = Astro.props;
 
 const awardIcons: Record<string, string> = {
-  melhorTuna: '🏆',
-  segundaMelhorTuna: '🥈',
-  terceiraMelhorTuna: '🥉',
-  tunaDoPublico: '❤️',
-  tunaMaisTuna: '🎭',
-  melhorSerenata: '🎵',
-  melhorPassacalles: '🎺',
-  melhorPandeireta: '🥁',
-  melhorInstrumental: '🎸',
-  melhorSolista: '🎤',
-  melhorOriginal: '✨',
-  melhorEstandarte: '🏴',
+  'melhor-tuna': '🏆',
+  'segunda-melhor-tuna': '🥈',
+  'terceira-melhor-tuna': '🥉',
+  'tuna-do-publico': '❤️',
+  'tuna-mais-tuna': '🎭',
+  'melhor-serenata': '🎵',
+  'melhor-passacalles': '🎺',
+  'melhor-pandeireta': '🥁',
+  'melhor-instrumental': '🎸',
+  'melhor-solista': '🎤',
+  'melhor-original': '✨',
+  'melhor-estandarte': '🏴',
 };
 
 function getVariant(key: string): AwardVariant {
-  if (key === 'melhorTuna') return 'gold';
-  if (key === 'segundaMelhorTuna') return 'silver';
-  if (key === 'terceiraMelhorTuna') return 'bronze';
-  if (key === 'tunaDoPublico') return 'special';
+  if (key === 'melhor-tuna') return 'gold';
+  if (key === 'segunda-melhor-tuna') return 'silver';
+  if (key === 'terceira-melhor-tuna') return 'bronze';
+  if (key === 'tuna-do-publico') return 'special';
   return 'default';
 }
 

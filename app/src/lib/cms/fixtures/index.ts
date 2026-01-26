@@ -42,15 +42,15 @@ function paginate<T>(docs: T[]): CMSPaginatedResponse<T> {
 // =============================================================================
 
 const awardTypes: CMSAwardType[] = [
-  { id: 1, name: 'Melhor Tuna', slug: 'melhorTuna' },
-  { id: 2, name: 'Melhor Serenata', slug: 'melhorSerenata' },
-  { id: 3, name: 'Tuna Mais Tuna', slug: 'tunaMaisTuna' },
-  { id: 4, name: 'Melhor Pandeireta', slug: 'melhorPandeireta' },
-  { id: 5, name: 'Melhor Instrumental', slug: 'melhorInstrumental' },
-  { id: 6, name: 'Melhor Estandarte', slug: 'melhorEstandarte' },
-  { id: 7, name: 'Melhor Solista', slug: 'melhorSolista' },
-  { id: 8, name: 'Melhor Tema Original', slug: 'melhorOriginal' },
-  { id: 9, name: 'Tuna do Público', slug: 'tunaDoPublico' },
+  { id: 1, name: 'Melhor Tuna', slug: 'melhor-tuna' },
+  { id: 2, name: 'Melhor Serenata', slug: 'melhor-serenata' },
+  { id: 3, name: 'Tuna Mais Tuna', slug: 'tuna-mais-tuna' },
+  { id: 4, name: 'Melhor Pandeireta', slug: 'melhor-pandeireta' },
+  { id: 5, name: 'Melhor Instrumental', slug: 'melhor-instrumental' },
+  { id: 6, name: 'Melhor Estandarte', slug: 'melhor-estandarte' },
+  { id: 7, name: 'Melhor Solista', slug: 'melhor-solista' },
+  { id: 8, name: 'Melhor Tema Original', slug: 'melhor-original' },
+  { id: 9, name: 'Tuna do Público', slug: 'tuna-do-publico' },
 ];
 
 // =============================================================================

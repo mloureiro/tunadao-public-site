@@ -135,7 +135,7 @@ const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
             {Object.entries(edition.awards).map(([key, winner]) => (
               <div
                 class="award-item"
-                class:list={{ 'award-item--highlight': key === 'melhorTuna' }}
+                class:list={{ 'award-item--highlight': key === 'melhor-tuna' }}
               >
                 <span class="award-item__label">{t(`awards.${key}`)}</span>
                 <span class="award-item__winner">{winner}</span>
