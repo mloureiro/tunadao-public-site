@@ -72,23 +72,46 @@ export function getMediaUrl(media: CMSMedia | number | string | undefined | null
 // =============================================================================
 
 /**
+ * Helper to check if tuna is populated (has the full object, not just ID)
+ */
+function isTunaPopulated(tuna: CMSTuna | number | string): tuna is CMSTuna {
+  return typeof tuna === 'object' && tuna !== null && 'shortName' in tuna;
+}
+
+/**
+ * Helper to extract clean short name (removes timestamp suffix if present)
+ * e.g., "eul-1769429567906" -> "EUL"
+ */
+function cleanShortName(shortName: string): string {
+  // Check if it has a timestamp suffix (slug-timestamp pattern)
+  const match = shortName.match(/^(.+)-\d{10,}$/);
+  if (match) {
+    // Return the slug part, uppercased
+    return match[1].toUpperCase();
+  }
+  return shortName;
+}
+
+/**
  * Helper to get tuna full name (for participants list)
  */
-function getTunaName(tuna: CMSTuna | number): string {
-  if (typeof tuna === 'number') {
-    return `Tuna #${tuna}`;
+function getTunaName(tuna: CMSTuna | number | string): string {
+  if (!isTunaPopulated(tuna)) {
+    console.warn('[CMS] Tuna relationship not populated:', tuna);
+    return '—';
   }
-  return tuna.fullName || tuna.shortName;
+  return tuna.fullName || cleanShortName(tuna.shortName);
 }
 
 /**
  * Helper to get tuna short name (for awards)
  */
-function getTunaShortName(tuna: CMSTuna | number): string {
-  if (typeof tuna === 'number') {
-    return `Tuna #${tuna}`;
+function getTunaShortName(tuna: CMSTuna | number | string): string {
+  if (!isTunaPopulated(tuna)) {
+    console.warn('[CMS] Tuna relationship not populated:', tuna);
+    return '—';
   }
-  return tuna.shortName || tuna.fullName;
+  return cleanShortName(tuna.shortName) || tuna.fullName;
 }
 
 /**

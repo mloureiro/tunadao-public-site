@@ -641,20 +641,42 @@ export const seedCitadaoEditions = async (payload: Payload) => {
     }
 
     const shortName = extractShortName(name);
-    const slug = normalizeForSlug(shortName);
 
     try {
       const website = tunaWebsites[name];
-      const newTuna = await payload.create({
-        collection: 'tunas',
-        data: {
-          shortName: `${slug}-${Date.now()}`, // Ensure unique
-          fullName: name,
-          ...(website && { website }),
-        },
-      });
-      tunaCache.set(normalizedKey, { id: newTuna.id, canonicalName: name });
-      console.log(`    ✅ Created tuna: ${shortName} (${name})${website ? ` [${website}]` : ''}`);
+      // Try with the extracted shortName first, add suffix if needed for uniqueness
+      let finalShortName = shortName;
+      let attempts = 0;
+      let created = false;
+
+      while (!created && attempts < 5) {
+        try {
+          const newTuna = await payload.create({
+            collection: 'tunas',
+            data: {
+              shortName: finalShortName,
+              fullName: name,
+              ...(website && { website }),
+            },
+          });
+          tunaCache.set(normalizedKey, { id: newTuna.id, canonicalName: name });
+          console.log(`    ✅ Created tuna: ${finalShortName} (${name})${website ? ` [${website}]` : ''}`);
+          created = true;
+        } catch (err: unknown) {
+          // If it's a duplicate key error, try with a suffix
+          const errorMessage = err instanceof Error ? err.message : String(err);
+          if (errorMessage.includes('duplicate') || errorMessage.includes('unique')) {
+            attempts++;
+            finalShortName = `${shortName} (${attempts})`;
+          } else {
+            throw err;
+          }
+        }
+      }
+
+      if (!created) {
+        console.error(`    ❌ Could not create unique shortName for "${name}"`);
+      }
     } catch (error) {
       console.error(`    ❌ Failed to create tuna "${name}":`, error);
     }
