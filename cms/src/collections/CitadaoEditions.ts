@@ -80,7 +80,7 @@ export const CitadaoEditions: CollectionConfig = {
     },
     {
       name: 'poster',
-      type: 'upload',
+      type: 'relationship',
       relationTo: 'media',
       admin: {
         description: 'Cartaz do evento',

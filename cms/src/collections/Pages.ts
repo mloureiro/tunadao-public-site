@@ -66,7 +66,7 @@ export const Pages: CollectionConfig = {
         },
         {
           name: 'seoImage',
-          type: 'upload',
+          type: 'relationship',
           relationTo: 'media',
           admin: {
             description: 'Imagem para partilha em redes sociais',

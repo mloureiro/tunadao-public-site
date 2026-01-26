@@ -56,7 +56,7 @@ export const BlogPosts: CollectionConfig = {
     },
     {
       name: 'featuredImage',
-      type: 'upload',
+      type: 'relationship',
       relationTo: 'media',
       required: true,
     },

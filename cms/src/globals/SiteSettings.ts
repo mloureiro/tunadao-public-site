@@ -33,12 +33,12 @@ export const SiteSettings: GlobalConfig = {
     },
     {
       name: 'logo',
-      type: 'upload',
+      type: 'relationship',
       relationTo: 'media',
     },
     {
       name: 'favicon',
-      type: 'upload',
+      type: 'relationship',
       relationTo: 'media',
     },
     {
@@ -88,7 +88,7 @@ export const SiteSettings: GlobalConfig = {
       fields: [
         {
           name: 'defaultSeoImage',
-          type: 'upload',
+          type: 'relationship',
           relationTo: 'media',
           admin: {
             description: 'Imagem padrão para partilha em redes sociais',

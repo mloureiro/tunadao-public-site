@@ -44,7 +44,7 @@ export const Albums: CollectionConfig = {
     },
     {
       name: 'coverImage',
-      type: 'upload',
+      type: 'relationship',
       relationTo: 'media',
       required: true,
       admin: {

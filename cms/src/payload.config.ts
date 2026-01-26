@@ -2,7 +2,6 @@ import { buildConfig } from 'payload';
 import { sqliteAdapter } from '@payloadcms/db-sqlite';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { resendAdapter } from '@payloadcms/email-resend';
-import { payloadCloudinaryPlugin } from '@jhb.software/payload-cloudinary-plugin';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import sharp from 'sharp';
@@ -72,26 +71,7 @@ export default buildConfig({
 
   globals: [SiteSettings, ContactInfo],
 
-  plugins: [
-    // Cloudinary storage for media files (only in production with credentials)
-    ...(process.env.CLOUDINARY_CLOUD_NAME
-      ? [
-          payloadCloudinaryPlugin({
-            collections: {
-              media: true,
-            },
-            cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-            credentials: {
-              apiKey: process.env.CLOUDINARY_API_KEY!,
-              apiSecret: process.env.CLOUDINARY_API_SECRET!,
-            },
-            folder: 'tunadao',
-            useFilename: true,
-          }),
-        ]
-      : []),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ] as any, // Type assertion needed due to monorepo payload version mismatch
+  plugins: [],
 
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
