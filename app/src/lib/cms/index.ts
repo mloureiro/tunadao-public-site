@@ -314,26 +314,45 @@ function transformPalmaresYear(
 ): FrontendPalmaresYear {
   return {
     year: cms.year,
-    festivals: cms.festivals.map((festival) => ({
-      name: festival.name,
-      location: festival.location || '',
-      awards: (festival.awards || []).map((award) => {
-        // Use custom name if provided, otherwise look up award type name
-        if (award.customName) {
-          return award.customName;
+    festivals: cms.festivals.map((festival) => {
+      // Transform organizing tuna if present
+      let organizingTuna: FrontendPalmaresYear['festivals'][0]['organizingTuna'] = undefined;
+      if (festival.organizingTuna) {
+        const tuna = typeof festival.organizingTuna === 'number'
+          ? null // ID not resolved, shouldn't happen with depth=2
+          : festival.organizingTuna as CMSTuna;
+        if (tuna) {
+          organizingTuna = {
+            shortName: tuna.shortName,
+            fullName: tuna.fullName,
+            city: tuna.city,
+            website: tuna.website,
+          };
         }
+      }
 
-        if (award.awardType) {
-          const awardTypeId =
-            typeof award.awardType === 'number'
-              ? award.awardType
-              : (award.awardType as CMSAwardType).id;
-          return awardTypes.get(Number(awardTypeId)) || 'Prémio';
-        }
+      return {
+        name: festival.name,
+        location: festival.location || '',
+        organizingTuna,
+        awards: (festival.awards || []).map((award) => {
+          // Use custom name if provided, otherwise look up award type name
+          if (award.customName) {
+            return award.customName;
+          }
 
-        return 'Prémio';
-      }),
-    })),
+          if (award.awardType) {
+            const awardTypeId =
+              typeof award.awardType === 'number'
+                ? award.awardType
+                : (award.awardType as CMSAwardType).id;
+            return awardTypes.get(Number(awardTypeId)) || 'Prémio';
+          }
+
+          return 'Prémio';
+        }),
+      };
+    }),
   };
 }
 

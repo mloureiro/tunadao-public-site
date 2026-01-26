@@ -260,6 +260,7 @@ export async function getPalmaresYears(): Promise<CMSPalmaresYear[]> {
     where: { status: { equals: 'published' } },
     sort: '-year',
     limit: 100,
+    depth: 2, // Populate organizingTuna relationship
   });
 
   console.log(`[CMS] Fetched ${response.docs.length} Palmarés years`);
