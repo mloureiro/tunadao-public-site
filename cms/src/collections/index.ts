@@ -1,6 +1,7 @@
 export { Users } from './Users';
 export { Media } from './Media';
 export { AwardTypes } from './AwardTypes';
+export { Tunas } from './Tunas';
 export { CitadaoEditions } from './CitadaoEditions';
 export { PalmaresYears } from './PalmaresYears';
 export { BlogPosts } from './BlogPosts';

@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     'award-types': AwardType;
+    tunas: Tuna;
     'citadao-editions': CitadaoEdition;
     'palmares-years': PalmaresYear;
     'blog-posts': BlogPost;
@@ -87,6 +88,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'award-types': AwardTypesSelect<false> | AwardTypesSelect<true>;
+    tunas: TunasSelect<false> | TunasSelect<true>;
     'citadao-editions': CitadaoEditionsSelect<false> | CitadaoEditionsSelect<true>;
     'palmares-years': PalmaresYearsSelect<false> | PalmaresYearsSelect<true>;
     'blog-posts': BlogPostsSelect<false> | BlogPostsSelect<true>;
@@ -259,6 +261,50 @@ export interface AwardType {
   createdAt: string;
 }
 /**
+ * Tunas académicas e grupos similares
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tunas".
+ */
+export interface Tuna {
+  id: number;
+  /**
+   * Nome oficial da tuna
+   */
+  name: string;
+  /**
+   * Identificador único (ex: tunadao-1998)
+   */
+  slug: string;
+  /**
+   * Nome abreviado/sigla (ex: TDK, TEUP)
+   */
+  shortName?: string | null;
+  /**
+   * Logo da tuna
+   */
+  logo?: (number | null) | Media;
+  /**
+   * Cidade de origem
+   */
+  city?: string | null;
+  /**
+   * Ano de fundação
+   */
+  foundedYear?: number | null;
+  /**
+   * Website ou perfil (URL completo)
+   */
+  website?: string | null;
+  /**
+   * Descrição curta (aparece em hover/tooltip)
+   */
+  shortDescription?: string | null;
+  status: 'draft' | 'published';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Edições do Festival Citadão
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -290,21 +336,11 @@ export interface CitadaoEdition {
   /**
    * Tunas participantes (a concurso)
    */
-  tunas?:
-    | {
-        name: string;
-        id?: string | null;
-      }[]
-    | null;
+  tunas?: (number | Tuna)[] | null;
   /**
    * Tunas/grupos convidados
    */
-  guests?:
-    | {
-        name: string;
-        id?: string | null;
-      }[]
-    | null;
+  guests?: (number | Tuna)[] | null;
   /**
    * Prémios atribuídos
    */
@@ -312,9 +348,9 @@ export interface CitadaoEdition {
     | {
         awardType: number | AwardType;
         /**
-         * Nome da tuna vencedora
+         * Tuna vencedora
          */
-        winner: string;
+        winner: number | Tuna;
         id?: string | null;
       }[]
     | null;
@@ -618,6 +654,10 @@ export interface PayloadLockedDocument {
         value: number | AwardType;
       } | null)
     | ({
+        relationTo: 'tunas';
+        value: number | Tuna;
+      } | null)
+    | ({
         relationTo: 'citadao-editions';
         value: number | CitadaoEdition;
       } | null)
@@ -751,6 +791,23 @@ export interface AwardTypesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tunas_select".
+ */
+export interface TunasSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  shortName?: T;
+  logo?: T;
+  city?: T;
+  foundedYear?: T;
+  website?: T;
+  shortDescription?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "citadao-editions_select".
  */
 export interface CitadaoEditionsSelect<T extends boolean = true> {
@@ -760,18 +817,8 @@ export interface CitadaoEditionsSelect<T extends boolean = true> {
   date?: T;
   venue?: T;
   poster?: T;
-  tunas?:
-    | T
-    | {
-        name?: T;
-        id?: T;
-      };
-  guests?:
-    | T
-    | {
-        name?: T;
-        id?: T;
-      };
+  tunas?: T;
+  guests?: T;
   awards?:
     | T
     | {

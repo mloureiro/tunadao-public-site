@@ -10,6 +10,7 @@ import sharp from 'sharp';
 import { Users } from './collections/Users';
 import { Media } from './collections/Media';
 import { AwardTypes } from './collections/AwardTypes';
+import { Tunas } from './collections/Tunas';
 import { CitadaoEditions } from './collections/CitadaoEditions';
 import { PalmaresYears } from './collections/PalmaresYears';
 import { BlogPosts } from './collections/BlogPosts';
@@ -60,6 +61,7 @@ export default buildConfig({
     Users,
     Media,
     AwardTypes,
+    Tunas,
     CitadaoEditions,
     PalmaresYears,
     BlogPosts,
