@@ -443,6 +443,10 @@ export interface PalmaresYear {
      */
     location?: string | null;
     /**
+     * Tuna organizadora do festival (opcional)
+     */
+    organizingTuna?: (number | null) | Tuna;
+    /**
      * Prémios ganhos
      */
     awards?:
@@ -938,6 +942,7 @@ export interface PalmaresYearsSelect<T extends boolean = true> {
     | {
         name?: T;
         location?: T;
+        organizingTuna?: T;
         awards?:
           | T
           | {
