@@ -20,7 +20,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === A ===
   {
     shortName: 'Afonsina',
-    fullName: 'Afonsina - Tuna de Engenharia da Universidade do Minho',
+    fullName: 'Tuna de Engenharia da Universidade do Minho',
     city: 'Guimaraes',
     website: 'https://afonsina.com/',
     logoPublicId: 'tunadao/tunas/afonsina',
@@ -33,7 +33,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: 'anTUNiA',
-    fullName: 'anTUNiA - Tuna de Ciencias e Tecnologia da Universidade Nova de Lisboa',
+    fullName: 'Tuna de Ciencias e Tecnologia da Universidade Nova de Lisboa',
     city: 'Lisboa',
     website: 'https://antunia.fct.unl.pt/',
     logoPublicId: 'tunadao/tunas/antunia',
@@ -46,7 +46,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: 'Azeituna',
-    fullName: 'Azeituna - Tuna da Universidade do Minho',
+    fullName: 'Tuna da Universidade do Minho',
     city: 'Braga',
     website: 'https://azeituna.pt/',
     logoPublicId: 'tunadao/tunas/azeituna',
@@ -55,14 +55,14 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === B ===
   {
     shortName: 'Bruna',
-    fullName: 'Bruna - Tuna Universitaria da Figueira da Foz',
+    fullName: 'Tuna Universitaria da Figueira da Foz',
     city: 'Figueira da Foz',
   },
 
   // === C ===
   {
     shortName: 'Castra Leuca',
-    fullName: 'Castra Leuca - Tuna Academica Masculina do Instituto Politecnico de Castelo Branco',
+    fullName: 'Tuna Academica Masculina do Instituto Politecnico de Castelo Branco',
     city: 'Castelo Branco',
     logoPublicId: 'tunadao/tunas/castra-leuca',
   },
@@ -73,7 +73,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: "Copituna d'Oppidana",
-    fullName: "Copituna d'Oppidana - Tuna Academica da Guarda",
+    fullName: 'Tuna Academica da Guarda',
     city: 'Guarda',
     website: 'https://tagcopituna.wixsite.com/copituna-d-oppidana',
     logoPublicId: 'tunadao/tunas/copituna',
@@ -86,7 +86,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === D ===
   {
     shortName: 'Desertuna',
-    fullName: 'Desertuna - Tuna Academica da Universidade da Beira Interior',
+    fullName: 'Tuna Academica da Universidade da Beira Interior',
     city: 'Covilha',
     website: 'https://www.portugaltunas.com/directorio/desertuna/',
     logoPublicId: 'tunadao/tunas/desertuna',
@@ -95,7 +95,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === E ===
   {
     shortName: 'EACB',
-    fullName: 'EACB - Estudantina Academica de Castelo Branco',
+    fullName: 'Estudantina Academica de Castelo Branco',
     city: 'Castelo Branco',
     website: 'https://estudantinacb.pt/',
     logoPublicId: 'tunadao/tunas/estudantina-academica-castelo-branco',
@@ -129,12 +129,12 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === F ===
   {
     shortName: 'Fado Livre',
-    fullName: 'Fado Livre - Grupo de Fados',
+    fullName: 'Grupo de Fados',
     city: 'Viseu',
   },
   {
     shortName: 'FAN-Farra',
-    fullName: 'FAN-Farra - Academica de Coimbra',
+    fullName: 'Farra Academica de Coimbra',
     city: 'Coimbra',
     website: 'http://www.portugaltunas.com/directorio/fanfarracoimbra/',
     logoPublicId: 'tunadao/tunas/fan-farra-academica-coimbra',
@@ -143,7 +143,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === G ===
   {
     shortName: 'Gatunos',
-    fullName: 'Gatunos - Tuna Academica do Politecnico do Porto',
+    fullName: 'Tuna Academica do Politecnico do Porto',
     city: 'Vila do Conde',
     website: 'https://alcatraz.gatunos.pt/',
   },
@@ -151,7 +151,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === H ===
   {
     shortName: 'Hinoportuna',
-    fullName: 'Hinoportuna - Tuna Academica do Instituto Politecnico de Viana do Castelo',
+    fullName: 'Tuna Academica do Instituto Politecnico de Viana do Castelo',
     city: 'Viana do Castelo',
     website: 'https://hinoportuna.ipvc.pt/',
     logoPublicId: 'tunadao/tunas/hinoportuna',
@@ -160,7 +160,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === I ===
   {
     shortName: 'Imperial Neptuna',
-    fullName: 'Imperial Neptuna - Academica da Figueira da Foz',
+    fullName: 'Tuna Academica da Figueira da Foz',
     city: 'Figueira da Foz',
     logoPublicId: 'tunadao/tunas/imperial-neptuna',
   },
@@ -175,7 +175,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === L ===
   {
     shortName: 'Luz&Tuna',
-    fullName: 'Luz&Tuna - Tuna da Universidade Lusiada de Lisboa',
+    fullName: 'Tuna da Universidade Lusiada de Lisboa',
     city: 'Lisboa',
     website: 'https://www.luztuna.pt/',
     logoPublicId: 'tunadao/tunas/luztuna',
@@ -184,7 +184,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === M ===
   {
     shortName: 'Magna Tuna Cartola',
-    fullName: 'Magna Tuna Cartola - Da Universidade de Aveiro',
+    fullName: 'Tuna da Universidade de Aveiro',
     city: 'Aveiro',
     logoPublicId: 'tunadao/tunas/magna-tuna-cartola',
   },
@@ -216,7 +216,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: 'RTUB',
-    fullName: 'RTUB - Real Tuna Universitaria de Braganca',
+    fullName: 'Real Tuna Universitaria de Braganca',
     city: 'Braganca',
     logoPublicId: 'tunadao/tunas/real-tuna-braganca',
   },
@@ -224,13 +224,13 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === S ===
   {
     shortName: 'Scalabituna',
-    fullName: 'Scalabituna - Tuna do Instituto Politecnico de Santarem',
+    fullName: 'Tuna do Instituto Politecnico de Santarem',
     city: 'Santarem',
     logoPublicId: 'tunadao/tunas/scalabituna',
   },
   {
     shortName: 'Semper Tesus',
-    fullName: 'Semper Tesus - Tuna Academica da Escola Superior Agraria de Beja',
+    fullName: 'Tuna Academica da Escola Superior Agraria de Beja',
     city: 'Beja',
     logoPublicId: 'tunadao/tunas/semper-tesus',
   },
@@ -243,29 +243,29 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: 'TAEP',
-    fullName: 'TAEP - Tuna Academica de Enfermagem do Porto',
+    fullName: 'Tuna Academica de Enfermagem do Porto',
     city: 'Porto',
   },
   {
     shortName: 'TAFDUP',
-    fullName: 'TAFDUP - Tuna Academica da Faculdade de Direito da Universidade do Porto',
+    fullName: 'Tuna Academica da Faculdade de Direito da Universidade do Porto',
     city: 'Porto',
     website: 'https://x.com/tafdup',
   },
   {
     shortName: 'TAIPCA',
-    fullName: 'TAIPCA - Tuna Academica do Instituto Politecnico do Cavado e do Ave',
+    fullName: 'Tuna Academica do Instituto Politecnico do Cavado e do Ave',
     city: 'Barcelos',
   },
   {
     shortName: 'TAISEP',
-    fullName: 'TAISEP - Tuna Academica do Instituto Superior de Engenharia do Porto',
+    fullName: 'Tuna Academica do Instituto Superior de Engenharia do Porto',
     city: 'Porto',
     website: 'https://en.taisep.com/',
   },
   {
     shortName: 'TASCA',
-    fullName: 'TASCA - Tuna Academica de Setubal Cidade Amada',
+    fullName: 'Tuna Academica de Setubal Cidade Amada',
     city: 'Setubal',
   },
   {
@@ -283,14 +283,14 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: 'TDUP',
-    fullName: 'TDUP - Tuna do Distrito Universitario do Porto',
+    fullName: 'Tuna do Distrito Universitario do Porto',
     city: 'Porto',
     website: 'https://www.instagram.com/tduporto/',
     logoPublicId: 'tunadao/tunas/tdup',
   },
   {
     shortName: 'TEUP',
-    fullName: 'TEUP - Tuna de Engenharia da Universidade do Porto',
+    fullName: 'Tuna de Engenharia da Universidade do Porto',
     city: 'Porto',
     website: 'https://fe.up.pt/teup/',
     logoPublicId: 'tunadao/tunas/teup',
@@ -302,7 +302,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: 'Tintuna',
-    fullName: 'Tintuna - Tuna Academica da Casa Moniz',
+    fullName: 'Tuna Academica da Casa Moniz',
     city: 'Madeira',
   },
   {
@@ -320,30 +320,30 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: 'Trovantina',
-    fullName: 'Trovantina - Tuna Masculina do Instituto Politecnico de Leiria',
+    fullName: 'Tuna Masculina do Instituto Politecnico de Leiria',
     city: 'Leiria',
   },
   {
     shortName: 'TUA',
-    fullName: 'TUA - Tuna Universitaria de Aveiro',
+    fullName: 'Tuna Universitaria de Aveiro',
     city: 'Aveiro',
     website: 'https://www.facebook.com/tunauniversitariadeaveiro/',
     logoPublicId: 'tunadao/tunas/tua-aveiro',
   },
   {
     shortName: 'TUB',
-    fullName: 'TUB - Tuna Universitaria de Beja',
+    fullName: 'Tuna Universitaria de Beja',
     city: 'Beja',
     logoPublicId: 'tunadao/tunas/tub-beja',
   },
   {
     shortName: 'TUCP',
-    fullName: 'TUCP - Tuna da Universidade Catolica Portuguesa do Porto',
+    fullName: 'Tuna da Universidade Catolica Portuguesa do Porto',
     city: 'Porto',
   },
   {
     shortName: 'TUIST',
-    fullName: 'TUIST - Tuna Universitaria do Instituto Superior Tecnico',
+    fullName: 'Tuna Universitaria do Instituto Superior Tecnico',
     city: 'Lisboa',
     logoPublicId: 'tunadao/tunas/tuist',
   },
@@ -362,7 +362,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: 'Tuna-MUs',
-    fullName: 'Tuna-MUs - Tuna Medica da Universidade da Beira Interior',
+    fullName: 'Tuna Medica da Universidade da Beira Interior',
     city: 'Covilha',
   },
   {
@@ -413,12 +413,12 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: 'Tusofona',
-    fullName: 'Tusofona - Real Tuna Lusofona',
+    fullName: 'Real Tuna Lusofona',
     city: 'Lisboa',
   },
   {
     shortName: 'Tunideos',
-    fullName: 'Tunideos - Tuna Masculina da Universidade dos Acores',
+    fullName: 'Tuna Masculina da Universidade dos Acores',
     city: 'Ponta Delgada',
     website: 'https://www.tunideos.com/',
     logoPublicId: 'tunadao/tunas/tunideos',
@@ -427,14 +427,14 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === V ===
   {
     shortName: 'Versus Tuna',
-    fullName: 'Versus Tuna - Tuna Academica da Universidade do Algarve',
+    fullName: 'Tuna Academica da Universidade do Algarve',
     city: 'Faro',
     website: 'https://www.versustuna.pt/',
     logoPublicId: 'tunadao/tunas/versus-tuna',
   },
   {
     shortName: 'Viriatuna',
-    fullName: 'Viriatuna - Tuna Academica da Escola Superior de Saude de Viseu',
+    fullName: 'Tuna Academica da Escola Superior de Saude de Viseu',
     city: 'Viseu',
     website: 'https://viriatuna.wixsite.com/viriatuna/',
     logoPublicId: 'tunadao/tunas/viriatuna-essv',
