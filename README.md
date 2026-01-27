@@ -125,6 +125,23 @@ npm run dev -w cms        # Start CMS server
 npm run build -w cms      # Build CMS
 ```
 
+### Component Development
+
+A component showcase page is available at `/dev/components` during development. This page:
+
+- Displays all UI components with their variants
+- Only accessible in development mode (redirects to `/` in production)
+- Supports theme toggle to test light/dark modes
+- Not indexed by search engines
+
+```bash
+# Start dev server and visit
+npm run dev -w app
+# Open http://localhost:4321/dev/components
+```
+
+To add new components to the showcase, edit `app/src/pages/dev/components.astro`.
+
 ## Deployment
 
 See [DEPLOY.md](./DEPLOY.md) for detailed deployment instructions.

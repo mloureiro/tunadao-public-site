@@ -1,0 +1,303 @@
+---
+import '@styles/global.css';
+import Button from '@components/Button.astro';
+import Card from '@components/Card.astro';
+import AwardBadge from '@components/AwardBadge.astro';
+import AwardCard from '@components/AwardCard.astro';
+import ThemeToggle from '@components/ThemeToggle.astro';
+
+// Only available in development
+if (import.meta.env.PROD) {
+  return Astro.redirect('/');
+}
+---
+
+<!doctype html>
+<html lang="pt" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Components | Dev</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      const theme =
+        localStorage.getItem('theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    </script>
+  </head>
+  <body>
+    <div class="dev-page">
+      <header class="dev-header">
+        <h1>Components</h1>
+        <div class="dev-header__actions">
+          <ThemeToggle />
+        </div>
+      </header>
+
+      <nav class="dev-nav">
+        <a href="#button">Button</a>
+        <a href="#card">Card</a>
+        <a href="#award-badge">AwardBadge</a>
+        <a href="#award-card">AwardCard</a>
+      </nav>
+
+      <main class="dev-main">
+        <!-- Button -->
+        <section id="button" class="component-section">
+          <h2>Button</h2>
+          <p class="component-path">@components/Button.astro</p>
+
+          <div class="component-group">
+            <h3>Variants</h3>
+            <div class="component-row">
+              <Button variant="primary">Primary</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button variant="outline">Outline</Button>
+              <Button variant="ghost">Ghost</Button>
+            </div>
+          </div>
+
+          <div class="component-group">
+            <h3>Sizes</h3>
+            <div class="component-row">
+              <Button size="sm">Small</Button>
+              <Button size="md">Medium</Button>
+              <Button size="lg">Large</Button>
+            </div>
+          </div>
+
+          <div class="component-group">
+            <h3>States</h3>
+            <div class="component-row">
+              <Button>Default</Button>
+              <Button disabled>Disabled</Button>
+            </div>
+          </div>
+
+          <div class="component-group">
+            <h3>As Link</h3>
+            <div class="component-row">
+              <Button href="#">Link Button</Button>
+              <Button href="#" target="_blank">External Link</Button>
+            </div>
+          </div>
+
+          <div class="component-group dark-bg">
+            <h3>On Dark Background</h3>
+            <div class="component-row hero">
+              <Button variant="primary">Primary</Button>
+              <Button variant="outline">Outline</Button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Card -->
+        <section id="card" class="component-section">
+          <h2>Card</h2>
+          <p class="component-path">@components/Card.astro</p>
+
+          <div class="component-group">
+            <h3>Variants</h3>
+            <div class="component-grid">
+              <Card variant="default">
+                <div class="card__content">
+                  <h4 class="card__title">Default Card</h4>
+                  <p class="card__description">This is the default card variant with subtle shadow.</p>
+                </div>
+              </Card>
+              <Card variant="elevated">
+                <div class="card__content">
+                  <h4 class="card__title">Elevated Card</h4>
+                  <p class="card__description">This card has a more prominent shadow.</p>
+                </div>
+              </Card>
+              <Card variant="outlined">
+                <div class="card__content">
+                  <h4 class="card__title">Outlined Card</h4>
+                  <p class="card__description">This card has a border instead of shadow.</p>
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          <div class="component-group">
+            <h3>As Link</h3>
+            <div class="component-grid">
+              <Card href="#" variant="default">
+                <div class="card__content">
+                  <h4 class="card__title">Clickable Card</h4>
+                  <p class="card__description">Hover to see the lift effect.</p>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        <!-- AwardBadge -->
+        <section id="award-badge" class="component-section">
+          <h2>AwardBadge</h2>
+          <p class="component-path">@components/AwardBadge.astro</p>
+
+          <div class="component-group">
+            <h3>Variants</h3>
+            <div class="component-row">
+              <AwardBadge variant="default">Default</AwardBadge>
+              <AwardBadge variant="gold">Gold</AwardBadge>
+              <AwardBadge variant="silver">Silver</AwardBadge>
+              <AwardBadge variant="bronze">Bronze</AwardBadge>
+              <AwardBadge variant="special">Special</AwardBadge>
+            </div>
+          </div>
+
+          <div class="component-group">
+            <h3>With Icons</h3>
+            <div class="component-row">
+              <AwardBadge variant="gold" showIcon>1st Place</AwardBadge>
+              <AwardBadge variant="silver" showIcon>2nd Place</AwardBadge>
+              <AwardBadge variant="bronze" showIcon>3rd Place</AwardBadge>
+              <AwardBadge variant="special" showIcon>Audience Choice</AwardBadge>
+            </div>
+          </div>
+        </section>
+
+        <!-- AwardCard -->
+        <section id="award-card" class="component-section">
+          <h2>AwardCard</h2>
+          <p class="component-path">@components/AwardCard.astro</p>
+
+          <div class="component-group">
+            <h3>Award Types</h3>
+            <div class="component-grid component-grid--sm">
+              <AwardCard awardKey="melhor-tuna" name="Melhor Tuna" winner="Tunadão 1998" />
+              <AwardCard awardKey="segunda-melhor-tuna" name="2ª Melhor Tuna" winner="Tuna Exemplo" />
+              <AwardCard awardKey="terceira-melhor-tuna" name="3ª Melhor Tuna" winner="Outra Tuna" />
+              <AwardCard awardKey="tuna-do-publico" name="Tuna do Público" winner="Tunadão 1998" />
+              <AwardCard awardKey="melhor-serenata" name="Melhor Serenata" winner="Tunadão 1998" />
+              <AwardCard awardKey="melhor-passacalles" name="Melhor Passacalles" winner="Tunadão 1998" />
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <style>
+      .dev-page {
+        min-height: 100vh;
+        background-color: var(--color-background);
+      }
+
+      .dev-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-4) var(--space-6);
+        border-bottom: 1px solid var(--color-border);
+        background-color: var(--color-surface);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .dev-header h1 {
+        font-size: var(--font-size-xl);
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .dev-nav {
+        display: flex;
+        gap: var(--space-4);
+        padding: var(--space-3) var(--space-6);
+        border-bottom: 1px solid var(--color-border);
+        background-color: var(--color-surface);
+        overflow-x: auto;
+      }
+
+      .dev-nav a {
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-size: var(--font-size-sm);
+        white-space: nowrap;
+        transition: color var(--transition-fast);
+      }
+
+      .dev-nav a:hover {
+        color: var(--color-primary);
+      }
+
+      .dev-main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-8) var(--space-6);
+      }
+
+      .component-section {
+        margin-bottom: var(--space-12);
+        scroll-margin-top: 120px;
+      }
+
+      .component-section h2 {
+        font-size: var(--font-size-2xl);
+        font-weight: 700;
+        margin-bottom: var(--space-1);
+        color: var(--color-text);
+      }
+
+      .component-path {
+        font-family: monospace;
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-6);
+      }
+
+      .component-group {
+        margin-bottom: var(--space-6);
+        padding: var(--space-4);
+        background-color: var(--color-surface);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--color-border);
+      }
+
+      .component-group h3 {
+        font-size: var(--font-size-sm);
+        font-weight: 600;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: var(--space-4);
+      }
+
+      .component-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-3);
+      }
+
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--space-4);
+      }
+
+      .component-grid--sm {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+
+      .dark-bg {
+        background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      }
+
+      .dark-bg h3 {
+        color: rgba(255, 255, 255, 0.8);
+      }
+    </style>
+  </body>
+</html>
