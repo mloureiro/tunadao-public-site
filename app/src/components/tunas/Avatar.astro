@@ -1,0 +1,166 @@
+---
+/**
+ * Tuna Avatar Component
+ * Displays a tuna's logo with fallback to initials
+ */
+
+interface Props {
+  shortName: string;
+  logoUrl?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  shape?: 'circle' | 'rounded';
+  class?: string;
+}
+
+const {
+  shortName,
+  logoUrl,
+  size = 'md',
+  shape = 'rounded',
+  class: className,
+} = Astro.props;
+
+// Size mapping in pixels
+const sizeMap = {
+  sm: 24,
+  md: 48,
+  lg: 64,
+  xl: 96,
+} as const;
+
+// Generate initials from shortName (first 2 characters)
+const initials = shortName.slice(0, 2).toUpperCase();
+
+// Generate a consistent color index (1-10) based on shortName
+function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
+
+const colorIndex = (hashString(shortName) % 10) + 1;
+const pixelSize = sizeMap[size];
+
+// Font size scales with avatar size
+const fontSizeMap = {
+  sm: '0.625rem',
+  md: '1rem',
+  lg: '1.25rem',
+  xl: '1.75rem',
+} as const;
+---
+
+<div
+  class:list={['tuna-avatar', `tuna-avatar--${size}`, `tuna-avatar--${shape}`, className]}
+  style={`--avatar-size: ${pixelSize}px; --avatar-font-size: ${fontSizeMap[size]};`}
+  data-color={colorIndex}
+>
+  {logoUrl ? (
+    <>
+      <img
+        src={logoUrl}
+        alt=""
+        class="tuna-avatar__bg"
+        aria-hidden="true"
+      />
+      <img
+        src={logoUrl}
+        alt={`Logo ${shortName}`}
+        class="tuna-avatar__image"
+        loading="lazy"
+      />
+    </>
+  ) : (
+    <span class="tuna-avatar__fallback">{initials}</span>
+  )}
+</div>
+
+<style>
+  .tuna-avatar {
+    --avatar-size: 48px;
+    --avatar-font-size: 1rem;
+
+    position: relative;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    min-width: var(--avatar-size);
+    min-height: var(--avatar-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--color-surface-alt, #f5f5f5);
+    border: 2px solid var(--color-border);
+  }
+
+  .tuna-avatar--circle {
+    border-radius: 50%;
+  }
+
+  /* Size-specific border radius for rounded */
+  .tuna-avatar--rounded.tuna-avatar--sm {
+    border-radius: 0.5rem;
+  }
+
+  .tuna-avatar--rounded.tuna-avatar--md {
+    border-radius: 0.75rem;
+  }
+
+  .tuna-avatar--rounded.tuna-avatar--lg {
+    border-radius: 1rem;
+  }
+
+  .tuna-avatar--rounded.tuna-avatar--xl {
+    border-radius: 1.25rem;
+  }
+
+  /* Background image (blurred) */
+  .tuna-avatar__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(2px);
+    transform: scale(1.2); /* Prevent blur edges from showing */
+    z-index: 0;
+  }
+
+  /* Main image */
+  .tuna-avatar__image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 1;
+  }
+
+  .tuna-avatar__fallback {
+    font-size: var(--avatar-font-size);
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  /* Color palette for fallback backgrounds (10 colors) */
+  .tuna-avatar[data-color="1"] { background-color: #8b5cf6; } /* violet */
+  .tuna-avatar[data-color="2"] { background-color: #ec4899; } /* pink */
+  .tuna-avatar[data-color="3"] { background-color: #f97316; } /* orange */
+  .tuna-avatar[data-color="4"] { background-color: #eab308; } /* yellow */
+  .tuna-avatar[data-color="5"] { background-color: #22c55e; } /* green */
+  .tuna-avatar[data-color="6"] { background-color: #14b8a6; } /* teal */
+  .tuna-avatar[data-color="7"] { background-color: #3b82f6; } /* blue */
+  .tuna-avatar[data-color="8"] { background-color: #6366f1; } /* indigo */
+  .tuna-avatar[data-color="9"] { background-color: #a855f7; } /* purple */
+  .tuna-avatar[data-color="10"] { background-color: #ef4444; } /* red */
+
+  /* When there's an image, keep the colored background as fallback during load */
+  .tuna-avatar:has(.tuna-avatar__image) {
+    background-color: transparent;
+  }
+</style>
