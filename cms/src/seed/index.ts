@@ -4,6 +4,7 @@ import {
   seedAdminUser,
   seedAwardTypes,
   seedTunas,
+  seedTunaLogos,
   seedCitadaoEditions,
   seedCitadaoPosters,
   seedPalmaresYears,
@@ -28,16 +29,19 @@ const seed = async () => {
     console.log('\n3. Seeding tunas...');
     const tunaRegistry = await seedTunas(payload);
 
-    console.log('\n4. Seeding Citadao editions (includes venues, participants, awards)...');
+    console.log('\n4. Seeding tuna logos (from Cloudinary)...');
+    await seedTunaLogos(payload);
+
+    console.log('\n5. Seeding Citadao editions (includes venues, participants, awards)...');
     await seedCitadaoEditions(payload, tunaRegistry, awardRegistry);
 
-    console.log('\n5. Seeding Citadao posters (from Cloudinary)...');
+    console.log('\n6. Seeding Citadao posters (from Cloudinary)...');
     await seedCitadaoPosters(payload);
 
-    console.log('\n6. Seeding Palmares years...');
+    console.log('\n7. Seeding Palmares years...');
     await seedPalmaresYears(payload, tunaRegistry, awardRegistry);
 
-    console.log('\n7. Seeding site settings...');
+    console.log('\n8. Seeding site settings...');
     await seedSiteSettings(payload);
 
     console.log('\n Seed completed successfully!');

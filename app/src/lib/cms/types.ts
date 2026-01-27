@@ -237,13 +237,21 @@ export interface CMSPaginatedResponse<T> {
 }
 
 // Transformed frontend types (matching existing app types)
+export interface FrontendTunaWithLogo {
+  shortName: string;
+  fullName: string;
+  logoUrl?: string;
+  city?: string;
+  website?: string;
+}
+
 export interface FrontendCitadaoEdition {
   edition: number;
   year: number;
   date: string;
   venue: string;
-  tunas: string[];
-  guests: string[];
+  tunas: FrontendTunaWithLogo[];
+  guests: FrontendTunaWithLogo[];
   awards: Record<string, string> | null;
   notes?: string;
   posterUrl?: string;
@@ -285,6 +293,7 @@ export interface FrontendPalmaresYear {
 export interface FrontendPalmaresOrganizingTuna {
   shortName: string;
   fullName: string;
+  logoUrl?: string;
   city?: string;
   website?: string;
 }

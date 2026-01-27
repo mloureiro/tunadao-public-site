@@ -15,6 +15,7 @@ import type {
   CMSPalmaresYear,
   CMSMedia,
   FrontendCitadaoEdition,
+  FrontendTunaWithLogo,
   FrontendBlogPost,
   FrontendVideo,
   FrontendAlbum,
@@ -104,6 +105,26 @@ function getTunaName(tuna: CMSTuna | number | string): string {
 }
 
 /**
+ * Helper to transform a tuna into FrontendTunaWithLogo
+ */
+function transformTunaWithLogo(tuna: CMSTuna | number | string): FrontendTunaWithLogo {
+  if (!isTunaPopulated(tuna)) {
+    console.warn('[CMS] Tuna relationship not populated:', tuna);
+    return {
+      shortName: '—',
+      fullName: '—',
+    };
+  }
+  return {
+    shortName: cleanShortName(tuna.shortName),
+    fullName: tuna.fullName || cleanShortName(tuna.shortName),
+    logoUrl: getMediaUrl(tuna.logo) || undefined,
+    city: tuna.city,
+    website: tuna.website,
+  };
+}
+
+/**
  * Helper to get tuna short name (for awards)
  */
 function getTunaShortName(tuna: CMSTuna | number | string): string {
@@ -181,9 +202,9 @@ function transformCitadaoEdition(
   });
 
   // Separate contestants and guests
-  const tunas = editionParticipants.filter((p) => p.type === 'contestant').map((p) => getTunaName(p.tuna));
+  const tunas = editionParticipants.filter((p) => p.type === 'contestant').map((p) => transformTunaWithLogo(p.tuna));
 
-  const guests = editionParticipants.filter((p) => p.type === 'guest').map((p) => getTunaName(p.tuna));
+  const guests = editionParticipants.filter((p) => p.type === 'guest').map((p) => transformTunaWithLogo(p.tuna));
 
   // Filter awards for this edition and transform to Record<string, string>
   const editionAwards = awards.filter((a) => {
@@ -360,8 +381,9 @@ function transformPalmaresYear(
           : festival.organizingTuna as CMSTuna;
         if (tuna) {
           organizingTuna = {
-            shortName: tuna.shortName,
+            shortName: cleanShortName(tuna.shortName),
             fullName: tuna.fullName,
+            logoUrl: getMediaUrl(tuna.logo) || undefined,
             city: tuna.city,
             website: tuna.website,
           };
