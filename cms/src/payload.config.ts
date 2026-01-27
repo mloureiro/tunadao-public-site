@@ -51,6 +51,7 @@ export default buildConfig({
       url: process.env.TURSO_DATABASE_URL || 'file:./data/tunadao.db',
       authToken: process.env.TURSO_AUTH_TOKEN,
     },
+    push: process.env.PAYLOAD_DISABLE_PUSH !== 'true',
   }),
 
   email: process.env.RESEND_API_KEY

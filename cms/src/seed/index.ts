@@ -1,3 +1,7 @@
+import 'dotenv/config';
+import { config as dotenvConfig } from 'dotenv';
+dotenvConfig({ path: '.env.local', override: true });
+
 import { getPayload } from 'payload';
 import config from '../payload.config';
 import {
