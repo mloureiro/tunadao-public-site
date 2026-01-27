@@ -2,7 +2,7 @@
 import Layout from '@layouts/Layout.astro';
 import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getCitadaoEditions } from '@lib/cms';
-import AwardCard from '@components/AwardCard.astro';
+import Award from '@components/Award.astro';
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
@@ -139,13 +139,9 @@ const editions = await getCitadaoEditions();
                   {edition.awards && Object.keys(edition.awards).length > 0 && (
                     <div class="edition-item__section edition-item__awards">
                       <h4>{t('citadao.awards')}</h4>
-                      <div class="awards-grid">
-                        {Object.entries(edition.awards).map(([key, winner]) => (
-                          <AwardCard
-                            awardKey={key}
-                            name={t(`awards.${key}`)}
-                            winner={winner as string}
-                          />
+                      <div class="awards-list">
+                        {Object.entries(edition.awards).map(([key]) => (
+                          <Award awardKey={key} size="sm">{t(`awards.${key}`)}</Award>
                         ))}
                       </div>
                     </div>
@@ -556,9 +552,9 @@ const editions = await getCitadaoEditions();
     white-space: nowrap;
   }
 
-  .awards-grid {
-    display: grid;
-    gap: var(--space-3);
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  .awards-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
   }
 </style>

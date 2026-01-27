@@ -374,10 +374,10 @@ export async function getPalmaresYears(): Promise<FrontendPalmaresYear[]> {
     client.getAwardTypes(),
   ]);
 
-  // Create a map of award type IDs to names
-  const awardTypesMap = new Map<number, string>();
+  // Create a map of award type IDs to { slug, name }
+  const awardTypesMap = new Map<number, { slug: string; name: string }>();
   for (const at of cmsAwardTypes) {
-    awardTypesMap.set(Number(at.id), at.name);
+    awardTypesMap.set(Number(at.id), { slug: at.slug, name: at.name });
   }
 
   // Create a map of festival IDs to their awards
@@ -432,20 +432,26 @@ export async function getPalmaresYears(): Promise<FrontendPalmaresYear[]> {
           location: festival.location || '',
           organizingTuna,
           awards: awards.map((award) => {
-            // Use custom name if provided, otherwise look up award type name
-            if (award.customName) {
-              return award.customName;
-            }
-
+            // Get award type info
             if (award.awardType) {
               const awardTypeId =
                 typeof award.awardType === 'number'
                   ? award.awardType
                   : (award.awardType as CMSAwardType).id;
-              return awardTypesMap.get(Number(awardTypeId)) || 'Prémio';
+              const awardType = awardTypesMap.get(Number(awardTypeId));
+              if (awardType) {
+                return {
+                  slug: awardType.slug,
+                  name: award.customName || awardType.name,
+                };
+              }
             }
 
-            return 'Prémio';
+            // Fallback for custom awards without type
+            return {
+              slug: 'outro',
+              name: award.customName || 'Prémio',
+            };
           }),
         };
       }),

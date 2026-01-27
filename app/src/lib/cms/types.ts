@@ -294,11 +294,16 @@ export interface FrontendPalmaresOrganizingTuna {
   website?: string;
 }
 
+export interface FrontendPalmaresAward {
+  slug: string;
+  name: string;
+}
+
 export interface FrontendPalmaresFestival {
   name: string;
   location: string;
   organizingTuna?: FrontendPalmaresOrganizingTuna;
-  awards: string[];
+  awards: FrontendPalmaresAward[];
 }
 
 export interface FrontendContactInfo {

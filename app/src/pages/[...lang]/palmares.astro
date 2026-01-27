@@ -3,18 +3,7 @@ import Layout from '@layouts/Layout.astro';
 import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getPalmaresYears } from '@lib/cms';
 import { Icon } from '@ui/icons';
-import AwardBadge from '@components/AwardBadge.astro';
-import type { AwardVariant } from '@components/types';
-
-function getAwardVariant(award: string): AwardVariant {
-  const lowerAward = award.toLowerCase();
-  if (lowerAward.includes('melhor tuna') && !award.includes('2ª') && !award.includes('3ª')) {
-    return 'gold';
-  }
-  if (award.includes('2ª')) return 'silver';
-  if (award.includes('3ª')) return 'bronze';
-  return 'default';
-}
+import Award from '@components/Award.astro';
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
@@ -38,12 +27,7 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
   return (
     total +
     year.festivals.reduce((festTotal, fest) => {
-      return (
-        festTotal +
-        fest.awards.filter(
-          (a) => a.toLowerCase().includes('melhor tuna') && !a.includes('2ª') && !a.includes('3ª')
-        ).length
-      );
+      return festTotal + fest.awards.filter((a) => a.slug === 'melhor-tuna').length;
     }, 0)
   );
 }, 0);
@@ -144,14 +128,9 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
                     </div>
                   </div>
                   <div class="festival-card__awards">
-                    {festival.awards.map((award) => {
-                      const variant = getAwardVariant(award);
-                      return (
-                        <AwardBadge variant={variant} showIcon={variant === 'gold'}>
-                          {award}
-                        </AwardBadge>
-                      );
-                    })}
+                    {festival.awards.map((award) => (
+                      <Award awardKey={award.slug} size="sm">{award.name}</Award>
+                    ))}
                   </div>
                 </div>
               ))}
