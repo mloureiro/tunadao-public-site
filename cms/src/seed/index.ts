@@ -1,21 +1,23 @@
+// Load environment FIRST before any other imports
 import 'dotenv/config';
 import { config as dotenvConfig } from 'dotenv';
 dotenvConfig({ path: '.env.local', override: true });
 
-import { getPayload } from 'payload';
-import config from '../payload.config';
-import {
-  seedAdminUser,
-  seedAwardTypes,
-  seedTunas,
-  seedTunaLogos,
-  seedCitadaoEditions,
-  seedCitadaoPosters,
-  seedFestivals,
-  seedSiteSettings,
-} from './seeders';
+// Now dynamically import everything else AFTER env is loaded
+const main = async () => {
+  const { getPayload } = await import('payload');
+  const { default: config } = await import('../payload.config');
+  const {
+    seedAdminUser,
+    seedAwardTypes,
+    seedTunas,
+    seedTunaLogos,
+    seedCitadaoEditions,
+    seedCitadaoPosters,
+    seedFestivals,
+    seedSiteSettings,
+  } = await import('./seeders');
 
-const seed = async () => {
   console.log('Starting seed process...');
   console.log(`Database: ${process.env.TURSO_DATABASE_URL?.substring(0, 50)}...`);
 
@@ -57,4 +59,4 @@ const seed = async () => {
   process.exit(0);
 };
 
-seed();
+main();
