@@ -11,7 +11,8 @@ import type {
   CMSCitadaoAward,
   CMSTuna,
   CMSVenue,
-  CMSPalmaresYear,
+  CMSFestival,
+  CMSFestivalAward,
   CMSAwardType,
   CMSBlogPost,
   CMSVideo,
@@ -153,38 +154,32 @@ const citadaoAwards: CMSCitadaoAward[] = [
 ];
 
 // =============================================================================
-// PALMARÉS
+// FESTIVALS
 // =============================================================================
 
-const palmaresYears: CMSPalmaresYear[] = [
+const festivals: CMSFestival[] = [
   {
     id: 1,
-    yearTitle: '2024',
-    year: 2024,
-    festivals: [
-      {
-        name: 'Festival Exemplo',
-        location: 'Lisboa',
-        organizingTuna: tunas[2], // EUL
-        awards: [{ awardType: awardTypes[0] }, { awardType: awardTypes[3] }],
-      },
-    ],
+    name: 'Festival Exemplo',
+    date: '2024-06-15',
+    location: 'Lisboa',
+    organizingTuna: tunas[2], // EUL
     status: 'published',
   },
   {
     id: 2,
-    yearTitle: '2023',
-    year: 2023,
-    festivals: [
-      {
-        name: 'Outro Festival',
-        location: 'Porto',
-        organizingTuna: tunas[1], // TUP
-        awards: [{ awardType: awardTypes[1] }],
-      },
-    ],
+    name: 'Outro Festival',
+    date: '2023-06-15',
+    location: 'Porto',
+    organizingTuna: tunas[1], // TUP
     status: 'published',
   },
+];
+
+const festivalAwards: CMSFestivalAward[] = [
+  { id: 1, festival: festivals[0], awardType: awardTypes[0] },
+  { id: 2, festival: festivals[0], awardType: awardTypes[3] },
+  { id: 3, festival: festivals[1], awardType: awardTypes[1] },
 ];
 
 // =============================================================================
@@ -305,7 +300,8 @@ export const fixtures = {
   'citadao-awards': () => paginate(citadaoAwards),
   tunas: () => paginate(tunas),
   venues: () => paginate(venues),
-  'palmares-years': () => paginate(palmaresYears),
+  festivals: () => paginate(festivals),
+  'festival-awards': () => paginate(festivalAwards),
   'award-types': () => paginate(awardTypes),
   'blog-posts': () => paginate(blogPosts),
   videos: () => paginate(videos),

@@ -12,7 +12,8 @@ import type {
   CMSBlogPost,
   CMSVideo,
   CMSAlbum,
-  CMSPalmaresYear,
+  CMSFestival,
+  CMSFestivalAward,
   CMSMedia,
   FrontendCitadaoEdition,
   FrontendTunaWithLogo,
@@ -363,61 +364,13 @@ export async function getAlbums(): Promise<FrontendAlbum[]> {
 }
 
 // =============================================================================
-// PALMARÉS
+// PALMARÉS (from Festivals + FestivalAwards)
 // =============================================================================
 
-function transformPalmaresYear(
-  cms: CMSPalmaresYear,
-  awardTypes: Map<number, string>
-): FrontendPalmaresYear {
-  return {
-    year: cms.year,
-    festivals: cms.festivals.map((festival) => {
-      // Transform organizing tuna if present
-      let organizingTuna: FrontendPalmaresYear['festivals'][0]['organizingTuna'] = undefined;
-      if (festival.organizingTuna) {
-        const tuna = typeof festival.organizingTuna === 'number'
-          ? null // ID not resolved, shouldn't happen with depth=2
-          : festival.organizingTuna as CMSTuna;
-        if (tuna) {
-          organizingTuna = {
-            shortName: cleanShortName(tuna.shortName),
-            fullName: tuna.fullName,
-            logoUrl: getMediaUrl(tuna.logo) || undefined,
-            city: tuna.city,
-            website: tuna.website,
-          };
-        }
-      }
-
-      return {
-        name: festival.name,
-        location: festival.location || '',
-        organizingTuna,
-        awards: (festival.awards || []).map((award) => {
-          // Use custom name if provided, otherwise look up award type name
-          if (award.customName) {
-            return award.customName;
-          }
-
-          if (award.awardType) {
-            const awardTypeId =
-              typeof award.awardType === 'number'
-                ? award.awardType
-                : (award.awardType as CMSAwardType).id;
-            return awardTypes.get(Number(awardTypeId)) || 'Prémio';
-          }
-
-          return 'Prémio';
-        }),
-      };
-    }),
-  };
-}
-
 export async function getPalmaresYears(): Promise<FrontendPalmaresYear[]> {
-  const [cmsYears, cmsAwardTypes] = await Promise.all([
-    client.getPalmaresYears(),
+  const [cmsFestivals, cmsFestivalAwards, cmsAwardTypes] = await Promise.all([
+    client.getFestivals(),
+    client.getFestivalAwards(),
     client.getAwardTypes(),
   ]);
 
@@ -427,7 +380,82 @@ export async function getPalmaresYears(): Promise<FrontendPalmaresYear[]> {
     awardTypesMap.set(Number(at.id), at.name);
   }
 
-  return cmsYears.map((y) => transformPalmaresYear(y, awardTypesMap));
+  // Create a map of festival IDs to their awards
+  const festivalAwardsMap = new Map<number, CMSFestivalAward[]>();
+  for (const award of cmsFestivalAwards) {
+    const festivalId = typeof award.festival === 'number' ? award.festival : award.festival.id;
+    if (!festivalAwardsMap.has(festivalId)) {
+      festivalAwardsMap.set(festivalId, []);
+    }
+    festivalAwardsMap.get(festivalId)!.push(award);
+  }
+
+  // Group festivals by year
+  const festivalsByYear = new Map<number, CMSFestival[]>();
+  for (const festival of cmsFestivals) {
+    const year = new Date(festival.date).getFullYear();
+    if (!festivalsByYear.has(year)) {
+      festivalsByYear.set(year, []);
+    }
+    festivalsByYear.get(year)!.push(festival);
+  }
+
+  // Transform to FrontendPalmaresYear format
+  const palmaresYears: FrontendPalmaresYear[] = [];
+
+  for (const [year, festivals] of festivalsByYear) {
+    palmaresYears.push({
+      year,
+      festivals: festivals.map((festival) => {
+        // Transform organizing tuna if present
+        let organizingTuna: FrontendPalmaresYear['festivals'][0]['organizingTuna'] = undefined;
+        if (festival.organizingTuna) {
+          const tuna = typeof festival.organizingTuna === 'number'
+            ? null // ID not resolved, shouldn't happen with depth=2
+            : festival.organizingTuna as CMSTuna;
+          if (tuna) {
+            organizingTuna = {
+              shortName: cleanShortName(tuna.shortName),
+              fullName: tuna.fullName,
+              logoUrl: getMediaUrl(tuna.logo) || undefined,
+              city: tuna.city,
+              website: tuna.website,
+            };
+          }
+        }
+
+        // Get awards for this festival
+        const awards = festivalAwardsMap.get(festival.id) || [];
+
+        return {
+          name: festival.name,
+          location: festival.location || '',
+          organizingTuna,
+          awards: awards.map((award) => {
+            // Use custom name if provided, otherwise look up award type name
+            if (award.customName) {
+              return award.customName;
+            }
+
+            if (award.awardType) {
+              const awardTypeId =
+                typeof award.awardType === 'number'
+                  ? award.awardType
+                  : (award.awardType as CMSAwardType).id;
+              return awardTypesMap.get(Number(awardTypeId)) || 'Prémio';
+            }
+
+            return 'Prémio';
+          }),
+        };
+      }),
+    });
+  }
+
+  // Sort by year descending
+  palmaresYears.sort((a, b) => b.year - a.year);
+
+  return palmaresYears;
 }
 
 // =============================================================================

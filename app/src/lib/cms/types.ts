@@ -86,23 +86,19 @@ export interface CMSCitadaoAward {
   tuna: CMSTuna | number;
 }
 
-// Palmarés Years
-export interface CMSPalmaresYear {
+// Festivals
+export interface CMSFestival {
   id: number;
-  yearTitle?: string;
-  year: number;
-  festivals: CMSPalmaresFestival[];
+  name: string;
+  date: string;
+  location?: string;
+  organizingTuna?: CMSTuna | number;
   status: 'draft' | 'published';
 }
 
-export interface CMSPalmaresFestival {
-  name: string;
-  location?: string;
-  organizingTuna?: CMSTuna | number;
-  awards?: CMSPalmaresAward[];
-}
-
-export interface CMSPalmaresAward {
+export interface CMSFestivalAward {
+  id: number;
+  festival: CMSFestival | number;
   awardType?: CMSAwardType | number;
   customName?: string;
 }

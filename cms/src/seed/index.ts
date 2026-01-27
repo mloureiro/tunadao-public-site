@@ -7,7 +7,7 @@ import {
   seedTunaLogos,
   seedCitadaoEditions,
   seedCitadaoPosters,
-  seedPalmaresYears,
+  seedFestivals,
   seedSiteSettings,
 } from './seeders';
 
@@ -38,8 +38,8 @@ const seed = async () => {
     console.log('\n6. Seeding Citadao posters (from Cloudinary)...');
     await seedCitadaoPosters(payload);
 
-    console.log('\n7. Seeding Palmares years...');
-    await seedPalmaresYears(payload, tunaRegistry, awardRegistry);
+    console.log('\n7. Seeding Festivals...');
+    await seedFestivals(payload, tunaRegistry, awardRegistry);
 
     console.log('\n8. Seeding site settings...');
     await seedSiteSettings(payload);

@@ -75,7 +75,8 @@ export interface Config {
     'citadao-editions': CitadaoEdition;
     'citadao-participants': CitadaoParticipant;
     'citadao-awards': CitadaoAward;
-    'palmares-years': PalmaresYear;
+    festivals: Festival;
+    'festival-awards': FestivalAward;
     'blog-posts': BlogPost;
     videos: Video;
     albums: Album;
@@ -96,7 +97,8 @@ export interface Config {
     'citadao-editions': CitadaoEditionsSelect<false> | CitadaoEditionsSelect<true>;
     'citadao-participants': CitadaoParticipantsSelect<false> | CitadaoParticipantsSelect<true>;
     'citadao-awards': CitadaoAwardsSelect<false> | CitadaoAwardsSelect<true>;
-    'palmares-years': PalmaresYearsSelect<false> | PalmaresYearsSelect<true>;
+    festivals: FestivalsSelect<false> | FestivalsSelect<true>;
+    'festival-awards': FestivalAwardsSelect<false> | FestivalAwardsSelect<true>;
     'blog-posts': BlogPostsSelect<false> | BlogPostsSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     albums: AlbumsSelect<false> | AlbumsSelect<true>;
@@ -418,53 +420,53 @@ export interface CitadaoAward {
   createdAt: string;
 }
 /**
- * Prémios ganhos pela Tunadão por ano
+ * Festivais de tunas onde participamos
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "palmares-years".
+ * via the `definition` "festivals".
  */
-export interface PalmaresYear {
+export interface Festival {
   id: number;
-  yearTitle?: string | null;
   /**
-   * Ano
+   * Nome do festival
    */
-  year: number;
+  name: string;
   /**
-   * Festivais onde participámos
+   * Data do festival
    */
-  festivals: {
-    /**
-     * Nome do festival
-     */
-    name: string;
-    /**
-     * Localização
-     */
-    location?: string | null;
-    /**
-     * Tuna organizadora do festival (opcional)
-     */
-    organizingTuna?: (number | null) | Tuna;
-    /**
-     * Prémios ganhos
-     */
-    awards?:
-      | {
-          /**
-           * Tipo de prémio (opcional se não existir na lista)
-           */
-          awardType?: (number | null) | AwardType;
-          /**
-           * Nome personalizado (se diferente do tipo)
-           */
-          customName?: string | null;
-          id?: string | null;
-        }[]
-      | null;
-    id?: string | null;
-  }[];
+  date: string;
+  /**
+   * Localidade
+   */
+  location?: string | null;
+  /**
+   * Tuna organizadora do festival
+   */
+  organizingTuna?: (number | null) | Tuna;
   status: 'draft' | 'published';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Premios ganhos em festivais
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "festival-awards".
+ */
+export interface FestivalAward {
+  id: number;
+  /**
+   * Festival onde o premio foi ganho
+   */
+  festival: number | Festival;
+  /**
+   * Tipo de premio (opcional se nao existir na lista)
+   */
+  awardType?: (number | null) | AwardType;
+  /**
+   * Nome personalizado (se diferente do tipo)
+   */
+  customName?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -733,8 +735,12 @@ export interface PayloadLockedDocument {
         value: number | CitadaoAward;
       } | null)
     | ({
-        relationTo: 'palmares-years';
-        value: number | PalmaresYear;
+        relationTo: 'festivals';
+        value: number | Festival;
+      } | null)
+    | ({
+        relationTo: 'festival-awards';
+        value: number | FestivalAward;
       } | null)
     | ({
         relationTo: 'blog-posts';
@@ -932,27 +938,25 @@ export interface CitadaoAwardsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "palmares-years_select".
+ * via the `definition` "festivals_select".
  */
-export interface PalmaresYearsSelect<T extends boolean = true> {
-  yearTitle?: T;
-  year?: T;
-  festivals?:
-    | T
-    | {
-        name?: T;
-        location?: T;
-        organizingTuna?: T;
-        awards?:
-          | T
-          | {
-              awardType?: T;
-              customName?: T;
-              id?: T;
-            };
-        id?: T;
-      };
+export interface FestivalsSelect<T extends boolean = true> {
+  name?: T;
+  date?: T;
+  location?: T;
+  organizingTuna?: T;
   status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "festival-awards_select".
+ */
+export interface FestivalAwardsSelect<T extends boolean = true> {
+  festival?: T;
+  awardType?: T;
+  customName?: T;
   updatedAt?: T;
   createdAt?: T;
 }

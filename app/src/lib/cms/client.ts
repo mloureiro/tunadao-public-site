@@ -11,7 +11,8 @@ import type {
   CMSCitadaoAward,
   CMSTuna,
   CMSVenue,
-  CMSPalmaresYear,
+  CMSFestival,
+  CMSFestivalAward,
   CMSAwardType,
   CMSBlogPost,
   CMSVideo,
@@ -254,16 +255,26 @@ export async function getVenues(): Promise<CMSVenue[]> {
   return response.docs;
 }
 
-// Palmarés
-export async function getPalmaresYears(): Promise<CMSPalmaresYear[]> {
-  const response = await fetchFromCMS<CMSPaginatedResponse<CMSPalmaresYear>>('palmares-years', {
+// Festivals
+export async function getFestivals(): Promise<CMSFestival[]> {
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSFestival>>('festivals', {
     where: { status: { equals: 'published' } },
-    sort: '-year',
-    limit: 100,
+    sort: '-date',
+    limit: 500,
     depth: 2, // Populate organizingTuna relationship
   });
 
-  console.log(`[CMS] Fetched ${response.docs.length} Palmarés years`);
+  console.log(`[CMS] Fetched ${response.docs.length} festivals`);
+  return response.docs;
+}
+
+export async function getFestivalAwards(): Promise<CMSFestivalAward[]> {
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSFestivalAward>>('festival-awards', {
+    limit: 1000,
+    depth: 2,
+  });
+
+  console.log(`[CMS] Fetched ${response.docs.length} festival awards`);
   return response.docs;
 }
 

@@ -15,7 +15,8 @@ import { Tunas } from './collections/Tunas';
 import { CitadaoEditions } from './collections/CitadaoEditions';
 import { CitadaoParticipants } from './collections/CitadaoParticipants';
 import { CitadaoAwards } from './collections/CitadaoAwards';
-import { PalmaresYears } from './collections/PalmaresYears';
+import { Festivals } from './collections/Festivals';
+import { FestivalAwards } from './collections/FestivalAwards';
 import { BlogPosts } from './collections/BlogPosts';
 import { Videos } from './collections/Videos';
 import { Albums } from './collections/Albums';
@@ -69,7 +70,8 @@ export default buildConfig({
     CitadaoEditions,
     CitadaoParticipants,
     CitadaoAwards,
-    PalmaresYears,
+    Festivals,
+    FestivalAwards,
     BlogPosts,
     Videos,
     Albums,
