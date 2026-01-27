@@ -108,23 +108,38 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
                         </span>
                       )}
                       {festival.organizingTuna && (
-                        <span class="festival-card__organizer">
-                          <Icon name="users" size={14} />
-                          {festival.organizingTuna.website ? (
-                            <a
-                              href={festival.organizingTuna.website}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title={festival.organizingTuna.fullName}
-                            >
-                              {festival.organizingTuna.shortName}
-                            </a>
-                          ) : (
-                            <span title={festival.organizingTuna.fullName}>
-                              {festival.organizingTuna.shortName}
-                            </span>
-                          )}
-                        </span>
+                        <div class="festival-card__organizer">
+                          <div class="festival-card__organizer-logo-wrapper">
+                            {festival.organizingTuna.logoUrl ? (
+                              <img
+                                src={festival.organizingTuna.logoUrl}
+                                alt={`Logo ${festival.organizingTuna.shortName}`}
+                                class="festival-card__organizer-logo"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div class="festival-card__organizer-placeholder">
+                                <span>{festival.organizingTuna.shortName.charAt(0)}</span>
+                              </div>
+                            )}
+                          </div>
+                          <span class="festival-card__organizer-info">
+                            {festival.organizingTuna.website ? (
+                              <a
+                                href={festival.organizingTuna.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={festival.organizingTuna.fullName}
+                              >
+                                {festival.organizingTuna.shortName}
+                              </a>
+                            ) : (
+                              <span title={festival.organizingTuna.fullName}>
+                                {festival.organizingTuna.shortName}
+                              </span>
+                            )}
+                          </span>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -296,8 +311,7 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
     gap: var(--space-2) var(--space-4);
   }
 
-  .festival-card__location,
-  .festival-card__organizer {
+  .festival-card__location {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
@@ -305,22 +319,68 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
     color: var(--color-text-muted);
   }
 
-  .festival-card__location svg,
-  .festival-card__organizer svg {
+  .festival-card__location svg {
     color: var(--color-primary);
     flex-shrink: 0;
   }
 
-  .festival-card__organizer a {
+  .festival-card__organizer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .festival-card__organizer-logo-wrapper {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border-light);
+    flex-shrink: 0;
+  }
+
+  .festival-card__organizer-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 2px;
+  }
+
+  .festival-card__organizer-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-text-inverted);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .festival-card__organizer-info {
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 2px;
+  }
+
+  .festival-card__organizer-info a {
+    color: var(--color-text);
+    font-weight: 500;
+    text-decoration: none;
     transition: color var(--transition-fast);
   }
 
-  .festival-card__organizer a:hover {
+  .festival-card__organizer-info a:hover {
     color: var(--color-primary);
+  }
+
+  .festival-card__organizer-info span {
+    color: var(--color-text);
+    font-weight: 500;
   }
 
   .festival-card__awards {
