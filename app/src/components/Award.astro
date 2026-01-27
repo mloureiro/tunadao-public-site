@@ -1,0 +1,135 @@
+---
+export type AwardVariant = 'default' | 'gold' | 'special' | 'public';
+
+export type AwardKey = 'melhor-tuna' | 'segunda-melhor-tuna' | 'terceira-melhor-tuna' | 'tuna-mais-tuna' | 'tuna-do-publico' | 'tuno-mais-tuninho' | 'tuna-mais-marafada' | 'tuna-mais-real' | 'tuna-mais-bebedora' | 'melhor-serenata' | 'melhor-passacalles' | 'melhor-pandeireta' | 'melhor-instrumental' | 'melhor-solista' | 'melhor-original' | 'melhor-estandarte' | 'mencao-honrosa' | 'premio-ibero-americano' | 'premio-participacao' | 'premio-tema-especial';
+
+interface Props {
+  awardKey: AwardKey | string;
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { awardKey, size = 'sm', class: className = '' } = Astro.props;
+
+const DEFAULT_ICON = '♦';
+
+const AWARD_ICONS: Record<string, string> = {
+  'melhor-tuna': '🏆',
+  'segunda-melhor-tuna': '🥈',
+  'terceira-melhor-tuna': '🥉',
+  'tuna-mais-tuna': '🎭',
+  'tuna-do-publico': '❤️',
+  'melhor-serenata': '🎵',
+  'melhor-passacalles': '🕺',
+  'melhor-pandeireta': '🥁',
+  'melhor-instrumental': '🎸',
+  'melhor-solista': '🎤',
+  'melhor-original': '✨',
+  'melhor-estandarte': '🏴',
+};
+
+function getVariant(key: string): AwardVariant {
+  if (key === 'melhor-tuna') return 'gold';
+  if (key === 'tuna-mais-tuna') return 'special';
+  if (key === 'tuna-do-publico') return 'public';
+  return 'default';
+}
+
+const variant = getVariant(awardKey);
+const icon = AWARD_ICONS[awardKey] || DEFAULT_ICON;
+---
+
+<span
+  class:list={[
+    'award',
+    `award--${size}`,
+    { [`award--${variant}`]: variant !== 'default' },
+    className,
+  ]}
+>
+  <span class="award__icon">{icon}</span>
+  <slot />
+</span>
+
+<style>
+  .award {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .award__icon {
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  /* Size: sm (inline badge) */
+  .award--sm {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-xs);
+  }
+
+  .award--sm .award__icon {
+    font-size: 0.875rem;
+  }
+
+  /* Size: md (card-like) */
+  .award--md {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+
+  .award--md .award__icon {
+    font-size: 1.25rem;
+  }
+
+  /* Variant: gold */
+  .award--gold {
+    background: linear-gradient(
+      135deg,
+      #ffd700 0%,
+      #ffec80 25%,
+      #ffd700 50%,
+      #b8860b 75%,
+      #ffd700 100%
+    );
+    background-size: 200% 200%;
+    border-color: var(--color-gold-dark);
+    color: #5c4a00;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgb(184 134 11 / 0.3);
+  }
+
+  /* Variant: special (tuna mais tuna - purple/violet) */
+  .award--special {
+    background: linear-gradient(
+      135deg,
+      #8b5cf6 0%,
+      #a78bfa 50%,
+      #7c3aed 100%
+    );
+    border-color: #6d28d9;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgb(109 40 217 / 0.3);
+  }
+
+  /* Variant: public (tuna do publico - red/pink) */
+  .award--public {
+    background: linear-gradient(
+      135deg,
+      #f43f5e 0%,
+      #fb7185 50%,
+      #e11d48 100%
+    );
+    border-color: #be123c;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgb(190 18 60 / 0.3);
+  }
+</style>

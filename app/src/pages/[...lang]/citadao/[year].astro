@@ -1,9 +1,24 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
+import Award from '@components/Award.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 import { getCitadaoEditions, getCitadaoEditionByYear } from '@lib/cms';
 import { Icon } from '@ui/icons';
+import type { FrontendTunaWithLogo } from '@lib/cms/types';
+
+// Award priority for sorting (lower = more important)
+const AWARD_PRIORITY: Record<string, number> = {
+  'melhor-tuna': 1,
+  'segunda-melhor-tuna': 2,
+  'terceira-melhor-tuna': 3,
+  'tuna-mais-tuna': 4,
+  'tuna-do-publico': 5,
+};
+
+function getAwardPriority(awardKey: string): number {
+  return AWARD_PRIORITY[awardKey] ?? 100;
+}
 
 export async function getStaticPaths() {
   const languages: (string | undefined)[] = [undefined, 'en'];
@@ -39,6 +54,49 @@ const allYears = allEditions.map((e) => e.year).sort((a, b) => b - a);
 const currentIndex = allYears.indexOf(edition.year);
 const prevYear = currentIndex < allYears.length - 1 ? allYears[currentIndex + 1] : null;
 const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
+
+// Group awards by tuna
+interface TunaWithAwards {
+  tuna: FrontendTunaWithLogo;
+  awards: string[];
+  bestAwardPriority: number;
+}
+
+const tunaAwardsMap = new Map<string, string[]>();
+
+if (edition.awards) {
+  for (const [awardKey, tunaShortName] of Object.entries(edition.awards)) {
+    const existing = tunaAwardsMap.get(tunaShortName) || [];
+    existing.push(awardKey);
+    tunaAwardsMap.set(tunaShortName, existing);
+  }
+}
+
+// Build list of tunas with their awards
+const tunasWithAwards: TunaWithAwards[] = edition.tunas.map((tuna) => {
+  const awards = tunaAwardsMap.get(tuna.shortName) || [];
+  const bestAwardPriority = awards.length > 0
+    ? Math.min(...awards.map(getAwardPriority))
+    : Infinity;
+  return { tuna, awards, bestAwardPriority };
+});
+
+// Sort: tunas with awards first (by best award priority), then tunas without awards
+tunasWithAwards.sort((a, b) => {
+  // Both have awards - sort by best award priority
+  if (a.awards.length > 0 && b.awards.length > 0) {
+    return a.bestAwardPriority - b.bestAwardPriority;
+  }
+  // One has awards, one doesn't - awards first
+  if (a.awards.length > 0) return -1;
+  if (b.awards.length > 0) return 1;
+  // Neither has awards - keep original order
+  return 0;
+});
+
+// Split into tunas with awards and tunas without
+const tunasWithPrizes = tunasWithAwards.filter((t) => t.awards.length > 0);
+const tunasWithoutPrizes = tunasWithAwards.filter((t) => t.awards.length === 0);
 ---
 
 <Layout
@@ -92,98 +150,111 @@ const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
     </div>
   </section>
 
-  <!-- Tunas Section -->
-  <section class="tunas">
-    <div class="container">
-      <h2 class="section-title">{t('citadao.tunas')}</h2>
-      <div class="tunas__grid">
-        {
-          edition.tunas.map((tuna, index) => (
-            <div class="tuna-avatar-card">
-              <div class="tuna-avatar-card__left">
-                <span class="tuna-avatar-card__number">{index + 1}</span>
-                <div class="tuna-avatar-card__ring">
+  <!-- Tunas with Awards Section -->
+  {tunasWithPrizes.length > 0 && (
+    <section class="results">
+      <div class="container">
+        <h2 class="section-title">{t('citadao.awards')}</h2>
+        <div class="results__list">
+          {tunasWithPrizes.map(({ tuna, awards }) => (
+            <div class="result-card" class:list={{ 'result-card--winner': awards.includes('melhor-tuna') }}>
+              <div class="result-card__tuna">
+                <div class="result-card__avatar">
                   {tuna.logoUrl ? (
                     <img
                       src={tuna.logoUrl}
                       alt={tuna.shortName}
-                      class="tuna-avatar-card__img"
+                      class="result-card__img"
                       loading="lazy"
                     />
                   ) : (
-                    <div class="tuna-avatar-card__placeholder">
+                    <div class="result-card__placeholder">
                       <span>{tuna.shortName.charAt(0)}</span>
                     </div>
                   )}
                 </div>
+                <div class="result-card__info">
+                  <span class="result-card__name">{tuna.shortName}</span>
+                  <span class="result-card__fullname">{tuna.fullName}</span>
+                </div>
               </div>
-              <div class="tuna-avatar-card__info">
-                <span class="tuna-avatar-card__name">{tuna.shortName}</span>
-                <span class="tuna-avatar-card__fullname">{tuna.fullName}</span>
+              <div class="result-card__awards">
+                {awards.map((awardKey) => (
+                  <Award awardKey={awardKey} size="sm">{t(`awards.${awardKey}`)}</Award>
+                ))}
               </div>
             </div>
-          ))
-        }
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
+
+  <!-- Tunas without Awards Section -->
+  {tunasWithoutPrizes.length > 0 && (
+    <section class="participants">
+      <div class="container">
+        <h2 class="section-title">{t('citadao.participants')}</h2>
+        <div class="participants__grid">
+          {tunasWithoutPrizes.map(({ tuna }) => (
+            <div class="participant-card">
+              <div class="participant-card__avatar">
+                {tuna.logoUrl ? (
+                  <img
+                    src={tuna.logoUrl}
+                    alt={tuna.shortName}
+                    class="participant-card__img"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="participant-card__placeholder">
+                    <span>{tuna.shortName.charAt(0)}</span>
+                  </div>
+                )}
+              </div>
+              <div class="participant-card__info">
+                <span class="participant-card__name">{tuna.shortName}</span>
+                <span class="participant-card__fullname">{tuna.fullName}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- Guests Section -->
-  {
-    edition.guests.length > 0 && (
-      <section class="guests">
-        <div class="container">
-          <h2 class="section-title">{t('citadao.guests')}</h2>
-          <div class="guests__list">
-            {edition.guests.map((guest) => (
-              <div class="guest-avatar">
-                <div class="guest-avatar__ring">
-                  {guest.logoUrl ? (
-                    <img
-                      src={guest.logoUrl}
-                      alt={guest.shortName}
-                      class="guest-avatar__img"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div class="guest-avatar__placeholder">
-                      <span>{guest.shortName.charAt(0)}</span>
-                    </div>
-                  )}
-                </div>
-                <div class="guest-avatar__info">
-                  <span class="guest-avatar__name">{guest.shortName}</span>
-                  <span class="guest-avatar__fullname">{guest.fullName}</span>
-                </div>
+  {edition.guests.length > 0 && (
+    <section class="guests">
+      <div class="container">
+        <h2 class="section-title">{t('citadao.guests')}</h2>
+        <div class="guests__list">
+          {edition.guests.map((guest) => (
+            <div class="guest-card">
+              <div class="guest-card__avatar">
+                {guest.logoUrl ? (
+                  <img
+                    src={guest.logoUrl}
+                    alt={guest.shortName}
+                    class="guest-card__img"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="guest-card__placeholder">
+                    <span>{guest.shortName.charAt(0)}</span>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  <!-- Awards Section -->
-  {
-    edition.awards && (
-      <section class="awards">
-        <div class="container">
-          <h2 class="section-title">{t('citadao.awards')}</h2>
-          <div class="awards__grid">
-            {Object.entries(edition.awards).map(([key, winner]) => (
-              <div
-                class="award-item"
-                class:list={{ 'award-item--highlight': key === 'melhor-tuna' }}
-              >
-                <span class="award-item__label">{t(`awards.${key}`)}</span>
-                <span class="award-item__winner">{winner}</span>
+              <div class="guest-card__info">
+                <span class="guest-card__name">{guest.shortName}</span>
+                <span class="guest-card__fullname">{guest.fullName}</span>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      </section>
-    )
-  }
+      </div>
+    </section>
+  )}
 
   <!-- Navigation -->
   <section class="navigation">
@@ -326,106 +397,187 @@ const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
     color: var(--color-text);
   }
 
-  /* Tunas Section */
-  .tunas {
+  /* Results Section (Tunas with Awards) */
+  .results {
     padding: var(--space-12) 0;
     background-color: var(--color-background);
   }
 
-  .tunas__grid {
-    display: grid;
-    gap: var(--space-4);
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  @media (min-width: 640px) {
-    .tunas__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .tuna-avatar-card {
+  .results__list {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: var(--space-4);
+  }
+
+  .result-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
     padding: var(--space-4);
     background-color: var(--color-surface);
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .tuna-avatar-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+  @media (min-width: 640px) {
+    .result-card {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
   }
 
-  .tuna-avatar-card__left {
+  .result-card--winner {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, #ffd700 10%, var(--color-surface)),
+      color-mix(in srgb, #ffec80 5%, var(--color-surface))
+    );
+    border-color: var(--color-gold);
+    border-width: 2px;
+  }
+
+  .result-card__tuna {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    flex-shrink: 0;
   }
 
-  .tuna-avatar-card__number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    color: var(--color-text-inverted);
-    border-radius: var(--radius-full);
-    font-size: var(--text-sm);
-    font-weight: 600;
-  }
-
-  .tuna-avatar-card__ring {
+  .result-card__avatar {
     width: 56px;
     height: 56px;
-    border-radius: var(--radius-full);
-    padding: 2px;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-  }
-
-  .tuna-avatar-card__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    flex-shrink: 0;
     background-color: var(--color-background);
   }
 
-  .tuna-avatar-card__placeholder {
+  .result-card--winner .result-card__avatar {
+    box-shadow: 0 0 0 3px var(--color-gold);
+  }
+
+  .result-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .result-card__placeholder {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--radius-full);
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     color: var(--color-text-inverted);
-    font-size: var(--text-xl);
+    font-size: var(--font-size-xl);
     font-weight: 700;
   }
 
-  .tuna-avatar-card__info {
+  .result-card__info {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: 2px;
     min-width: 0;
   }
 
-  .tuna-avatar-card__name {
-    font-size: var(--text-base);
+  .result-card__name {
+    font-size: var(--font-size-lg);
     font-weight: 600;
     color: var(--color-text);
   }
 
-  .tuna-avatar-card__fullname {
-    font-size: var(--text-sm);
+  .result-card__fullname {
+    font-size: var(--font-size-sm);
     color: var(--color-text-muted);
-    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .result-card__awards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  /* Participants Section (Tunas without Awards) */
+  .participants {
+    padding: var(--space-12) 0;
+    background-color: var(--color-surface);
+  }
+
+  .participants__grid {
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  @media (min-width: 640px) {
+    .participants__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .participants__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .participant-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background-color: var(--color-background);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+
+  .participant-card__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--color-surface);
+  }
+
+  .participant-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .participant-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-neutral-400), var(--color-neutral-500));
+    color: var(--color-text-inverted);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+  }
+
+  .participant-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .participant-card__name {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .participant-card__fullname {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -434,143 +586,83 @@ const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
   /* Guests Section */
   .guests {
     padding: var(--space-12) 0;
-    background-color: var(--color-surface);
+    background-color: var(--color-background);
   }
 
   .guests__list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-4);
-  }
-
-  .guest-avatar {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-3) var(--space-4);
-    background-color: var(--color-background);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-  }
-
-  .guest-avatar__ring {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-full);
-    padding: 2px;
-    background: linear-gradient(135deg, var(--color-text-muted), var(--color-border));
-    flex-shrink: 0;
-  }
-
-  .guest-avatar__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: var(--radius-full);
-    background-color: var(--color-surface);
-  }
-
-  .guest-avatar__placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-full);
-    background: linear-gradient(135deg, var(--color-text-muted), var(--color-border));
-    color: var(--color-text-inverted);
-    font-size: var(--text-lg);
-    font-weight: 700;
-  }
-
-  .guest-avatar__info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .guest-avatar__name {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-text);
-  }
-
-  .guest-avatar__fullname {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-  }
-
-  /* Awards Section */
-  .awards {
-    padding: var(--space-12) 0;
-    background-color: var(--color-background);
-  }
-
-  .awards__grid {
     display: grid;
     gap: var(--space-3);
     grid-template-columns: repeat(1, 1fr);
   }
 
   @media (min-width: 640px) {
-    .awards__grid {
+    .guests__list {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (min-width: 1024px) {
-    .awards__grid {
+    .guests__list {
       grid-template-columns: repeat(3, 1fr);
     }
   }
 
-  .award-item {
+  .guest-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--color-border);
+  }
+
+  .guest-card__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--color-background);
+  }
+
+  .guest-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .guest-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-text-muted), var(--color-neutral-400));
+    color: var(--color-text-inverted);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+  }
+
+  .guest-card__info {
     display: flex;
     flex-direction: column;
-    padding: var(--space-4);
-    background-color: var(--color-surface);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
+    gap: 2px;
+    min-width: 0;
   }
 
-  .award-item--highlight {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    color: var(--color-text-inverted);
-    border: none;
-    grid-column: span 1;
-  }
-
-  @media (min-width: 640px) {
-    .award-item--highlight {
-      grid-column: span 2;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .award-item--highlight {
-      grid-column: span 3;
-    }
-  }
-
-  .award-item__label {
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-1);
-  }
-
-  .award-item--highlight .award-item__label {
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  .award-item__winner {
-    font-size: var(--text-lg);
+  .guest-card__name {
+    font-size: var(--font-size-sm);
     font-weight: 600;
     color: var(--color-text);
   }
 
-  .award-item--highlight .award-item__winner {
-    color: var(--color-text-inverted);
-    font-size: var(--text-xl);
+  .guest-card__fullname {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   /* Navigation Section */

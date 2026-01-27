@@ -2,11 +2,34 @@
 import '@styles/global.css';
 import Button from '@components/Button.astro';
 import Card from '@components/Card.astro';
-import AwardBadge from '@components/AwardBadge.astro';
-import AwardCard from '@components/AwardCard.astro';
+import Award from '@components/Award.astro';
 import ThemeToggle from '@components/ThemeToggle.astro';
 import { TunaAvatar, TunaCard } from '@components/tunas';
 import type { FrontendTunaWithLogo } from '@lib/cms/types';
+
+// All award types for demo
+const allAwards = [
+  { key: 'melhor-tuna', name: 'Melhor Tuna' },
+  { key: 'segunda-melhor-tuna', name: '2a Melhor Tuna' },
+  { key: 'terceira-melhor-tuna', name: '3a Melhor Tuna' },
+  { key: 'tuna-mais-tuna', name: 'Tuna Mais Tuna' },
+  { key: 'tuna-do-publico', name: 'Tuna do Publico' },
+  { key: 'melhor-serenata', name: 'Melhor Serenata' },
+  { key: 'melhor-passacalles', name: 'Melhor Passacalles' },
+  { key: 'melhor-pandeireta', name: 'Melhor Pandeireta' },
+  { key: 'melhor-instrumental', name: 'Melhor Instrumental' },
+  { key: 'melhor-solista', name: 'Melhor Solista' },
+  { key: 'melhor-original', name: 'Melhor Tema Original' },
+  { key: 'melhor-estandarte', name: 'Melhor Estandarte' },
+  { key: 'tuno-mais-tuninho', name: 'Tuno Mais Tuninho' },
+  { key: 'tuna-mais-marafada', name: 'Tuna Mais Marafada' },
+  { key: 'tuna-mais-real', name: 'Tuna Mais Real' },
+  { key: 'tuna-mais-bebedora', name: 'Tuna Mais Bebedora' },
+  { key: 'mencao-honrosa', name: 'Mencao Honrosa' },
+  { key: 'premio-ibero-americano', name: 'Premio Ibero-Americano' },
+  { key: 'premio-participacao', name: 'Premio Participacao' },
+  { key: 'premio-tema-especial', name: 'Premio Tema Especial' },
+];
 
 // Sample tuna data for demos
 const sampleTunas: FrontendTunaWithLogo[] = [
@@ -57,8 +80,7 @@ if (import.meta.env.PROD) {
         <a href="#card">Card</a>
         <a href="#tuna-avatar">TunaAvatar</a>
         <a href="#tuna-card">TunaCard</a>
-        <a href="#award-badge">AwardBadge</a>
-        <a href="#award-card">AwardCard</a>
+        <a href="#award">Award</a>
       </nav>
 
       <main class="dev-main">
@@ -251,47 +273,57 @@ if (import.meta.env.PROD) {
           </div>
         </section>
 
-        <!-- AwardBadge -->
-        <section id="award-badge" class="component-section">
-          <h2>AwardBadge</h2>
-          <p class="component-path">@components/AwardBadge.astro</p>
+        <!-- Award -->
+        <section id="award" class="component-section">
+          <h2>Award</h2>
+          <p class="component-path">@components/Award.astro</p>
 
           <div class="component-group">
             <h3>Variants</h3>
             <div class="component-row">
-              <AwardBadge variant="default">Default</AwardBadge>
-              <AwardBadge variant="gold">Gold</AwardBadge>
-              <AwardBadge variant="silver">Silver</AwardBadge>
-              <AwardBadge variant="bronze">Bronze</AwardBadge>
-              <AwardBadge variant="special">Special</AwardBadge>
+              <Award awardKey="melhor-tuna">Gold</Award>
+              <Award awardKey="tuna-mais-tuna">Special</Award>
+              <Award awardKey="tuna-do-publico">Public</Award>
+              <Award awardKey="melhor-serenata">Default</Award>
             </div>
           </div>
 
           <div class="component-group">
-            <h3>With Icons</h3>
+            <h3>Sizes</h3>
             <div class="component-row">
-              <AwardBadge variant="gold" showIcon>1st Place</AwardBadge>
-              <AwardBadge variant="silver" showIcon>2nd Place</AwardBadge>
-              <AwardBadge variant="bronze" showIcon>3rd Place</AwardBadge>
-              <AwardBadge variant="special" showIcon>Audience Choice</AwardBadge>
+              <Award awardKey="melhor-tuna" size="sm">Small (sm)</Award>
+              <Award awardKey="melhor-tuna" size="md">Medium (md)</Award>
             </div>
           </div>
-        </section>
-
-        <!-- AwardCard -->
-        <section id="award-card" class="component-section">
-          <h2>AwardCard</h2>
-          <p class="component-path">@components/AwardCard.astro</p>
 
           <div class="component-group">
-            <h3>Award Types</h3>
-            <div class="component-grid component-grid--sm">
-              <AwardCard awardKey="melhor-tuna" name="Melhor Tuna" winner="Tunadão 1998" />
-              <AwardCard awardKey="segunda-melhor-tuna" name="2ª Melhor Tuna" winner="Tuna Exemplo" />
-              <AwardCard awardKey="terceira-melhor-tuna" name="3ª Melhor Tuna" winner="Outra Tuna" />
-              <AwardCard awardKey="tuna-do-publico" name="Tuna do Público" winner="Tunadão 1998" />
-              <AwardCard awardKey="melhor-serenata" name="Melhor Serenata" winner="Tunadão 1998" />
-              <AwardCard awardKey="melhor-passacalles" name="Melhor Passacalles" winner="Tunadão 1998" />
+            <h3>All Awards - Size SM</h3>
+            <div class="component-row" style="flex-wrap: wrap;">
+              {allAwards.map(award => (
+                <Award awardKey={award.key} size="sm">{award.name}</Award>
+              ))}
+            </div>
+          </div>
+
+          <div class="component-group">
+            <h3>All Awards - Size MD</h3>
+            <div class="component-row" style="flex-wrap: wrap;">
+              {allAwards.map(award => (
+                <Award awardKey={award.key} size="md">{award.name}</Award>
+              ))}
+            </div>
+          </div>
+
+          <div class="component-group">
+            <h3>Without Text (Icon Only)</h3>
+            <div class="component-row">
+              <Award awardKey="melhor-tuna" size="sm" />
+              <Award awardKey="segunda-melhor-tuna" size="sm" />
+              <Award awardKey="terceira-melhor-tuna" size="sm" />
+              <Award awardKey="tuna-mais-tuna" size="sm" />
+              <Award awardKey="tuna-do-publico" size="sm" />
+              <Award awardKey="melhor-serenata" size="sm" />
+              <Award awardKey="mencao-honrosa" size="sm" />
             </div>
           </div>
         </section>
