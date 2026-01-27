@@ -38,8 +38,8 @@ export const FESTIVAL_ORGANIZERS: Record<string, string> = {
   'cidade berco': 'Afonsina',
   'cidade de berco': 'Afonsina',
   // Castelo Branco
-  fitucb: 'Estudantina CB',
-  fitas: 'Estudantina CB',
+  fitucb: 'EACB',
+  fitas: 'EACB',
   // Coimbra
   festuna: 'EUC',
   'cantar de estudante': 'TMUC',
@@ -258,7 +258,7 @@ export const PALMARES_YEARS: PalmaresYearData[] = [
       {
         name: 'XIII FITUCB',
         location: 'Castelo Branco',
-        organizingTuna: 'Estudantina CB',
+        organizingTuna: 'EACB',
         awards: [
           { slug: 'melhor-estandarte' },
           { slug: 'segunda-melhor-tuna' },
@@ -391,7 +391,7 @@ export const PALMARES_YEARS: PalmaresYearData[] = [
       {
         name: 'FITUCB',
         location: 'Castelo Branco',
-        organizingTuna: 'Estudantina CB',
+        organizingTuna: 'EACB',
         awards: [
           { slug: 'melhor-instrumental' },
           { slug: 'tuna-mais-tuna' },
@@ -661,7 +661,7 @@ export const PALMARES_YEARS: PalmaresYearData[] = [
       {
         name: 'FITAs 2009',
         location: 'Castelo Branco',
-        organizingTuna: 'Estudantina CB',
+        organizingTuna: 'EACB',
         awards: [{ slug: 'melhor-tuna' }],
       },
       {
@@ -757,7 +757,7 @@ export const PALMARES_YEARS: PalmaresYearData[] = [
       {
         name: "FITUCB'08",
         location: 'Castelo Branco',
-        organizingTuna: 'Estudantina CB',
+        organizingTuna: 'EACB',
         awards: [
           { slug: 'tuna-mais-tuna' },
           { slug: 'melhor-tuna' },

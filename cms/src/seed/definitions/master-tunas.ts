@@ -94,8 +94,8 @@ export const MASTER_TUNAS: MasterTuna[] = [
 
   // === E ===
   {
-    shortName: 'Estudantina CB',
-    fullName: 'Estudantina Academica de Castelo Branco',
+    shortName: 'EACB',
+    fullName: 'EACB - Estudantina Academica de Castelo Branco',
     city: 'Castelo Branco',
     website: 'https://estudantinacb.pt/',
     logoPublicId: 'tunadao/tunas/estudantina-academica-castelo-branco',
@@ -133,8 +133,8 @@ export const MASTER_TUNAS: MasterTuna[] = [
     city: 'Viseu',
   },
   {
-    shortName: 'FAN',
-    fullName: 'FAN - Farra Academica de Coimbra',
+    shortName: 'FAN-Farra',
+    fullName: 'FAN-Farra - Academica de Coimbra',
     city: 'Coimbra',
     website: 'http://www.portugaltunas.com/directorio/fanfarracoimbra/',
     logoPublicId: 'tunadao/tunas/fan-farra-academica-coimbra',
@@ -160,7 +160,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   // === I ===
   {
     shortName: 'Imperial Neptuna',
-    fullName: 'Imperial Neptuna Academica da Figueira da Foz',
+    fullName: 'Imperial Neptuna - Academica da Figueira da Foz',
     city: 'Figueira da Foz',
     logoPublicId: 'tunadao/tunas/imperial-neptuna',
   },
@@ -366,17 +366,17 @@ export const MASTER_TUNAS: MasterTuna[] = [
     city: 'Covilha',
   },
   {
-    shortName: 'Tuna Granada (Loyola)',
+    shortName: 'TCML',
     fullName: 'Tuna del Colegio Mayor Loyola - Granada',
     city: 'Granada',
   },
   {
-    shortName: 'Tuna Granada (Medicina)',
+    shortName: 'TMG',
     fullName: 'Tuna de Medicina de Granada',
     city: 'Granada',
   },
   {
-    shortName: 'Tuna Peru (Los Andes)',
+    shortName: 'TUPLA',
     fullName: 'Tuna de la Universidade Peruana Los Andes',
     city: 'Peru',
   },
@@ -392,7 +392,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
     logoPublicId: 'tunadao/tunas/tuna-templaria-tomar',
   },
   {
-    shortName: 'Tuna UFP',
+    shortName: 'TAUFP',
     fullName: 'Tuna da Universidade Fernando Pessoa',
     city: 'Porto',
     logoPublicId: 'tunadao/tunas/tuna-fernando-pessoa',
