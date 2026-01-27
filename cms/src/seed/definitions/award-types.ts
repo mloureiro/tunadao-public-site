@@ -114,14 +114,8 @@ export const AWARD_TYPES: AwardTypeData[] = [
   {
     name: 'Melhor Estandarte',
     slug: 'melhor-estandarte',
-    aliases: [{ alias: 'Estandarte' }, { alias: 'Melhor Bandeira' }],
+    aliases: [{ alias: 'Estandarte' }, { alias: 'Melhor Bandeira' }, { alias: 'Melhor Porta-Estandarte' }, { alias: 'Porta-Estandarte' }],
     description: 'Premio para o estandarte/bandeira mais bonito e bem apresentado.',
-  },
-  {
-    name: 'Melhor Porta-Estandarte',
-    slug: 'melhor-porta-estandarte',
-    aliases: [{ alias: 'Porta-Estandarte' }],
-    description: 'Premio para o melhor porta-estandarte, avaliando postura e apresentacao.',
   },
 
   // === Special Awards ===
