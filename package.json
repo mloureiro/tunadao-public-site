@@ -16,7 +16,10 @@
     "test": "npm run test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "seed": "npm run seed -w cms",
+    "db:reset": "npm run db:reset -w cms",
+    "db:reset-and-seed": "npm run db:reset-and-seed -w cms"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0"
