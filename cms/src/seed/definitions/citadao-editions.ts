@@ -212,7 +212,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
     date: '29-30 Abril',
     venues: ['Aula Magna do IPV', 'Rua Formosa'],
     tunas: ['TMUC', 'TUM', 'EUL', 'Hinoportuna'],
-    guests: ['Arfectus'],
+    guests: ['Adfectus'],
     awards: {
       'melhor-tuna': 'TMUC',
       'tuna-mais-tuna': 'TMUC',
