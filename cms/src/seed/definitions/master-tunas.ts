@@ -139,7 +139,6 @@ export const MASTER_TUNAS: MasterTuna[] = [
     website: 'http://www.portugaltunas.com/directorio/fanfarracoimbra/',
     logoPublicId: 'tunadao/tunas/fan-farra-academica-coimbra',
   },
-
   // === G ===
   {
     shortName: 'Gatunos',
@@ -205,6 +204,14 @@ export const MASTER_TUNAS: MasterTuna[] = [
     fullName: 'Orfeao Universitario do Porto',
     city: 'Porto',
     website: 'https://orfeao.up.pt/',
+  },
+
+  // === Q ===
+  {
+    shortName: 'QFC',
+    fullName: 'Queima das Fitas de Coimbra',
+    city: 'Coimbra',
+    logoPublicId: 'tunadao/tunas/queima-fitas-coimbra',
   },
 
   // === R ===
