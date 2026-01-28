@@ -201,12 +201,36 @@ jobs:
           npm ci
           npm i @rollup/rollup-linux-x64-gnu
 
+      - name: Check CMS availability
+        id: cms-check
+        run: |
+          if [[ -n "${{ secrets.CMS_URL }}" ]]; then
+            if curl -sf "${{ secrets.CMS_URL }}/api/health" --max-time 10 > /dev/null 2>&1; then
+              echo "CMS is available"
+              echo "available=true" >> $GITHUB_OUTPUT
+            else
+              echo "CMS is NOT available - will use seed data fallback"
+              echo "available=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "CMS_URL not configured - will use seed data fallback"
+            echo "available=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate fallback data from seeds
+        if: steps.cms-check.outputs.available == 'false'
+        run: |
+          echo "Seeding local database and exporting dump..."
+          npm run db:reset-and-seed -w cms
+          npm run db:export -w cms
+          echo "Dump generated at data/cms-dump.json"
+
       - name: Build site
         run: npm run build -w app
         env:
           BASE_PATH: ${{ vars.BASE_PATH || '/tunadao-public-site/' }}
           SITE_URL: ${{ vars.SITE_URL || 'https://www.loureiro.me' }}
-          CMS_URL: ${{ secrets.CMS_URL }}
+          CMS_URL: ${{ steps.cms-check.outputs.available == 'true' && secrets.CMS_URL || '' }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
