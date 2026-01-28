@@ -8,10 +8,10 @@ import type { FrontendTunaWithLogo, FrontendCitadaoEdition } from '@lib/cms/type
 // Award priority for sorting (lower = more important)
 const AWARD_PRIORITY: Record<string, number> = {
   'melhor-tuna': 1,
-  'segunda-melhor-tuna': 2,
-  'terceira-melhor-tuna': 3,
-  'tuna-mais-tuna': 4,
-  'tuna-do-publico': 5,
+  'tuna-mais-tuna': 2,
+  'tuna-do-publico': 3,
+  'segunda-melhor-tuna': 4,
+  'terceira-melhor-tuna': 5,
 };
 
 interface TunaWithAwards {
@@ -45,11 +45,15 @@ function groupAwardsByTuna(edition: FrontendCitadaoEdition): TunaWithAwards[] {
     }
   }
 
-  // Sort by best award priority
+  // Sort by best award priority, then alphabetically for same priority
   result.sort((a, b) => {
     const aPriority = Math.min(...a.awards.map(k => AWARD_PRIORITY[k] ?? 100));
     const bPriority = Math.min(...b.awards.map(k => AWARD_PRIORITY[k] ?? 100));
-    return aPriority - bPriority;
+    if (aPriority !== bPriority) {
+      return aPriority - bPriority;
+    }
+    // Same priority: sort alphabetically by tuna shortName
+    return a.tuna.shortName.localeCompare(b.tuna.shortName, 'pt');
   });
 
   return result;

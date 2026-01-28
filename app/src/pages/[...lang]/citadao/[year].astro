@@ -10,10 +10,10 @@ import type { FrontendTunaWithLogo } from '@lib/cms/types';
 // Award priority for sorting (lower = more important)
 const AWARD_PRIORITY: Record<string, number> = {
   'melhor-tuna': 1,
-  'segunda-melhor-tuna': 2,
-  'terceira-melhor-tuna': 3,
-  'tuna-mais-tuna': 4,
-  'tuna-do-publico': 5,
+  'tuna-mais-tuna': 2,
+  'tuna-do-publico': 3,
+  'segunda-melhor-tuna': 4,
+  'terceira-melhor-tuna': 5,
 };
 
 function getAwardPriority(awardKey: string): number {
@@ -83,15 +83,19 @@ const tunasWithAwards: TunaWithAwards[] = edition.tunas.map((tuna) => {
 
 // Sort: tunas with awards first (by best award priority), then tunas without awards
 tunasWithAwards.sort((a, b) => {
-  // Both have awards - sort by best award priority
+  // Both have awards - sort by best award priority, then alphabetically
   if (a.awards.length > 0 && b.awards.length > 0) {
-    return a.bestAwardPriority - b.bestAwardPriority;
+    if (a.bestAwardPriority !== b.bestAwardPriority) {
+      return a.bestAwardPriority - b.bestAwardPriority;
+    }
+    // Same priority: sort alphabetically
+    return a.tuna.shortName.localeCompare(b.tuna.shortName, 'pt');
   }
   // One has awards, one doesn't - awards first
   if (a.awards.length > 0) return -1;
   if (b.awards.length > 0) return 1;
-  // Neither has awards - keep original order
-  return 0;
+  // Neither has awards - sort alphabetically
+  return a.tuna.shortName.localeCompare(b.tuna.shortName, 'pt');
 });
 
 // Split into tunas with awards and tunas without
