@@ -43,6 +43,15 @@ jobs:
       - name: Check changed files and inputs
         id: check
         run: |
+          # For PRs, don't deploy anything
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "deploy_app=false" >> $GITHUB_OUTPUT
+            echo "deploy_cms=false" >> $GITHUB_OUTPUT
+            echo "Deploy targets:"
+            cat $GITHUB_OUTPUT
+            exit 0
+          fi
+
           # Manual dispatch with specific target
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             case "${{ inputs.deploy_target }}" in
@@ -64,30 +73,18 @@ jobs:
             esac
           fi
 
-          # Auto-detection based on changed files (for push events or auto mode)
+          # Auto-detection for push events or auto mode
           if [[ -z "$(cat $GITHUB_OUTPUT 2>/dev/null)" ]] || [[ "${{ inputs.deploy_target }}" == "auto" ]]; then
-            # Get changed files
+            # Always deploy app when main is green (deploy on green strategy)
+            echo "deploy_app=true" >> $GITHUB_OUTPUT
+
+            # CMS deploy only when cms/ files changed (triggers external Render deploy)
             CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
-
-            # Check for app changes
-            if echo "$CHANGED_FILES" | grep -qE "^app/|^package"; then
-              echo "deploy_app=true" >> $GITHUB_OUTPUT
-            else
-              echo "deploy_app=false" >> $GITHUB_OUTPUT
-            fi
-
-            # Check for CMS changes
             if echo "$CHANGED_FILES" | grep -qE "^cms/"; then
               echo "deploy_cms=true" >> $GITHUB_OUTPUT
             else
               echo "deploy_cms=false" >> $GITHUB_OUTPUT
             fi
-          fi
-
-          # For PRs, don't deploy anything
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "deploy_app=false" >> $GITHUB_OUTPUT
-            echo "deploy_cms=false" >> $GITHUB_OUTPUT
           fi
 
           echo "Deploy targets:"
