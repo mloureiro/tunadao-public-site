@@ -324,10 +324,10 @@ export const FESTIVALS: FestivalData[] = [
   // 2015
   {
     name: 'VI Collipo',
-    date: '2014-03-14',
+    date: '2015-03-14',
     location: 'Leiria',
     organizingTuna: 'Trovantina',
-    posterPublicId: 'tunadao/festivais/vi-collipo-2014',
+    posterPublicId: 'tunadao/festivais/vi-collipo-2015',
     awards: [
       { slug: 'melhor-tuna' },
       { slug: 'melhor-serenata' },

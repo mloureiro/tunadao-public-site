@@ -14,6 +14,7 @@
     "seed": "tsx src/seed/index.ts",
     "db:reset": "tsx src/seed/reset-db.ts",
     "db:reset-and-seed": "tsx src/seed/reset-db.ts && tsx src/seed/index.ts",
+    "db:export": "tsx src/export/index.ts",
     "lint": "eslint .",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
