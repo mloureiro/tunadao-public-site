@@ -91,6 +91,8 @@ export const FESTIVAL_ORGANIZERS: Record<string, string> = {
   'festival internacional de tunas do atlantico': 'TUM-Madeira',
   // Santarem
   centup: 'Scalabituna',
+  // Lamego
+  fitul: 'EAL',
 };
 
 /**
@@ -119,6 +121,65 @@ export function findOrganizingTunaShortName(festivalName: string): string | null
  * Date format: YYYY-MM-DD (using June 15 as default when only year is known)
  */
 export const FESTIVALS: FestivalData[] = [
+  // 2025
+  {
+    name: 'XXXIV FITU Bracara Augusta',
+    date: '2025-05-22',
+    location: 'Braga',
+    organizingTuna: 'TUM',
+    awards: [{ slug: 'melhor-passacalles' }],
+  },
+  // 2024
+  {
+    name: 'XV Ciclone',
+    date: '2024-04-15',
+    location: 'Angra do Heroismo',
+    organizingTuna: 'TUSA',
+    awards: [{ slug: 'tuna-mais-tuna', customNote: 'Premio Mestre Tuso' }],
+  },
+  {
+    name: 'XVIII Cidade Berco',
+    date: '2024-03-01',
+    location: 'Guimaraes',
+    organizingTuna: 'Afonsina',
+    awards: [],
+  },
+  // 2023
+  {
+    name: 'VIII Herminius',
+    date: '2023-05-26',
+    location: 'Covilha',
+    organizingTuna: 'Tuna-MUs',
+    awards: [
+      { slug: 'melhor-pandeireta' },
+      { slug: 'tuna-mais-tuna' },
+    ],
+  },
+  // 2022
+  {
+    name: 'VII FITUL Cidade de Lamego',
+    date: '2022-11-04',
+    location: 'Lamego',
+    organizingTuna: 'EAL',
+    awards: [
+      { slug: 'melhor-passacalles' },
+      { slug: 'melhor-estandarte' },
+      { slug: 'tuna-mais-tuna' },
+    ],
+  },
+  {
+    name: 'XVI Cidade Berco',
+    date: '2022-03-15',
+    location: 'Guimaraes',
+    organizingTuna: 'Afonsina',
+    awards: [
+      { slug: 'melhor-tuna' },
+      { slug: 'melhor-instrumental' },
+      { slug: 'melhor-original' },
+      { slug: 'melhor-instrumental', customNote: 'Melhor Prestacao Musical' },
+      { slug: 'tuna-mais-tuna' },
+    ],
+  },
   // 2019
   {
     name: 'XXIX FITUA',
@@ -295,6 +356,7 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-instrumental' },
       { slug: 'tuna-mais-tuna' },
       { slug: 'segunda-melhor-tuna' },
+      { slug: 'melhor-estandarte', customNote: 'Premio Rui Truta Gil' },
     ],
   },
   {
@@ -677,7 +739,7 @@ export const FESTIVALS: FestivalData[] = [
     ],
   },
   {
-    name: "FITUCB'08",
+    name: "II FITUCB",
     date: '2008-06-15',
     location: 'Castelo Branco',
     organizingTuna: 'EACB',
