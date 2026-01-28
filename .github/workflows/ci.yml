@@ -221,12 +221,22 @@ jobs:
         if: steps.cms-check.outputs.available == 'false'
         run: |
           echo "Seeding local SQLite database and exporting dump..."
-          # Create cms data directory for local SQLite
+          # Create cms/data directory for local SQLite database
           mkdir -p cms/data
+          # Create data directory at project root for cms-dump.json export
+          mkdir -p data
           # Use local SQLite (no Turso) - starts empty, no reset needed
           npm run seed -w cms
           npm run db:export -w cms
-          echo "Dump generated at data/cms-dump.json"
+          # Verify the dump was created
+          if [ -f "data/cms-dump.json" ]; then
+            echo "✓ Dump generated at data/cms-dump.json"
+            echo "  Contents preview:"
+            head -20 data/cms-dump.json
+          else
+            echo "✗ ERROR: cms-dump.json was not created!"
+            exit 1
+          fi
 
       - name: Build site
         run: npm run build -w app
