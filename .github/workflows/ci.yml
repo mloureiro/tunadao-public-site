@@ -221,6 +221,8 @@ jobs:
         if: steps.cms-check.outputs.available == 'false'
         run: |
           echo "Seeding local SQLite database and exporting dump..."
+          # Create cms data directory for local SQLite
+          mkdir -p cms/data
           # Use local SQLite (no Turso) - starts empty, no reset needed
           npm run seed -w cms
           npm run db:export -w cms
