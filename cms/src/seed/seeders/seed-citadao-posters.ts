@@ -37,19 +37,19 @@ function parseFilename(filename: string): { year: number; edition: number } | nu
 }
 
 /**
- * Create a synthetic CloudinaryResource for a poster.
+ * Create a synthetic CloudinaryResource from a full public ID.
  * This is used when the Cloudinary CLI is not available (e.g., in CI).
  */
-function createSyntheticResource(edition: number, year: number): CloudinaryResource {
-  const editionStr = String(edition).padStart(2, '0');
-  const publicId = `tunadao/citadao/citadao-${year}-${editionStr}-poster`;
+function createSyntheticResourceFromPublicId(publicId: string, edition: number, year: number): CloudinaryResource {
   const secureUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}`;
   const url = secureUrl.replace('https://', 'http://');
+  const editionStr = String(edition).padStart(2, '0');
+  const filename = `citadao-${year}-${editionStr}-poster`;
 
   return {
     asset_id: `synthetic-citadao-${year}-${editionStr}`,
     public_id: publicId,
-    filename: `citadao-${year}-${editionStr}-poster`,
+    filename,
     format: 'jpg',
     version: 1,
     resource_type: 'image',
@@ -84,16 +84,13 @@ export const seedCitadaoPosters = async (payload: Payload) => {
     resources = cloudinaryData.resources;
     console.log(`  Found ${cloudinaryData.total_count} posters in Cloudinary`);
   } catch (error) {
-    console.warn('  Cloudinary CLI not available, using synthetic URLs for known editions');
+    console.warn('  Cloudinary CLI not available, using poster public IDs from edition definitions');
     usingSyntheticData = true;
 
-    // Create synthetic resources for all known editions
-    // Note: Not all editions may have posters, but the synthetic URLs will just 404 if they don't exist
+    // Create synthetic resources from the posterPublicId defined in each edition
     for (const edition of CITADAO_EDITIONS) {
-      // Only create for editions that are likely to have posters (recent ones)
-      // Older editions (before ~2010) might not have digital posters
-      if (edition.year >= 2010) {
-        resources.push(createSyntheticResource(edition.edition, edition.year));
+      if (edition.posterPublicId) {
+        resources.push(createSyntheticResourceFromPublicId(edition.posterPublicId, edition.edition, edition.year));
       }
     }
     console.log(`  Created ${resources.length} synthetic poster entries`);

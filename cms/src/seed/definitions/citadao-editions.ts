@@ -16,6 +16,8 @@ export interface CitadaoEditionData {
   guests: string[];
   /** Map of award slug to winner shortName */
   awards: Record<string, string> | null;
+  /** Cloudinary public ID for poster (without folder prefix) */
+  posterPublicId?: string;
 }
 
 export const CITADAO_EDITIONS: CitadaoEditionData[] = [
@@ -27,6 +29,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
     tunas: ['TUPLA', 'Tuna Salamanca', 'TAUE', 'RTUB', 'TMUC'],
     guests: ['Real Tunel', 'Viriatuna', 'Infantuna'],
     awards: null,
+    posterPublicId: 'tunadao/citadao/citadao-2004-01-poster_lfku2h',
   },
   {
     edition: 2,
@@ -36,6 +39,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
     tunas: ['TMUC', 'TCML', 'Luz&Tuna', 'Tintuna', 'TABM'],
     guests: ['Infantuna', 'Real Tunel', 'Viriatuna'],
     awards: null,
+    posterPublicId: 'tunadao/citadao/citadao-2005-02-poster_vsi9cf',
   },
   {
     edition: 3,
@@ -57,6 +61,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'tuna-mais-tuna': 'Tusofona',
       'tuna-do-publico': 'Semper Tesus',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2007-03-poster_obpgjo',
   },
   {
     edition: 4,
@@ -67,6 +72,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
     tunas: ['EACB', "Copituna d'Oppidana", 'Semper Tesus', 'TAUP', 'TUSA'],
     guests: ['Charrascos da Citania'],
     awards: null,
+    posterPublicId: 'tunadao/citadao/citadao-2008-04-poster_ifegpv',
   },
   {
     edition: 5,
@@ -86,6 +92,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-passacalles': 'Tuna Templaria',
       'tuna-mais-tuna': 'Afonsina',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2009-05-poster_ts5rfr',
   },
   {
     edition: 6,
@@ -106,6 +113,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-estandarte': 'anTUNiA',
       'melhor-serenata': 'TUB',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2010-06-poster_hbn5fs',
   },
   {
     edition: 7,
@@ -127,6 +135,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'tuna-mais-tuna': 'TUM-Madeira',
       'mencao-honrosa': 'Castra Leuca',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2011-07-poster_wyj7ds',
   },
   {
     edition: 8,
@@ -146,6 +155,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-estandarte': 'Scalabituna',
       'melhor-serenata': 'Desertuna',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2012-08-poster_pjvnxl',
   },
   {
     edition: 9,
@@ -166,6 +176,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-estandarte': 'Luz&Tuna',
       'melhor-serenata': 'Luz&Tuna',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2013-09-poster_xzeqtq',
   },
   {
     edition: 10,
@@ -186,6 +197,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'tuna-mais-tuna': 'TUSA',
       'melhor-passacalles': 'TUSA',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2014-10-poster_n2dgcl',
   },
   {
     edition: 11,
@@ -205,6 +217,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-serenata': 'anTUNiA',
       'melhor-instrumental': 'anTUNiA',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2015-11-poster_nfxdhl',
   },
   {
     edition: 12,
@@ -224,6 +237,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-pandeireta': 'TUM',
       'melhor-estandarte': 'Hinoportuna',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2016-12-poster_onovfv',
   },
   {
     edition: 13,
@@ -243,6 +257,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-original': 'Azeituna',
       'melhor-serenata': 'Tunideos',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2017-13-poster_idoq7z',
   },
   {
     edition: 14,
@@ -262,6 +277,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-instrumental': 'TUIST',
       'melhor-original': 'TAIPCA',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2018-14-poster_xh8kiq',
   },
   {
     edition: 15,
@@ -280,6 +296,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-instrumental': 'TUM',
       'melhor-original': 'TUM',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2019-15-poster_ecowwn',
   },
   {
     edition: 16,
@@ -299,6 +316,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-instrumental': 'Afonsina',
       'melhor-original': 'Afonsina',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2022-16-poster_z1g5uq',
   },
   {
     edition: 17,
@@ -318,6 +336,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-instrumental': 'TUM',
       'melhor-original': 'EUL',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2023-17-poster_g9447z',
   },
   {
     edition: 18,
@@ -335,6 +354,7 @@ export const CITADAO_EDITIONS: CitadaoEditionData[] = [
       'melhor-solista': 'Afonsina',
       'melhor-instrumental': 'EACB',
     },
+    posterPublicId: 'tunadao/citadao/citadao-2024-18-poster_s7e7zj',
   },
   {
     edition: 19,
