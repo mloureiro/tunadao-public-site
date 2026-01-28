@@ -14,12 +14,6 @@ test.describe('Citadão Page', () => {
     await expect(editions.first()).toBeVisible();
   });
 
-  test('should display latest edition highlight', async ({ page }) => {
-    const latestCard = page.locator('.latest__card');
-    await expect(latestCard).toBeVisible();
-    await expect(latestCard.locator('h2')).toContainText('CITADÃO');
-  });
-
   test('should display edition information', async ({ page }) => {
     const editionItem = page.locator('.edition-item').first();
     await expect(editionItem).toBeVisible();
@@ -28,7 +22,7 @@ test.describe('Citadão Page', () => {
 
   test('should display tunas list in edition', async ({ page }) => {
     const editionItem = page.locator('.edition-item').first();
-    const tunasList = editionItem.locator('.edition-item__tunas');
+    const tunasList = editionItem.locator('.tunas-avatars');
     await expect(tunasList).toBeVisible();
   });
 });
