@@ -22,7 +22,7 @@ test.describe('Citadão Page', () => {
 
   test('should display tunas list in edition', async ({ page }) => {
     const editionItem = page.locator('.edition-item').first();
-    const tunasList = editionItem.locator('.tunas-avatars');
+    const tunasList = editionItem.locator('.tunas-avatars').first();
     await expect(tunasList).toBeVisible();
   });
 });
