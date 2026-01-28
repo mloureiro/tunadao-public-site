@@ -4,6 +4,28 @@ import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getPalmaresYears } from '@lib/cms';
 import { Icon } from '@ui/icons';
 import Award from '@components/Award.astro';
+import type { FrontendPalmaresAward } from '@lib/cms/types';
+
+// Award priority for sorting (lower = more important)
+const AWARD_PRIORITY: Record<string, number> = {
+  'melhor-tuna': 1,
+  'tuna-mais-tuna': 2,
+  'tuna-do-publico': 3,
+  'segunda-melhor-tuna': 4,
+  'terceira-melhor-tuna': 5,
+};
+
+function sortAwards(awards: FrontendPalmaresAward[]): FrontendPalmaresAward[] {
+  return [...awards].sort((a, b) => {
+    const aPriority = AWARD_PRIORITY[a.slug] ?? 100;
+    const bPriority = AWARD_PRIORITY[b.slug] ?? 100;
+    if (aPriority !== bPriority) {
+      return aPriority - bPriority;
+    }
+    // Same priority: sort alphabetically by name
+    return a.name.localeCompare(b.name, 'pt');
+  });
+}
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
@@ -128,7 +150,7 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
                     </div>
                   </div>
                   <div class="festival-card__awards">
-                    {festival.awards.map((award) => (
+                    {sortAwards(festival.awards).map((award) => (
                       <Award awardKey={award.slug} size="sm">{award.name}</Award>
                     ))}
                   </div>
