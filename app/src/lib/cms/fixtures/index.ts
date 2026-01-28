@@ -30,10 +30,38 @@ import type {
   CMSPaginatedResponse,
 } from '../types';
 
-// Get current directory for path resolution
-const __dirname = dirname(fileURLToPath(import.meta.url));
-// Path from app/src/lib/cms/fixtures/ to project root data/
-const DUMP_PATH = join(__dirname, '../../../../../data/cms-dump.json');
+// Try multiple possible paths to find cms-dump.json
+// This handles different build contexts (local dev, CI, bundled)
+function findDumpPath(): string | null {
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+
+  const possiblePaths = [
+    // From project root (when cwd is project root)
+    join(process.cwd(), 'data/cms-dump.json'),
+    // From app/ directory (when cwd is app/)
+    join(process.cwd(), '../data/cms-dump.json'),
+    // Relative from source file location (5 levels up from app/src/lib/cms/fixtures/)
+    join(__dirname, '../../../../../data/cms-dump.json'),
+    // Relative from source file location (4 levels up - in case we're in dist/)
+    join(__dirname, '../../../../data/cms-dump.json'),
+  ];
+
+  for (const p of possiblePaths) {
+    if (existsSync(p)) {
+      return p;
+    }
+  }
+
+  // Debug: log what we tried
+  console.log('[Fixtures] Searched for cms-dump.json in:');
+  console.log(`  cwd: ${process.cwd()}`);
+  console.log(`  __dirname: ${__dirname}`);
+  for (const p of possiblePaths) {
+    console.log(`  - ${p} (exists: ${existsSync(p)})`);
+  }
+
+  return null;
+}
 
 interface CMSDump {
   _meta: {
@@ -62,23 +90,28 @@ interface CMSDump {
 
 // Load the CMS dump file if it exists
 let cmsDump: CMSDump | null = null;
+let dumpChecked = false;
 
 function loadDump(): CMSDump | null {
-  if (cmsDump !== null) return cmsDump;
+  if (dumpChecked) return cmsDump;
+  dumpChecked = true;
 
-  try {
-    if (existsSync(DUMP_PATH)) {
-      const content = readFileSync(DUMP_PATH, 'utf-8');
-      cmsDump = JSON.parse(content) as CMSDump;
-      console.log(`[Fixtures] Loaded CMS dump (exported: ${cmsDump._meta?.exportedAt || 'unknown'})`);
-      return cmsDump;
-    }
-  } catch (error) {
-    console.warn('[Fixtures] Failed to load CMS dump:', error);
+  const dumpPath = findDumpPath();
+  if (!dumpPath) {
+    console.log('[Fixtures] CMS dump not found, using minimal E2E data');
+    return null;
   }
 
-  console.log('[Fixtures] CMS dump not found, using minimal E2E data');
-  return null;
+  try {
+    const content = readFileSync(dumpPath, 'utf-8');
+    cmsDump = JSON.parse(content) as CMSDump;
+    console.log(`[Fixtures] Loaded CMS dump from ${dumpPath}`);
+    console.log(`[Fixtures] Dump exported: ${cmsDump._meta?.exportedAt || 'unknown'}`);
+    return cmsDump;
+  } catch (error) {
+    console.warn('[Fixtures] Failed to load CMS dump:', error);
+    return null;
+  }
 }
 
 // Helper to create paginated response
