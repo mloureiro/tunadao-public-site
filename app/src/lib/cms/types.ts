@@ -93,6 +93,7 @@ export interface CMSFestival {
   date: string;
   location?: string;
   organizingTuna?: CMSTuna | number;
+  poster?: CMSMedia | number;
   status: 'draft' | 'published';
 }
 
@@ -303,6 +304,7 @@ export interface FrontendPalmaresFestival {
   name: string;
   location: string;
   organizingTuna?: FrontendPalmaresOrganizingTuna;
+  posterUrl?: string;
   awards: FrontendPalmaresAward[];
 }
 

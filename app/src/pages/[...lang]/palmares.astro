@@ -104,55 +104,71 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
             <div class="festivals-grid">
               {yearData.festivals.map((festival) => (
                 <div class="festival-card">
-                  <div class="festival-card__header">
-                    <h3 class="festival-card__name">{festival.name}</h3>
-                    <div class="festival-card__meta">
-                      {festival.location && (
-                        <span class="festival-card__location">
-                          <Icon name="map-pin" size={14} />
-                          {festival.location}
-                        </span>
-                      )}
-                      {festival.organizingTuna && (
-                        <div class="festival-card__organizer">
-                          <div class="festival-card__organizer-logo-wrapper">
-                            {festival.organizingTuna.logoUrl ? (
-                              <img
-                                src={festival.organizingTuna.logoUrl}
-                                alt={`Logo ${festival.organizingTuna.shortName}`}
-                                class="festival-card__organizer-logo"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <div class="festival-card__organizer-placeholder">
-                                <span>{festival.organizingTuna.shortName.charAt(0)}</span>
-                              </div>
-                            )}
-                          </div>
-                          <span class="festival-card__organizer-info">
-                            {festival.organizingTuna.website ? (
-                              <a
-                                href={festival.organizingTuna.website}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title={festival.organizingTuna.fullName}
-                              >
-                                {festival.organizingTuna.shortName}
-                              </a>
-                            ) : (
-                              <span title={festival.organizingTuna.fullName}>
-                                {festival.organizingTuna.shortName}
-                              </span>
-                            )}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                  <div class="festival-card__poster">
+                    {festival.posterUrl ? (
+                      <img
+                        src={festival.posterUrl}
+                        alt={`Cartaz ${festival.name}`}
+                        class="festival-card__poster-image"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div class="festival-card__poster-placeholder">
+                        <Icon name="image" size={32} />
+                      </div>
+                    )}
                   </div>
-                  <div class="festival-card__awards">
-                    {sortAwards(festival.awards).map((award) => (
-                      <Award awardKey={award.slug} size="sm">{award.name}</Award>
-                    ))}
+                  <div class="festival-card__content">
+                    <div class="festival-card__header">
+                      <h3 class="festival-card__name">{festival.name}</h3>
+                      <div class="festival-card__meta">
+                        {festival.location && (
+                          <span class="festival-card__location">
+                            <Icon name="map-pin" size={14} />
+                            {festival.location}
+                          </span>
+                        )}
+                        {festival.organizingTuna && (
+                          <div class="festival-card__organizer">
+                            <div class="festival-card__organizer-logo-wrapper">
+                              {festival.organizingTuna.logoUrl ? (
+                                <img
+                                  src={festival.organizingTuna.logoUrl}
+                                  alt={`Logo ${festival.organizingTuna.shortName}`}
+                                  class="festival-card__organizer-logo"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <div class="festival-card__organizer-placeholder">
+                                  <span>{festival.organizingTuna.shortName.charAt(0)}</span>
+                                </div>
+                              )}
+                            </div>
+                            <span class="festival-card__organizer-info">
+                              {festival.organizingTuna.website ? (
+                                <a
+                                  href={festival.organizingTuna.website}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title={festival.organizingTuna.fullName}
+                                >
+                                  {festival.organizingTuna.shortName}
+                                </a>
+                              ) : (
+                                <span title={festival.organizingTuna.fullName}>
+                                  {festival.organizingTuna.shortName}
+                                </span>
+                              )}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div class="festival-card__awards">
+                      {sortAwards(festival.awards).map((award) => (
+                        <Award awardKey={award.slug} size="sm">{award.name}</Award>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -284,7 +300,9 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    padding: var(--space-4);
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
     transition:
       transform var(--transition-normal),
       box-shadow var(--transition-normal);
@@ -293,6 +311,41 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
   .festival-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+  }
+
+  .festival-card__poster {
+    width: 100px;
+    min-height: 140px;
+    flex-shrink: 0;
+    background-color: var(--color-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .festival-card__poster-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .festival-card__poster-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+
+  .festival-card__content {
+    flex: 1;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
   }
 
   .festival-card__header {

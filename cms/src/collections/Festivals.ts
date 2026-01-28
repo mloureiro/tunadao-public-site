@@ -62,6 +62,14 @@ export const Festivals: CollectionConfig = {
       },
     },
     {
+      name: 'poster',
+      type: 'relationship',
+      relationTo: 'media',
+      admin: {
+        description: 'Cartaz do festival',
+      },
+    },
+    {
       name: 'status',
       type: 'select',
       required: true,

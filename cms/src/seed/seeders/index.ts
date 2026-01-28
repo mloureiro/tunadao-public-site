@@ -5,4 +5,5 @@ export * from './seed-tuna-logos';
 export * from './seed-citadao';
 export * from './seed-citadao-posters';
 export * from './seed-festivals';
+export * from './seed-festival-posters';
 export * from './seed-site-settings';

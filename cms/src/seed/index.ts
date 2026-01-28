@@ -15,6 +15,7 @@ const main = async () => {
     seedCitadaoEditions,
     seedCitadaoPosters,
     seedFestivals,
+    seedFestivalPosters,
     seedSiteSettings,
   } = await import('./seeders');
 
@@ -47,7 +48,10 @@ const main = async () => {
     console.log('\n7. Seeding Festivals...');
     await seedFestivals(payload, tunaRegistry, awardRegistry);
 
-    console.log('\n8. Seeding site settings...');
+    console.log('\n8. Seeding Festival posters (from Cloudinary)...');
+    await seedFestivalPosters(payload);
+
+    console.log('\n9. Seeding site settings...');
     await seedSiteSettings(payload);
 
     console.log('\n Seed completed successfully!');

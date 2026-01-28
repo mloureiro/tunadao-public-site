@@ -443,6 +443,10 @@ export interface Festival {
    * Tuna organizadora do festival
    */
   organizingTuna?: (number | null) | Tuna;
+  /**
+   * Cartaz do festival
+   */
+  poster?: (number | null) | Media;
   status: 'draft' | 'published';
   updatedAt: string;
   createdAt: string;
@@ -945,6 +949,7 @@ export interface FestivalsSelect<T extends boolean = true> {
   date?: T;
   location?: T;
   organizingTuna?: T;
+  poster?: T;
   status?: T;
   updatedAt?: T;
   createdAt?: T;

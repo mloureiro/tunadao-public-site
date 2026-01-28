@@ -419,10 +419,14 @@ export async function getPalmaresYears(): Promise<FrontendPalmaresYear[]> {
         // Get awards for this festival
         const awards = festivalAwardsMap.get(festival.id) || [];
 
+        // Get poster URL if available
+        const posterUrl = getMediaUrl(festival.poster) || undefined;
+
         return {
           name: festival.name,
           location: festival.location || '',
           organizingTuna,
+          posterUrl,
           awards: awards.map((award) => {
             // Get award type info
             if (award.awardType) {
