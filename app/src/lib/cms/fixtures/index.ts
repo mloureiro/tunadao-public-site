@@ -32,7 +32,8 @@ import type {
 
 // Get current directory for path resolution
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DUMP_PATH = join(__dirname, '../../../../data/cms-dump.json');
+// Path from app/src/lib/cms/fixtures/ to project root data/
+const DUMP_PATH = join(__dirname, '../../../../../data/cms-dump.json');
 
 interface CMSDump {
   _meta: {
