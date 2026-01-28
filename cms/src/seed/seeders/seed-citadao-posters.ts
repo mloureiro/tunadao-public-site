@@ -1,5 +1,9 @@
 import type { Payload } from 'payload';
 import { execSync } from 'child_process';
+import { CITADAO_EDITIONS } from '../definitions/citadao-editions';
+
+// Cloudinary cloud name for constructing URLs when CLI is not available
+const CLOUDINARY_CLOUD_NAME = 'tunadao-site';
 
 interface CloudinaryResource {
   asset_id: string;
@@ -32,11 +36,40 @@ function parseFilename(filename: string): { year: number; edition: number } | nu
   };
 }
 
+/**
+ * Create a synthetic CloudinaryResource for a poster.
+ * This is used when the Cloudinary CLI is not available (e.g., in CI).
+ */
+function createSyntheticResource(edition: number, year: number): CloudinaryResource {
+  const editionStr = String(edition).padStart(2, '0');
+  const publicId = `tunadao/citadao/citadao-${year}-${editionStr}-poster`;
+  const secureUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}`;
+  const url = secureUrl.replace('https://', 'http://');
+
+  return {
+    asset_id: `synthetic-citadao-${year}-${editionStr}`,
+    public_id: publicId,
+    filename: `citadao-${year}-${editionStr}-poster`,
+    format: 'jpg',
+    version: 1,
+    resource_type: 'image',
+    type: 'upload',
+    created_at: new Date().toISOString(),
+    bytes: 0,
+    width: 0,
+    height: 0,
+    url,
+    secure_url: secureUrl,
+  };
+}
+
 export const seedCitadaoPosters = async (payload: Payload) => {
   console.log('  Fetching posters from Cloudinary...');
 
-  // Fetch posters from Cloudinary using CLI
-  let cloudinaryData: CloudinarySearchResult;
+  // Fetch posters from Cloudinary using CLI (if available)
+  let resources: CloudinaryResource[] = [];
+  let usingSyntheticData = false;
+
   try {
     const result = execSync('source ~/.zshrc && cld search "folder:tunadao/citadao" -n 50', {
       encoding: 'utf-8',
@@ -47,16 +80,27 @@ export const seedCitadaoPosters = async (payload: Payload) => {
     if (!jsonMatch) {
       throw new Error('No JSON found in Cloudinary output');
     }
-    cloudinaryData = JSON.parse(jsonMatch[0]);
+    const cloudinaryData: CloudinarySearchResult = JSON.parse(jsonMatch[0]);
+    resources = cloudinaryData.resources;
+    console.log(`  Found ${cloudinaryData.total_count} posters in Cloudinary`);
   } catch (error) {
-    console.error('  Failed to fetch from Cloudinary:', error);
-    return;
+    console.warn('  Cloudinary CLI not available, using synthetic URLs for known editions');
+    usingSyntheticData = true;
+
+    // Create synthetic resources for all known editions
+    // Note: Not all editions may have posters, but the synthetic URLs will just 404 if they don't exist
+    for (const edition of CITADAO_EDITIONS) {
+      // Only create for editions that are likely to have posters (recent ones)
+      // Older editions (before ~2010) might not have digital posters
+      if (edition.year >= 2010) {
+        resources.push(createSyntheticResource(edition.edition, edition.year));
+      }
+    }
+    console.log(`  Created ${resources.length} synthetic poster entries`);
   }
 
-  console.log(`  Found ${cloudinaryData.total_count} posters in Cloudinary`);
-
   // Create Media entries and map to editions
-  for (const resource of cloudinaryData.resources) {
+  for (const resource of resources) {
     const parsed = parseFilename(resource.filename);
     if (!parsed) {
       console.log(`  Warning: Could not parse filename: ${resource.filename}`);
@@ -73,11 +117,13 @@ export const seedCitadaoPosters = async (payload: Payload) => {
         limit: 1,
       });
 
-      let mediaId: string;
+      let mediaId: string | number;
 
       if (existingMedia.docs.length > 0) {
         mediaId = existingMedia.docs[0].id;
-        console.log(`  Skipped media for ${parsed.edition}o (${parsed.year}) - already exists`);
+        if (!usingSyntheticData) {
+          console.log(`  Skipped media for ${parsed.edition}o (${parsed.year}) - already exists`);
+        }
       } else {
         // Create media entry
         const media = await payload.create({
@@ -102,7 +148,9 @@ export const seedCitadaoPosters = async (payload: Payload) => {
           },
         });
         mediaId = media.id;
-        console.log(`  Created media: ${parsed.edition}o Citadao (${parsed.year})`);
+        if (!usingSyntheticData) {
+          console.log(`  Created media: ${parsed.edition}o Citadao (${parsed.year})`);
+        }
       }
 
       // Find and update the corresponding CitadaoEdition
@@ -124,7 +172,9 @@ export const seedCitadaoPosters = async (payload: Payload) => {
               poster: mediaId,
             },
           });
-          console.log(`  Linked poster to ${parsed.edition}o Citadao (${parsed.year})`);
+          if (!usingSyntheticData) {
+            console.log(`  Linked poster to ${parsed.edition}o Citadao (${parsed.year})`);
+          }
         }
       } else {
         console.log(`  Warning: No CitadaoEdition found for ${parsed.edition}o (${parsed.year})`);
@@ -132,5 +182,9 @@ export const seedCitadaoPosters = async (payload: Payload) => {
     } catch (error) {
       console.error(`  Failed to process ${resource.filename}:`, error);
     }
+  }
+
+  if (usingSyntheticData) {
+    console.log(`  Done: Created synthetic poster entries for editions 2010+`);
   }
 };

@@ -2,6 +2,9 @@ import type { Payload } from 'payload';
 import { execSync } from 'child_process';
 import { MASTER_TUNAS } from '../definitions/master-tunas';
 
+// Cloudinary cloud name for constructing URLs when CLI is not available
+const CLOUDINARY_CLOUD_NAME = 'tunadao-site';
+
 interface CloudinaryResource {
   asset_id: string;
   public_id: string;
@@ -23,11 +26,38 @@ interface CloudinarySearchResult {
   resources: CloudinaryResource[];
 }
 
+/**
+ * Create a synthetic CloudinaryResource from just the public ID.
+ * This is used when the Cloudinary CLI is not available (e.g., in CI).
+ */
+function createSyntheticResource(publicId: string): CloudinaryResource {
+  const secureUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}`;
+  const url = secureUrl.replace('https://', 'http://');
+
+  return {
+    asset_id: `synthetic-${publicId.replace(/\//g, '-')}`,
+    public_id: publicId,
+    filename: publicId.split('/').pop() || publicId,
+    format: 'png', // Default format, Cloudinary auto-detects anyway
+    version: 1,
+    resource_type: 'image',
+    type: 'upload',
+    created_at: new Date().toISOString(),
+    bytes: 0,
+    width: 0,
+    height: 0,
+    url,
+    secure_url: secureUrl,
+  };
+}
+
 export const seedTunaLogos = async (payload: Payload) => {
   console.log('  Fetching logos from Cloudinary...');
 
-  // Fetch logos from Cloudinary using CLI
-  let cloudinaryData: CloudinarySearchResult;
+  // Fetch logos from Cloudinary using CLI (if available)
+  let cloudinaryMap = new Map<string, CloudinaryResource>();
+  let usingSyntheticData = false;
+
   try {
     const result = execSync('source ~/.zshrc && cld search "folder:tunadao/tunas" -n 100', {
       encoding: 'utf-8',
@@ -38,18 +68,24 @@ export const seedTunaLogos = async (payload: Payload) => {
     if (!jsonMatch) {
       throw new Error('No JSON found in Cloudinary output');
     }
-    cloudinaryData = JSON.parse(jsonMatch[0]);
+    const cloudinaryData: CloudinarySearchResult = JSON.parse(jsonMatch[0]);
+    console.log(`  Found ${cloudinaryData.total_count} logos in Cloudinary`);
+
+    // Build a map of public_id to cloudinary resource
+    for (const resource of cloudinaryData.resources) {
+      cloudinaryMap.set(resource.public_id, resource);
+    }
   } catch (error) {
-    console.error('  Failed to fetch from Cloudinary:', error);
-    return;
-  }
+    console.warn('  Cloudinary CLI not available, using synthetic URLs from public IDs');
+    usingSyntheticData = true;
 
-  console.log(`  Found ${cloudinaryData.total_count} logos in Cloudinary`);
-
-  // Build a map of public_id to cloudinary resource
-  const cloudinaryMap = new Map<string, CloudinaryResource>();
-  for (const resource of cloudinaryData.resources) {
-    cloudinaryMap.set(resource.public_id, resource);
+    // Create synthetic resources from the public IDs in master data
+    for (const tuna of MASTER_TUNAS) {
+      if (tuna.logoPublicId) {
+        cloudinaryMap.set(tuna.logoPublicId, createSyntheticResource(tuna.logoPublicId));
+      }
+    }
+    console.log(`  Created ${cloudinaryMap.size} synthetic media entries`);
   }
 
   // Process tunas that have logoPublicId
@@ -61,7 +97,7 @@ export const seedTunaLogos = async (payload: Payload) => {
 
     const resource = cloudinaryMap.get(tuna.logoPublicId);
     if (!resource) {
-      console.log(`  Warning: Logo not found in Cloudinary for ${tuna.shortName}: ${tuna.logoPublicId}`);
+      console.log(`  Warning: Logo not found for ${tuna.shortName}: ${tuna.logoPublicId}`);
       continue;
     }
 
@@ -75,7 +111,7 @@ export const seedTunaLogos = async (payload: Payload) => {
         limit: 1,
       });
 
-      let mediaId: string;
+      let mediaId: string | number;
 
       if (existingMedia.docs.length > 0) {
         mediaId = existingMedia.docs[0].id;
@@ -103,7 +139,9 @@ export const seedTunaLogos = async (payload: Payload) => {
           },
         });
         mediaId = media.id;
-        console.log(`  Created media: ${tuna.shortName}`);
+        if (!usingSyntheticData) {
+          console.log(`  Created media: ${tuna.shortName}`);
+        }
       }
 
       // Find and update the corresponding Tuna
@@ -125,7 +163,9 @@ export const seedTunaLogos = async (payload: Payload) => {
               logo: mediaId,
             },
           });
-          console.log(`  Linked logo to ${tuna.shortName}`);
+          if (!usingSyntheticData) {
+            console.log(`  Linked logo to ${tuna.shortName}`);
+          }
           linked++;
         } else {
           skipped++;
