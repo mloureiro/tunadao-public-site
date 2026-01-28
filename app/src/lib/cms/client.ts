@@ -1,8 +1,12 @@
 /**
  * CMS Client - Raw fetch functions for PayloadCMS REST API
  *
- * Set USE_TEST_FIXTURES=true to use static fixtures instead of live CMS.
- * This is useful for E2E tests and builds without a running CMS.
+ * Environment variables:
+ * - USE_TEST_FIXTURES=true: Force use of static fixtures (for E2E tests)
+ * - FORCE_PROD_CMS=true: Require CMS connection, fail build if unavailable
+ *
+ * Default behavior (no env vars): Try CMS first, fallback to fixtures if unavailable.
+ * This ensures builds succeed even when CMS is down.
  */
 
 import type {
@@ -33,6 +37,9 @@ const CMS_URL = import.meta.env.CMS_URL || 'http://localhost:3000';
 // Use process.env directly to avoid Vite tree-shaking the fixture code
 // This works because SSG runs in Node.js context
 const USE_TEST_FIXTURES = process.env.USE_TEST_FIXTURES === 'true';
+// When true, CMS connection is required - build fails if CMS is unavailable
+// When false/unset, falls back to fixtures if CMS is unavailable
+const FORCE_PROD_CMS = process.env.FORCE_PROD_CMS === 'true';
 
 interface FetchOptions {
   depth?: number;
@@ -53,8 +60,17 @@ export class CMSError extends Error {
   }
 }
 
+function tryFixtureFallback<T>(endpoint: string): T {
+  const fixtureKey = endpoint as FixtureEndpoint;
+  if (fixtureKey in fixtures) {
+    console.log(`[CMS:Fallback] Using fixture for ${endpoint}`);
+    return fixtures[fixtureKey]() as T;
+  }
+  throw new CMSError(`No fixture found for endpoint: ${endpoint}`, endpoint);
+}
+
 async function fetchFromCMS<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-  // Use test fixtures if enabled
+  // Use test fixtures if enabled (explicit fixture mode)
   if (USE_TEST_FIXTURES) {
     const fixtureKey = endpoint as FixtureEndpoint;
     if (fixtureKey in fixtures) {
@@ -92,26 +108,43 @@ async function fetchFromCMS<T>(endpoint: string, options: FetchOptions = {}): Pr
       },
     });
   } catch {
-    throw new CMSError(
-      `Failed to connect to CMS at ${CMS_URL}. Is the CMS running?`,
-      endpoint
-    );
+    if (FORCE_PROD_CMS) {
+      throw new CMSError(
+        `Failed to connect to CMS at ${CMS_URL}. Is the CMS running? (FORCE_PROD_CMS=true)`,
+        endpoint
+      );
+    }
+    console.warn(`[CMS:Fallback] CMS unavailable at ${CMS_URL}, falling back to fixtures for ${endpoint}`);
+    return tryFixtureFallback<T>(endpoint);
   }
 
   if (!response.ok) {
-    throw new CMSError(
-      `CMS returned error ${response.status} for ${endpoint}`,
-      endpoint,
-      response.status
-    );
+    if (FORCE_PROD_CMS) {
+      throw new CMSError(
+        `CMS returned error ${response.status} for ${endpoint} (FORCE_PROD_CMS=true)`,
+        endpoint,
+        response.status
+      );
+    }
+    console.warn(`[CMS:Fallback] CMS error ${response.status} for ${endpoint}, falling back to fixtures`);
+    return tryFixtureFallback<T>(endpoint);
   }
 
   const data = await response.json();
   return data;
 }
 
+function tryGlobalFixtureFallback<T>(slug: string): T {
+  const fixtureKey = slug as GlobalFixtureEndpoint;
+  if (fixtureKey in globalFixtures) {
+    console.log(`[CMS:Fallback] Using fixture for global ${slug}`);
+    return globalFixtures[fixtureKey]() as T;
+  }
+  throw new CMSError(`No fixture found for global: ${slug}`, `globals/${slug}`);
+}
+
 async function fetchGlobal<T>(slug: string): Promise<T> {
-  // Use test fixtures if enabled
+  // Use test fixtures if enabled (explicit fixture mode)
   if (USE_TEST_FIXTURES) {
     const fixtureKey = slug as GlobalFixtureEndpoint;
     if (fixtureKey in globalFixtures) {
@@ -131,18 +164,26 @@ async function fetchGlobal<T>(slug: string): Promise<T> {
       },
     });
   } catch {
-    throw new CMSError(
-      `Failed to connect to CMS at ${CMS_URL}. Is the CMS running?`,
-      `globals/${slug}`
-    );
+    if (FORCE_PROD_CMS) {
+      throw new CMSError(
+        `Failed to connect to CMS at ${CMS_URL}. Is the CMS running? (FORCE_PROD_CMS=true)`,
+        `globals/${slug}`
+      );
+    }
+    console.warn(`[CMS:Fallback] CMS unavailable at ${CMS_URL}, falling back to fixtures for global ${slug}`);
+    return tryGlobalFixtureFallback<T>(slug);
   }
 
   if (!response.ok) {
-    throw new CMSError(
-      `CMS returned error ${response.status} for global ${slug}`,
-      `globals/${slug}`,
-      response.status
-    );
+    if (FORCE_PROD_CMS) {
+      throw new CMSError(
+        `CMS returned error ${response.status} for global ${slug} (FORCE_PROD_CMS=true)`,
+        `globals/${slug}`,
+        response.status
+      );
+    }
+    console.warn(`[CMS:Fallback] CMS error ${response.status} for global ${slug}, falling back to fixtures`);
+    return tryGlobalFixtureFallback<T>(slug);
   }
 
   const data = await response.json();
@@ -370,7 +411,7 @@ export async function getContactInfo(): Promise<CMSContactInfo> {
   return data;
 }
 
-// Health check - throws if CMS is not reachable (skipped in fixtures mode)
+// Health check - throws if CMS is not reachable (only when FORCE_PROD_CMS=true)
 export async function checkCMSConnection(): Promise<void> {
   if (USE_TEST_FIXTURES) {
     console.log('[CMS:Fixtures] Using test fixtures - skipping CMS connection check');
@@ -382,14 +423,21 @@ export async function checkCMSConnection(): Promise<void> {
       method: 'GET',
     });
     if (response.status === 404) {
-      throw new CMSError('CMS API not found', 'users/me', 404);
+      if (FORCE_PROD_CMS) {
+        throw new CMSError('CMS API not found (FORCE_PROD_CMS=true)', 'users/me', 404);
+      }
+      console.warn('[CMS:Fallback] CMS API not found, will use fixtures as fallback');
+      return;
     }
     console.log(`[CMS] Connected to ${CMS_URL}`);
   } catch (error) {
     if (error instanceof CMSError) throw error;
-    throw new CMSError(
-      `Failed to connect to CMS at ${CMS_URL}. Is the CMS running?`,
-      'users/me'
-    );
+    if (FORCE_PROD_CMS) {
+      throw new CMSError(
+        `Failed to connect to CMS at ${CMS_URL}. Is the CMS running? (FORCE_PROD_CMS=true)`,
+        'users/me'
+      );
+    }
+    console.warn(`[CMS:Fallback] CMS unavailable at ${CMS_URL}, will use fixtures as fallback`);
   }
 }
