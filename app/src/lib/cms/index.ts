@@ -95,17 +95,6 @@ function cleanShortName(shortName: string): string {
 }
 
 /**
- * Helper to get tuna full name (for participants list)
- */
-function getTunaName(tuna: CMSTuna | number | string): string {
-  if (!isTunaPopulated(tuna)) {
-    console.warn('[CMS] Tuna relationship not populated:', tuna);
-    return '—';
-  }
-  return tuna.fullName || cleanShortName(tuna.shortName);
-}
-
-/**
  * Helper to transform a tuna into FrontendTunaWithLogo
  */
 function transformTunaWithLogo(tuna: CMSTuna | number | string): FrontendTunaWithLogo {
