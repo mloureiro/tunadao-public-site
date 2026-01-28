@@ -236,7 +236,10 @@ export async function getCitadaoEditions(): Promise<FrontendCitadaoEdition[]> {
     client.getCitadaoAwards(),
   ]);
 
-  return cmsEditions.map((edition) => transformCitadaoEdition(edition, participants, awards));
+  const editions = cmsEditions.map((edition) => transformCitadaoEdition(edition, participants, awards));
+
+  // Sort by year descending (newest first)
+  return editions.sort((a, b) => b.year - a.year);
 }
 
 export async function getCitadaoEditionByYear(
