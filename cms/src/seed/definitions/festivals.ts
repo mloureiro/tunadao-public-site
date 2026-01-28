@@ -17,6 +17,8 @@ export interface FestivalData {
   location: string | null;
   /** Organizing tuna shortName (null if unknown) */
   organizingTuna: string | null;
+  /** Cloudinary public ID for the festival poster */
+  posterPublicId?: string;
   awards: FestivalAwardData[];
 }
 
@@ -35,14 +37,15 @@ export const FESTIVAL_ORGANIZERS: Record<string, string> = {
   'cidade de berco': 'Afonsina',
   // Castelo Branco
   fitucb: 'EACB',
-  fitas: 'EACB',
   // Coimbra
   festuna: 'EUC',
   'cantar de estudante': 'TMUC',
-  fitqfc: 'EUC',
   // Guarda
   oppidana: "Copituna d'Oppidana",
-  maltunas: "Copituna d'Oppidana",
+  // Castelo Branco - FITAs
+  fitas: 'Castra Leuca',
+  // Coimbra - Queima das Fitas
+  fitqfc: 'QFC',
   // Barcelos
   'barca celi': 'TAIPCA',
   // Viana do Castelo
@@ -70,7 +73,7 @@ export const FESTIVAL_ORGANIZERS: Record<string, string> = {
   fartuna: 'Versus Tuna',
   // Figueira da Foz
   fituff: 'Bruna',
-  fitaff: 'Bruna',
+  fitaff: 'Imperial Neptuna',
   fituiff: 'Bruna',
   // Braganca
   fitab: 'RTUB',
@@ -119,9 +122,10 @@ export const FESTIVALS: FestivalData[] = [
   // 2019
   {
     name: 'XXIX FITUA',
-    date: '2019-06-15',
+    date: '2019-04-12',
     location: 'Aveiro',
     organizingTuna: 'TUA',
+    posterPublicId: 'tunadao/festivais/xxix-fitua-2019',
     awards: [
       { slug: 'melhor-instrumental' },
       { slug: 'melhor-tuna' },
@@ -130,9 +134,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'XXIX FITU Bracara Augusta',
-    date: '2019-06-15',
+    date: '2019-04-05',
     location: 'Braga',
     organizingTuna: 'TUM',
+    posterPublicId: 'tunadao/festivais/xxix-fitu-bracara-augusta-2019',
     awards: [
       { slug: 'tuna-do-publico' },
       { slug: 'melhor-pandeireta' },
@@ -141,9 +146,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'XIII FITUCB',
-    date: '2019-06-15',
+    date: '2019-11-01',
     location: 'Castelo Branco',
     organizingTuna: 'EACB',
+    posterPublicId: 'tunadao/festivais/xiii-fitucb-2019',
     awards: [
       { slug: 'melhor-estandarte' },
       { slug: 'segunda-melhor-tuna' },
@@ -152,19 +158,21 @@ export const FESTIVALS: FestivalData[] = [
   // 2018
   {
     name: 'XXVIII Festuna',
-    date: '2018-06-15',
+    date: '2018-11-02',
     location: 'Coimbra',
     organizingTuna: 'EUC',
+    posterPublicId: 'tunadao/festivais/xxviii-festuna-2018',
     awards: [
       { slug: 'segunda-melhor-tuna' },
       { slug: 'melhor-pandeireta' },
     ],
   },
   {
-    name: 'XII Cidade de Berco',
-    date: '2018-06-15',
+    name: 'XIII Cidade de Berco',
+    date: '2018-03-04',
     location: 'Guimaraes',
     organizingTuna: 'Afonsina',
+    posterPublicId: 'tunadao/festivais/xiii-cidade-de-berco-2018',
     awards: [
       { slug: 'melhor-solista' },
       { slug: 'melhor-instrumental' },
@@ -177,16 +185,18 @@ export const FESTIVALS: FestivalData[] = [
   // 2017
   {
     name: 'XVI Oppidana',
-    date: '2017-06-15',
+    date: '2017-03-11',
     location: 'Guarda',
     organizingTuna: "Copituna d'Oppidana",
+    posterPublicId: 'tunadao/festivais/xvi-oppidana-2017',
     awards: [{ slug: 'tuna-mais-tuna' }],
   },
   {
     name: 'XII Barca Celi',
-    date: '2017-06-15',
+    date: '2017-11-03',
     location: 'Barcelos',
     organizingTuna: 'TAIPCA',
+    posterPublicId: 'tunadao/festivais/xii-barca-celi-2017',
     awards: [
       { slug: 'melhor-original' },
       { slug: 'melhor-tuna' },
@@ -194,9 +204,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'XXVII FITU Bracara Augusta',
-    date: '2017-06-15',
+    date: '2017-03-31',
     location: 'Braga',
     organizingTuna: 'TUM',
+    posterPublicId: 'tunadao/festivais/xxvii-fitu-bracara-augusta-2017',
     awards: [
       { slug: 'melhor-pandeireta' },
       { slug: 'terceira-melhor-tuna' },
@@ -204,16 +215,18 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'XVII Lethes',
-    date: '2017-06-15',
+    date: '2017-04-07',
     location: 'Viana do Castelo',
     organizingTuna: 'Hinoportuna',
+    posterPublicId: 'tunadao/festivais/xvii-lethes-2017',
     awards: [],
   },
   {
     name: 'IX Cantar de Estudante',
-    date: '2017-06-15',
+    date: '2017-11-23',
     location: 'Coimbra',
     organizingTuna: 'TMUC',
+    posterPublicId: 'tunadao/festivais/ix-cantar-de-estudante-2017',
     awards: [
       { slug: 'tuna-mais-tuna' },
       { slug: 'tuna-do-publico' },
@@ -222,9 +235,10 @@ export const FESTIVALS: FestivalData[] = [
   // 2016
   {
     name: 'VII Collipo',
-    date: '2016-06-15',
+    date: '2016-03-05',
     location: 'Leiria',
     organizingTuna: 'Trovantina',
+    posterPublicId: 'tunadao/festivais/vii-collipo-2016',
     awards: [
       { slug: 'melhor-passacalles' },
       { slug: 'tuna-mais-tuna' },
@@ -234,9 +248,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'XXVI FITU Bracara Augusta',
-    date: '2016-06-15',
+    date: '2016-04-10',
     location: 'Braga',
     organizingTuna: 'TUM',
+    posterPublicId: 'tunadao/festivais/xxvi-fitu-bracara-augusta-2016',
     awards: [
       { slug: 'premio-ibero-americano' },
       { slug: 'tuna-mais-tuna' },
@@ -248,9 +263,10 @@ export const FESTIVALS: FestivalData[] = [
   // 2015
   {
     name: 'VI Collipo',
-    date: '2015-06-15',
+    date: '2014-03-14',
     location: 'Leiria',
     organizingTuna: 'Trovantina',
+    posterPublicId: 'tunadao/festivais/vi-collipo-2014',
     awards: [
       { slug: 'melhor-tuna' },
       { slug: 'melhor-serenata' },
@@ -259,9 +275,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'III Herminius',
-    date: '2015-06-15',
+    date: '2015-04-11',
     location: 'Covilha',
     organizingTuna: 'Tuna-MUs',
+    posterPublicId: 'tunadao/festivais/iii-herminius-2015',
     awards: [
       { slug: 'melhor-tuna' },
       { slug: 'melhor-serenata' },
@@ -269,10 +286,11 @@ export const FESTIVALS: FestivalData[] = [
     ],
   },
   {
-    name: 'FITUCB',
-    date: '2015-06-15',
+    name: 'IX FITUCB',
+    date: '2015-11-20',
     location: 'Castelo Branco',
     organizingTuna: 'EACB',
+    posterPublicId: 'tunadao/festivais/ix-fitucb-2015',
     awards: [
       { slug: 'melhor-instrumental' },
       { slug: 'tuna-mais-tuna' },
@@ -281,9 +299,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'VII Cantar de Estudante',
-    date: '2015-06-15',
+    date: '2015-11-27',
     location: 'Coimbra',
     organizingTuna: 'TMUC',
+    posterPublicId: 'tunadao/festivais/vii-cantar-de-estudante-2015',
     awards: [
       { slug: 'tuna-mais-tuna' },
       { slug: 'tuna-do-publico' },
@@ -292,23 +311,26 @@ export const FESTIVALS: FestivalData[] = [
   // 2014
   {
     name: 'XI FITUFF',
-    date: '2014-06-15',
+    date: '2014-03-15',
     location: 'Figueira da Foz',
     organizingTuna: 'Bruna',
+    posterPublicId: 'tunadao/festivais/xi-fituff-2014',
     awards: [{ slug: 'premio-participacao' }],
   },
   {
     name: 'XIX Alcatraz',
-    date: '2014-06-15',
+    date: '2014-04-04',
     location: 'Vila do Conde',
     organizingTuna: 'Gatunos',
+    posterPublicId: 'tunadao/festivais/xix-alcatraz-2014',
     awards: [{ slug: 'melhor-tuna' }],
   },
   {
     name: 'IX Barca Celi',
-    date: '2014-06-15',
+    date: '2014-11-07',
     location: 'Barcelos',
     organizingTuna: 'TAIPCA',
+    posterPublicId: 'tunadao/festivais/ix-barca-celi-2014',
     awards: [
       { slug: 'segunda-melhor-tuna' },
       { slug: 'melhor-serenata' },
@@ -320,24 +342,27 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'XXI Celta',
-    date: '2014-06-15',
+    date: '2014-12-12',
     location: 'Braga',
     organizingTuna: 'Azeituna',
+    posterPublicId: 'tunadao/festivais/xxi-celta-2014',
     awards: [{ slug: 'melhor-instrumental' }],
   },
   // 2013
   {
     name: 'Portuscalle 13',
-    date: '2013-06-15',
+    date: '2013-10-26',
     location: 'Porto',
     organizingTuna: 'TEUP',
+    posterPublicId: 'tunadao/festivais/portuscalle-13-2013',
     awards: [{ slug: 'tuna-mais-tuna' }],
   },
   {
     name: 'XXIII FITU Bracara Augusta',
-    date: '2013-06-15',
+    date: '2013-04-12',
     location: 'Braga',
     organizingTuna: 'TUM',
+    posterPublicId: 'tunadao/festivais/xxiii-fitu-bracara-augusta-2013',
     awards: [
       { slug: 'terceira-melhor-tuna' },
       { slug: 'tuna-mais-tuna' },
@@ -346,9 +371,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'IX Ciclone',
-    date: '2013-06-15',
+    date: '2013-03-15',
     location: 'Angra do Heroismo',
     organizingTuna: 'TUSA',
+    posterPublicId: 'tunadao/festivais/ix-ciclone-2013',
     awards: [
       { slug: 'melhor-tuna' },
       { slug: 'melhor-original' },
@@ -358,9 +384,10 @@ export const FESTIVALS: FestivalData[] = [
   // 2012
   {
     name: 'XIX FITISEP',
-    date: '2012-06-15',
+    date: '2012-11-23',
     location: 'Porto',
     organizingTuna: 'TAISEP',
+    posterPublicId: 'tunadao/festivais/xix-fitisep-2012',
     awards: [
       { slug: 'segunda-melhor-tuna' },
       { slug: 'melhor-estandarte' },
@@ -380,18 +407,20 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'X Festubi',
-    date: '2012-06-15',
+    date: '2012-04-14',
     location: 'Covilha',
     organizingTuna: 'Desertuna',
+    posterPublicId: 'tunadao/festivais/x-festubi-2012',
     awards: [
       { slug: 'tuno-mais-tuninho', customNote: 'Luis Filipe (BOOBOO)' },
     ],
   },
   {
     name: 'XII Lethes',
-    date: '2012-06-15',
+    date: '2012-03-16',
     location: 'Viana do Castelo',
     organizingTuna: 'Hinoportuna',
+    posterPublicId: 'tunadao/festivais/xii-lethes-2012',
     awards: [
       { slug: 'melhor-pandeireta' },
       { slug: 'tuna-mais-tuna' },
@@ -399,9 +428,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'I Noites de Ronda',
-    date: '2012-06-15',
+    date: '2012-03-09',
     location: 'Porto',
     organizingTuna: 'TMP',
+    posterPublicId: 'tunadao/festivais/i-noites-de-ronda-2012',
     awards: [
       { slug: 'melhor-serenata' },
       { slug: 'melhor-estandarte' },
@@ -423,9 +453,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'XIV FITAFF',
-    date: '2011-06-15',
+    date: '2011-05-27',
     location: 'Figueira da Foz',
-    organizingTuna: 'Bruna',
+    organizingTuna: 'Imperial Neptuna',
+    posterPublicId: 'tunadao/festivais/xiv-fitaff-2011',
     awards: [
       { slug: 'melhor-tuna' },
       { slug: 'melhor-serenata' },
@@ -434,9 +465,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'XIII Fartuna',
-    date: '2011-06-15',
+    date: '2011-04-01',
     location: 'Faro',
     organizingTuna: 'Versus Tuna',
+    posterPublicId: 'tunadao/festivais/xiii-fartuna-2011',
     awards: [
       { slug: 'melhor-serenata' },
       { slug: 'melhor-pandeireta' },
@@ -447,9 +479,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'IX Estudantino',
-    date: '2011-06-15',
+    date: '2011-03-11',
     location: 'Lisboa',
     organizingTuna: 'Estudantina ISEL',
+    posterPublicId: 'tunadao/festivais/ix-estudantino-2011',
     awards: [
       { slug: 'terceira-melhor-tuna' },
       { slug: 'tuna-mais-tuna' },
@@ -463,9 +496,10 @@ export const FESTIVALS: FestivalData[] = [
   // 2010
   {
     name: 'XI El Acor',
-    date: '2010-06-15',
+    date: '2010-03-12',
     location: 'Acores',
     organizingTuna: 'Tunideos',
+    posterPublicId: 'tunadao/festivais/xi-el-acor-2010',
     awards: [
       { slug: 'terceira-melhor-tuna' },
       { slug: 'tuna-mais-tuna' },
@@ -475,9 +509,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'IX Templario',
-    date: '2010-06-15',
+    date: '2010-03-20',
     location: 'Tomar',
     organizingTuna: 'Tuna Templaria',
+    posterPublicId: 'tunadao/festivais/ix-templario-2010',
     awards: [
       { slug: 'segunda-melhor-tuna' },
       { slug: 'tuna-mais-tuna' },
@@ -487,10 +522,11 @@ export const FESTIVALS: FestivalData[] = [
     ],
   },
   {
-    name: 'FITAFF 2010',
-    date: '2010-06-15',
+    name: 'XIII FITAFF',
+    date: '2010-05-26',
     location: 'Figueira da Foz',
-    organizingTuna: 'Bruna',
+    organizingTuna: 'Imperial Neptuna',
+    posterPublicId: 'tunadao/festivais/xiii-fitaff-2010',
     awards: [
       { slug: 'melhor-tuna' },
       { slug: 'tuna-mais-tuna', customNote: 'Premio Luis Daniel Nabais' },
@@ -543,7 +579,7 @@ export const FESTIVALS: FestivalData[] = [
     name: 'FITAs 2009',
     date: '2009-06-15',
     location: 'Castelo Branco',
-    organizingTuna: 'EACB',
+    organizingTuna: 'Castra Leuca',
     awards: [{ slug: 'melhor-tuna' }],
   },
   {
@@ -741,14 +777,14 @@ export const FESTIVALS: FestivalData[] = [
     name: 'Maltunas - Festival de Tunas Academicas',
     date: '2005-06-15',
     location: 'Guarda',
-    organizingTuna: "Copituna d'Oppidana",
+    organizingTuna: null,
     awards: [{ slug: 'melhor-solista' }],
   },
   {
     name: 'FITQFC 2005 - Festival Internacional de Tunas da Queima das Fitas de Coimbra',
     date: '2005-06-15',
     location: 'Coimbra',
-    organizingTuna: 'EUC',
+    organizingTuna: 'QFC',
     awards: [
       { slug: 'melhor-tuna' },
       { slug: 'tuna-mais-tuna' },
