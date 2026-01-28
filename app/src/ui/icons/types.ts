@@ -17,4 +17,5 @@ export type IconName =
   | 'phone'
   | 'map-pin'
   | 'calendar'
-  | 'image';
+  | 'image'
+  | 'zoom-in';
