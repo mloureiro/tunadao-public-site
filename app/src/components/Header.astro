@@ -11,10 +11,12 @@ interface Props {
 const { lang = defaultLang } = Astro.props;
 const t = useTranslations(lang);
 
-const navItems = navItemsConfig.map((item) => ({
-  label: t(item.labelKey),
-  href: getLocalizedPath(item.href, lang),
-}));
+const navItems = navItemsConfig
+  .filter((item) => !item.hidden)
+  .map((item) => ({
+    label: t(item.labelKey),
+    href: getLocalizedPath(item.href, lang),
+  }));
 
 const currentPath = Astro.url.pathname;
 ---
