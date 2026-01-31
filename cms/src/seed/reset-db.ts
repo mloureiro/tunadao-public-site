@@ -62,7 +62,7 @@ const resetDatabase = async () => {
         try {
           await client.execute(`DROP TABLE IF EXISTS "${tableName}"`);
           console.log(`🗑️  Dropped ${tableName}`);
-        } catch (err) {
+        } catch {
           // Table might have dependency issues, try again later
           stillRemaining.push(tableName);
         }

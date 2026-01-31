@@ -1,5 +1,5 @@
 import type { Payload } from 'payload';
-import { MASTER_TUNAS, getMasterTuna, type MasterTuna } from '../definitions/master-tunas';
+import { MASTER_TUNAS, getMasterTuna } from '../definitions/master-tunas';
 
 /**
  * Registry for tuna lookups by shortName.

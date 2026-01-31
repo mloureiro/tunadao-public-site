@@ -83,7 +83,7 @@ export const seedCitadaoPosters = async (payload: Payload) => {
     const cloudinaryData: CloudinarySearchResult = JSON.parse(jsonMatch[0]);
     resources = cloudinaryData.resources;
     console.log(`  Found ${cloudinaryData.total_count} posters in Cloudinary`);
-  } catch (error) {
+  } catch {
     console.warn('  Cloudinary CLI not available, using poster public IDs from edition definitions');
     usingSyntheticData = true;
 

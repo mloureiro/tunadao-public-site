@@ -24,7 +24,7 @@ interface CloudinaryResource {
  * Create a synthetic CloudinaryResource from a full public ID.
  * This is used when the Cloudinary CLI is not available (e.g., in CI).
  */
-function createSyntheticResource(publicId: string, festivalName: string): CloudinaryResource {
+function createSyntheticResource(publicId: string, _festivalName: string): CloudinaryResource {
   const secureUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}`;
   const url = secureUrl.replace('https://', 'http://');
   // Extract filename from public ID (last part after /)

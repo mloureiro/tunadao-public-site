@@ -1,64 +1,9 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import { useTranslations, type Language, defaultLang } from '@i18n/index';
-import { getCitadaoEditions } from '@lib/cms';
+import { getCitadaoEditions, groupAwardsByTuna } from '@lib/cms';
 import Award from '@components/Award.astro';
 import { Icon } from '@ui/icons';
-import type { FrontendTunaWithLogo, FrontendCitadaoEdition } from '@lib/cms/types';
-
-// Award priority for sorting (lower = more important)
-const AWARD_PRIORITY: Record<string, number> = {
-  'melhor-tuna': 1,
-  'tuna-mais-tuna': 2,
-  'tuna-do-publico': 3,
-  'segunda-melhor-tuna': 4,
-  'terceira-melhor-tuna': 5,
-};
-
-interface TunaWithAwards {
-  tuna: FrontendTunaWithLogo;
-  awards: string[];
-}
-
-function groupAwardsByTuna(edition: FrontendCitadaoEdition): TunaWithAwards[] {
-  if (!edition.awards) return [];
-
-  // Group awards by tuna shortName
-  const tunaAwardsMap = new Map<string, string[]>();
-  for (const [awardKey, tunaShortName] of Object.entries(edition.awards)) {
-    const existing = tunaAwardsMap.get(tunaShortName) || [];
-    existing.push(awardKey);
-    tunaAwardsMap.set(tunaShortName, existing);
-  }
-
-  // Build list with tuna info
-  const result: TunaWithAwards[] = [];
-  for (const [shortName, awards] of tunaAwardsMap) {
-    const tuna = edition.tunas.find(t => t.shortName === shortName);
-    if (tuna) {
-      result.push({ tuna, awards });
-    } else {
-      // Tuna not in participants (might be guest or external)
-      result.push({
-        tuna: { shortName, fullName: shortName },
-        awards,
-      });
-    }
-  }
-
-  // Sort by best award priority, then alphabetically for same priority
-  result.sort((a, b) => {
-    const aPriority = Math.min(...a.awards.map(k => AWARD_PRIORITY[k] ?? 100));
-    const bPriority = Math.min(...b.awards.map(k => AWARD_PRIORITY[k] ?? 100));
-    if (aPriority !== bPriority) {
-      return aPriority - bPriority;
-    }
-    // Same priority: sort alphabetically by tuna shortName
-    return a.tuna.shortName.localeCompare(b.tuna.shortName, 'pt');
-  });
-
-  return result;
-}
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];

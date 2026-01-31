@@ -15,6 +15,7 @@ dotenvConfig({ path: '.env.local', override: true });
 import { writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import type { Where } from 'payload';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -79,7 +80,7 @@ function sortDeterministic(obj: unknown): unknown {
 interface CollectionConfig {
   slug: string;
   sort?: string;
-  where?: Record<string, unknown>;
+  where?: Where;
   depth?: number;
 }
 

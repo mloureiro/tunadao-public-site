@@ -34,6 +34,14 @@ export type * from './types';
 // Re-export utilities
 export { richTextToHtml, estimateReadingTime } from './rich-text';
 export { CMSError } from './client';
+export {
+  AWARD_PRIORITY,
+  getAwardPriority,
+  isTopPrize,
+  sortAwards,
+  groupAwardsByTuna,
+  type TunaWithAwards,
+} from './awards';
 
 const CMS_URL = import.meta.env.CMS_URL || 'http://localhost:3000';
 

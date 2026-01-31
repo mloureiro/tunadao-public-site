@@ -1,5 +1,5 @@
 import type { Payload } from 'payload';
-import { AWARD_TYPES, type AwardTypeData } from '../definitions/award-types';
+import { AWARD_TYPES } from '../definitions/award-types';
 
 /**
  * Registry for award type lookups by slug.

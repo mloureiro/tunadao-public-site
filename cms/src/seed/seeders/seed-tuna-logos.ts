@@ -55,7 +55,7 @@ export const seedTunaLogos = async (payload: Payload) => {
   console.log('  Fetching logos from Cloudinary...');
 
   // Fetch logos from Cloudinary using CLI (if available)
-  let cloudinaryMap = new Map<string, CloudinaryResource>();
+  const cloudinaryMap = new Map<string, CloudinaryResource>();
   let usingSyntheticData = false;
 
   try {
@@ -75,7 +75,7 @@ export const seedTunaLogos = async (payload: Payload) => {
     for (const resource of cloudinaryData.resources) {
       cloudinaryMap.set(resource.public_id, resource);
     }
-  } catch (error) {
+  } catch {
     console.warn('  Cloudinary CLI not available, using synthetic URLs from public IDs');
     usingSyntheticData = true;
 

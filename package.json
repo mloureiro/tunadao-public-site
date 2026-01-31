@@ -4,7 +4,23 @@
   "version": "1.0.0",
   "description": "Monorepo for Tunadão 1998 website",
   "private": true,
-  "workspaces": ["app", "cms"],
+  "workspaces": [
+    "app",
+    "cms"
+  ],
+  "lint-staged": {
+    "app/**/*.{ts,tsx,astro}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "cms/**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{json,md,css,scss}": [
+      "prettier --write"
+    ]
+  },
   "scripts": {
     "app": "npm run dev -w app",
     "cms": "npm run dev -w cms",
@@ -19,9 +35,12 @@
     "test:e2e:ui": "playwright test --ui",
     "seed": "npm run seed -w cms",
     "db:reset": "npm run db:reset -w cms",
-    "db:reset-and-seed": "npm run db:reset-and-seed -w cms"
+    "db:reset-and-seed": "npm run db:reset-and-seed -w cms",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "@playwright/test": "^1.57.0"
+    "@playwright/test": "^1.57.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
   }
 }

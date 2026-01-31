@@ -3,22 +3,9 @@ import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
 import Award from '@components/Award.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
-import { getCitadaoEditions, getCitadaoEditionByYear } from '@lib/cms';
+import { getCitadaoEditions, getCitadaoEditionByYear, getAwardPriority } from '@lib/cms';
 import { Icon } from '@ui/icons';
 import type { FrontendTunaWithLogo } from '@lib/cms/types';
-
-// Award priority for sorting (lower = more important)
-const AWARD_PRIORITY: Record<string, number> = {
-  'melhor-tuna': 1,
-  'tuna-mais-tuna': 2,
-  'tuna-do-publico': 3,
-  'segunda-melhor-tuna': 4,
-  'terceira-melhor-tuna': 5,
-};
-
-function getAwardPriority(awardKey: string): number {
-  return AWARD_PRIORITY[awardKey] ?? 100;
-}
 
 export async function getStaticPaths() {
   const languages: (string | undefined)[] = [undefined, 'en'];

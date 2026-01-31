@@ -133,6 +133,7 @@ export const CloudinaryUploadField: React.FC<TextFieldClientProps> = ({
       {value?.secure_url ? (
         <div className="cloudinary-preview">
           {value.resource_type === 'image' ? (
+            // eslint-disable-next-line @next/next/no-img-element -- CMS admin preview, next/image unnecessary
             <img src={value.secure_url} alt="Preview" />
           ) : (
             <div className="file-preview">

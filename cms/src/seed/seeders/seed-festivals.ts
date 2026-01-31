@@ -1,5 +1,5 @@
 import type { Payload } from 'payload';
-import { FESTIVALS, type FestivalAwardData } from '../definitions/festivals';
+import { FESTIVALS } from '../definitions/festivals';
 import { TunaRegistry } from '../utils/tuna-registry';
 import { AwardRegistry } from '../utils/award-registry';
 
