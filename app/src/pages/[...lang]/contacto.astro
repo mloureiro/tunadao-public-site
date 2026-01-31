@@ -1,6 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
+import HeroSection from '@components/HeroSection.astro';
 import SocialLinks from '@components/SocialLinks.astro';
 import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getContactInfo } from '@lib/cms';
@@ -19,13 +20,7 @@ const contactInfo = await getContactInfo();
 ---
 
 <Layout title={`${t('contact.title')} | Tunadão 1998`} description={t('contact.description')}>
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <h1 class="hero__title">{t('contact.title')}</h1>
-      <p class="hero__subtitle">{t('contact.subtitle')}</p>
-    </div>
-  </section>
+  <HeroSection title={t('contact.title')} subtitle={t('contact.subtitle')} />
 
   <!-- Contact Section -->
   <section class="contact">
@@ -170,25 +165,6 @@ const contactInfo = await getContactInfo();
 </Layout>
 
 <style>
-  /* Hero Section */
-  .hero {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: var(--color-text-inverted);
-    padding: var(--space-12) 0;
-    text-align: center;
-  }
-
-  .hero__title {
-    font-size: var(--text-4xl);
-    font-weight: 700;
-    margin-bottom: var(--space-2);
-  }
-
-  .hero__subtitle {
-    font-size: var(--text-xl);
-    opacity: 0.9;
-  }
-
   /* Contact Section */
   .contact {
     padding: var(--space-12) 0;
