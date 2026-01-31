@@ -44,6 +44,7 @@ const contactInfo = await getContactInfo();
                 id="name"
                 name="name"
                 required
+                aria-required="true"
                 placeholder={t('contact.form.namePlaceholder')}
               />
             </div>
@@ -55,13 +56,14 @@ const contactInfo = await getContactInfo();
                 id="email"
                 name="email"
                 required
+                aria-required="true"
                 placeholder={t('contact.form.emailPlaceholder')}
               />
             </div>
 
             <div class="form-group">
               <label for="subject">{t('contact.form.subject')} *</label>
-              <select id="subject" name="subject" required>
+              <select id="subject" name="subject" required aria-required="true">
                 <option value="">{t('contact.form.subjectPlaceholder')}</option>
                 <option value="atuacao">{t('contact.form.subjectOptions.atuacao')}</option>
                 <option value="citadao">{t('contact.form.subjectOptions.citadao')}</option>
@@ -79,6 +81,7 @@ const contactInfo = await getContactInfo();
                 name="message"
                 rows="5"
                 required
+                aria-required="true"
                 placeholder={t('contact.form.messagePlaceholder')}></textarea>
             </div>
 
@@ -91,6 +94,9 @@ const contactInfo = await getContactInfo();
             <div
               class="form-status"
               id="formStatus"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
               data-sending={t('contact.form.sending')}
               data-success={t('contact.form.success')}
               data-error={t('contact.form.error')}
