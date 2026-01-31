@@ -1,0 +1,142 @@
+---
+/**
+ * Lightbox component for displaying images in a modal overlay.
+ * Used for poster images in palmares and citadao pages.
+ *
+ * Usage:
+ * 1. Add <Lightbox /> to your page
+ * 2. Add data-poster-url and data-poster-alt attributes to clickable elements
+ * 3. The component will automatically attach click handlers
+ *
+ * Example:
+ * <button data-poster-url="/path/to/image.jpg" data-poster-alt="Description">
+ *   <img src="/path/to/thumbnail.jpg" alt="Thumbnail" />
+ * </button>
+ * <Lightbox />
+ */
+
+interface Props {
+  closeLabel?: string;
+}
+
+const { closeLabel = 'Fechar' } = Astro.props;
+---
+
+<div id="poster-lightbox" class="lightbox" aria-hidden="true">
+  <button type="button" class="lightbox__close" aria-label={closeLabel}>&times;</button>
+  <div class="lightbox__content">
+    <img src="" alt="" class="lightbox__image" />
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    function initLightbox() {
+      const lightbox = document.getElementById('poster-lightbox');
+      const lightboxImage = lightbox?.querySelector('.lightbox__image');
+      const closeButton = lightbox?.querySelector('.lightbox__close');
+
+      if (!lightbox || !lightboxImage) return;
+
+      // Open lightbox when clicking on elements with data-poster-url
+      document.querySelectorAll('[data-poster-url]').forEach(function(element) {
+        element.addEventListener('click', function() {
+          const url = element.getAttribute('data-poster-url');
+          const alt = element.getAttribute('data-poster-alt') || '';
+          if (url) {
+            lightboxImage.src = url;
+            lightboxImage.alt = alt;
+            lightbox.classList.add('is-open');
+            lightbox.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+          }
+        });
+      });
+
+      // Close lightbox
+      function closeLightbox() {
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      closeButton?.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) closeLightbox();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lightbox.classList.contains('is-open')) {
+          closeLightbox();
+        }
+      });
+    }
+
+    // Run when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLightbox);
+    } else {
+      initLightbox();
+    }
+  })();
+</script>
+
+<style>
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s ease;
+  }
+
+  .lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .lightbox__close {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 2rem;
+    line-height: 1;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox__close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .lightbox__content {
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox__image {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+  }
+</style>
