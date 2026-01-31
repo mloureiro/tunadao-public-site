@@ -9,9 +9,16 @@ test.describe('Homepage', () => {
     await expect(page.locator('h1')).toContainText('Tunadão 1998');
   });
 
-  test('should have navigation', async ({ page }) => {
-    const nav = page.getByRole('navigation', { name: 'Navegação principal' });
-    await expect(nav).toBeAttached();
+  test('should have navigation', async ({ page, isMobile }) => {
+    if (isMobile) {
+      // On mobile, navigation is behind hamburger menu
+      const menuBtn = page.locator('.header__menu-btn');
+      await expect(menuBtn).toBeVisible();
+    } else {
+      // On desktop, navigation is visible
+      const nav = page.getByRole('navigation', { name: 'Navegação principal' });
+      await expect(nav).toBeAttached();
+    }
   });
 
   test('should have footer', async ({ page }) => {
