@@ -1,0 +1,261 @@
+---
+/**
+ * YearNavigation - Quick year jump navigation
+ * Displays all years as compact pills for quick navigation
+ */
+interface Props {
+  years: number[];
+  /** CSS class prefix for year section IDs (e.g., "year" for id="year-2024") */
+  idPrefix?: string;
+  /** Label for screen readers */
+  ariaLabel?: string;
+}
+
+const { years, idPrefix = 'year', ariaLabel = 'Jump to year' } = Astro.props;
+
+// Sort years descending (most recent first)
+const sortedYears = [...years].sort((a, b) => b - a);
+---
+
+<nav class="year-navigation" aria-label={ariaLabel}>
+  <div class="year-navigation__container">
+    <ul class="year-navigation__list" role="list">
+      {sortedYears.map((year) => (
+        <li class="year-navigation__item">
+          <a
+            href={`#${idPrefix}-${year}`}
+            class="year-navigation__link"
+            data-year={year}
+          >
+            {year}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<!-- Sticky year indicator -->
+<div class="year-indicator" aria-hidden="true">
+  <span class="year-indicator__text"></span>
+</div>
+
+<script>
+  (function() {
+    function initYearNavigation() {
+      const nav = document.querySelector('.year-navigation');
+      const indicator = document.querySelector('.year-indicator');
+      const indicatorText = indicator?.querySelector('.year-indicator__text');
+
+      if (!nav || !indicator || !indicatorText) return;
+
+      // Get all year section elements
+      const yearLinks = nav.querySelectorAll('.year-navigation__link');
+      const yearSections: Element[] = [];
+
+      yearLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href) {
+          const section = document.querySelector(href);
+          if (section) yearSections.push(section);
+        }
+      });
+
+      if (yearSections.length === 0) return;
+
+      // Intersection Observer for tracking current year
+      let currentYear: string | null = null;
+
+      const observer = new IntersectionObserver((entries) => {
+        // Find the topmost visible section
+        const visibleEntries = entries.filter(e => e.isIntersecting);
+
+        if (visibleEntries.length > 0) {
+          // Sort by position to get topmost
+          visibleEntries.sort((a, b) =>
+            a.boundingClientRect.top - b.boundingClientRect.top
+          );
+
+          const topSection = visibleEntries[0].target;
+          const year = topSection.id.replace(/^year-/, '');
+
+          if (year !== currentYear) {
+            currentYear = year;
+            indicatorText.textContent = year;
+            indicator.classList.add('year-indicator--visible');
+
+            // Update active state in nav
+            yearLinks.forEach(link => {
+              const linkYear = link.getAttribute('data-year');
+              link.classList.toggle('year-navigation__link--active', linkYear === year);
+            });
+          }
+        }
+      }, {
+        rootMargin: '-10% 0px -80% 0px',
+        threshold: 0
+      });
+
+      yearSections.forEach(section => observer.observe(section));
+
+      // Hide indicator when at top of page
+      const hideObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          indicator.classList.remove('year-indicator--visible');
+        }
+      }, { threshold: 0.5 });
+
+      hideObserver.observe(nav);
+
+      // Make navigation sticky when scrolled past
+      const stickyObserver = new IntersectionObserver((entries) => {
+        nav.classList.toggle('year-navigation--sticky', !entries[0].isIntersecting);
+      }, { threshold: 0, rootMargin: '-1px 0px 0px 0px' });
+
+      // Create a sentinel element for sticky detection
+      const sentinel = document.createElement('div');
+      sentinel.className = 'year-navigation-sentinel';
+      sentinel.style.cssText = 'height: 1px; width: 100%; position: relative;';
+      nav.parentNode?.insertBefore(sentinel, nav);
+      stickyObserver.observe(sentinel);
+
+      // Smooth scroll with offset
+      yearLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+          if (!href) return;
+
+          const target = document.querySelector(href);
+          if (!target) return;
+
+          // Account for sticky nav height
+          const navHeight = nav.classList.contains('year-navigation--sticky')
+            ? (nav as HTMLElement).offsetHeight
+            : 0;
+
+          const offset = 20; // Extra padding
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight - offset;
+
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initYearNavigation);
+    } else {
+      initYearNavigation();
+    }
+  })();
+</script>
+
+<style>
+  .year-navigation {
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-4) 0;
+    z-index: 10;
+  }
+
+  .year-navigation--sticky {
+    position: sticky;
+    top: 0;
+    box-shadow: var(--shadow-md);
+  }
+
+  .year-navigation__container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+  }
+
+  .year-navigation__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .year-navigation__item {
+    margin: 0;
+  }
+
+  .year-navigation__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3.5rem;
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .year-navigation__link:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light, rgba(139, 0, 0, 0.05));
+  }
+
+  .year-navigation__link:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .year-navigation__link--active {
+    color: var(--color-text-inverted);
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  /* Sticky year indicator */
+  .year-indicator {
+    position: fixed;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverted);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity var(--transition-base), transform var(--transition-base);
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  .year-indicator--visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 640px) {
+    .year-navigation__link {
+      min-width: 3rem;
+      padding: var(--space-1);
+      font-size: var(--text-xs);
+    }
+
+    .year-indicator {
+      bottom: var(--space-4);
+      right: var(--space-4);
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--text-base);
+    }
+  }
+</style>
