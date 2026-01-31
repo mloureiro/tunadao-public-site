@@ -105,24 +105,32 @@ const sinceText = lang === 'en' ? 'Since' : 'Desde';
   .footer {
     background-color: var(--color-primary-dark);
     color: var(--color-text-inverted);
-    padding: var(--space-12) 0 var(--space-6);
+    padding: var(--space-8) 0 var(--space-6);
     margin-top: auto;
+  }
+
+  @media (min-width: 768px) {
+    .footer {
+      padding: var(--space-12) 0 var(--space-6);
+    }
   }
 
   .footer__grid {
     display: grid;
-    gap: var(--space-8);
+    gap: var(--space-5);
   }
 
   @media (min-width: 640px) {
     .footer__grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
     }
   }
 
   @media (min-width: 1024px) {
     .footer__grid {
       grid-template-columns: 2fr repeat(3, 1fr);
+      gap: var(--space-8);
     }
   }
 

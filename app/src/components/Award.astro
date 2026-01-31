@@ -91,19 +91,13 @@ const icon = AWARD_ICONS[awardKey] || DEFAULT_ICON;
 
   /* Variant: gold */
   .award--gold {
-    background: linear-gradient(
-      135deg,
-      #ffd700 0%,
-      #ffec80 25%,
-      #ffd700 50%,
-      #b8860b 75%,
-      #ffd700 100%
-    );
-    background-size: 200% 200%;
+    background: var(--color-gold);
     border-color: var(--color-gold-dark);
-    color: #5c4a00;
+    color: #1a1400;
     font-weight: 600;
-    box-shadow: 0 2px 4px rgb(184 134 11 / 0.3);
+    box-shadow:
+      0 2px 4px rgb(184 134 11 / 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
   }
 
   /* Variant: special (tuna mais tuna - purple/violet) */
