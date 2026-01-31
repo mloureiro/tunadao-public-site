@@ -44,6 +44,15 @@ export {
   type TunaWithAwards,
   type TunaWithAwardsExtended,
 } from './awards';
+export {
+  CLOUDINARY_CLOUD_NAME,
+  POSTER_TRANSFORMATIONS,
+  POSTER_SIZES,
+  getCloudinaryUrl,
+  getPosterUrl,
+  getPosterSrcSet,
+  type PosterTransformation,
+} from './cloudinary';
 
 const CMS_URL = import.meta.env.CMS_URL || 'http://localhost:3000';
 
