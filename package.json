@@ -8,19 +8,6 @@
     "app",
     "cms"
   ],
-  "lint-staged": {
-    "app/**/*.{ts,tsx,astro}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "cms/**/*.{ts,tsx,js,jsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "**/*.{json,md,css,scss}": [
-      "prettier --write"
-    ]
-  },
   "scripts": {
     "app": "npm run dev -w app",
     "cms": "npm run dev -w cms",
@@ -40,7 +27,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.2.7"
+    "husky": "^9.1.7"
   }
 }
