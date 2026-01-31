@@ -8,6 +8,8 @@ import TunaAvatar from '@components/tunas/Avatar.astro';
 import TunaCard from '@components/tunas/Card.astro';
 import CitadaoTunaCard from '@components/citadao/TunaCard.astro';
 import EditionCard from '@components/citadao/EditionCard.astro';
+import HeroSection from '@components/HeroSection.astro';
+import ResponsiveImage from '@components/ResponsiveImage.astro';
 import type { FrontendTunaWithLogo, FrontendCitadaoEdition } from '@lib/cms/types';
 
 // All award types for demo
@@ -97,6 +99,8 @@ if (import.meta.env.PROD) {
         <a href="#award">Award</a>
         <a href="#citadao-tuna-card">CitadaoTunaCard</a>
         <a href="#edition-card">EditionCard</a>
+        <a href="#hero-section">HeroSection</a>
+        <a href="#responsive-image">ResponsiveImage</a>
       </nav>
 
       <main class="dev-main">
@@ -390,6 +394,64 @@ if (import.meta.env.PROD) {
                 awardLabel: (key) => allAwards.find(a => a.key === key)?.name || key,
               }}
             />
+          </div>
+        </section>
+
+        <!-- HeroSection -->
+        <section id="hero-section" class="component-section">
+          <h2>HeroSection</h2>
+          <p class="component-path">@components/HeroSection.astro</p>
+
+          <div class="component-group" style="padding: 0; overflow: hidden;">
+            <HeroSection title="Page Title" subtitle="Optional subtitle with additional context" />
+          </div>
+
+          <div class="component-group" style="padding: 0; overflow: hidden;">
+            <h3 style="padding: var(--space-4) var(--space-4) 0;">Title Only</h3>
+            <HeroSection title="Title Without Subtitle" />
+          </div>
+        </section>
+
+        <!-- ResponsiveImage -->
+        <section id="responsive-image" class="component-section">
+          <h2>ResponsiveImage</h2>
+          <p class="component-path">@components/ResponsiveImage.astro</p>
+
+          <div class="component-group">
+            <h3>With Cloudinary Public ID</h3>
+            <div style="max-width: 300px;">
+              <ResponsiveImage
+                publicId="tunadao/sample-poster"
+                alt="Sample poster image"
+                sizes="(max-width: 768px) 100vw, 300px"
+                aspectRatio="2/3"
+              />
+            </div>
+            <p class="component-note">Uses srcset with thumb (300w), medium (600w), full (1200w) variants</p>
+          </div>
+
+          <div class="component-group">
+            <h3>Placeholder (no publicId)</h3>
+            <div style="max-width: 300px;">
+              <ResponsiveImage
+                publicId=""
+                alt="Placeholder"
+                aspectRatio="2/3"
+              />
+            </div>
+            <p class="component-note">Shows placeholder when no image is available</p>
+          </div>
+
+          <div class="component-group">
+            <h3>Props</h3>
+            <ul style="font-size: var(--font-size-sm); color: var(--color-text-muted);">
+              <li><code>publicId</code> - Cloudinary public ID</li>
+              <li><code>alt</code> - Alt text (required)</li>
+              <li><code>defaultSize</code> - 'thumb' | 'medium' | 'full' (default: 'medium')</li>
+              <li><code>sizes</code> - Responsive sizes attribute</li>
+              <li><code>aspectRatio</code> - CSS aspect ratio (e.g., "2/3")</li>
+              <li><code>loading</code> - 'lazy' | 'eager' (default: 'lazy')</li>
+            </ul>
           </div>
         </section>
       </main>
