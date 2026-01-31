@@ -51,6 +51,7 @@ export {
   getCloudinaryUrl,
   getPosterUrl,
   getPosterSrcSet,
+  extractPublicId,
   type PosterTransformation,
 } from './cloudinary';
 

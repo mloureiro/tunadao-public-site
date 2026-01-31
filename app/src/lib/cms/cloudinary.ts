@@ -80,3 +80,27 @@ export function getPosterSrcSet(publicId: string): string {
     })
     .join(', ');
 }
+
+/**
+ * Extract Cloudinary public ID from a Cloudinary URL
+ *
+ * @param url - A Cloudinary URL or any other URL
+ * @returns The public ID if it's a Cloudinary URL, null otherwise
+ *
+ * @example
+ * extractPublicId('https://res.cloudinary.com/tunadao-site/image/upload/v123/tunadao/poster.jpg')
+ * // → 'tunadao/poster'
+ */
+export function extractPublicId(url: string): string | null {
+  if (!url) return null;
+
+  // Check if it's a Cloudinary URL
+  const cloudinaryPattern = /res\.cloudinary\.com\/[^/]+\/image\/upload\//;
+  if (!cloudinaryPattern.test(url)) return null;
+
+  // Extract the part after /upload/ (may include version and transformations)
+  const uploadMatch = url.match(/\/upload\/(?:v\d+\/)?(?:t_[^/]+\/)?(.+?)(?:\.[^.]+)?$/);
+  if (!uploadMatch) return null;
+
+  return uploadMatch[1];
+}
