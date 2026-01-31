@@ -17,13 +17,17 @@ const foundingYear = 1998;
 // Fetch contact info from CMS (with fallback)
 const contactInfo = await getContactInfo();
 
-const footerLinks = footerSections.map((section) => ({
-  title: t(section.titleKey),
-  links: section.items.map((item) => ({
-    label: t(item.labelKey),
-    href: getLocalizedPath(item.href, lang),
-  })),
-}));
+const footerLinks = footerSections
+  .map((section) => ({
+    title: t(section.titleKey),
+    links: section.items
+      .filter((item) => !item.hidden)
+      .map((item) => ({
+        label: t(item.labelKey),
+        href: getLocalizedPath(item.href, lang),
+      })),
+  }))
+  .filter((section) => section.links.length > 0);
 
 const yearsText = lang === 'en' ? 'years of history' : 'anos de história';
 const sinceText = lang === 'en' ? 'Since' : 'Desde';

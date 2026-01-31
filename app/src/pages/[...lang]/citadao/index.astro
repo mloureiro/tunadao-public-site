@@ -3,6 +3,7 @@ import Layout from '@layouts/Layout.astro';
 import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getCitadaoEditions } from '@lib/cms';
 import Award from '@components/Award.astro';
+import { Icon } from '@ui/icons';
 import type { FrontendTunaWithLogo, FrontendCitadaoEdition } from '@lib/cms/types';
 
 // Award priority for sorting (lower = more important)
@@ -69,6 +70,41 @@ const t = useTranslations(currentLang);
 
 // Fetch editions from CMS (with fallback)
 const editions = await getCitadaoEditions();
+
+// Group editions into decades for collapsible sections
+interface Decade {
+  label: string;
+  id: string;
+  editions: typeof editions;
+  totalEditions: number;
+}
+
+function groupByDecade(editionsList: typeof editions): Decade[] {
+  const decadeMap = new Map<number, typeof editions>();
+
+  for (const edition of editionsList) {
+    const decadeStart = Math.floor(edition.year / 10) * 10;
+    const existing = decadeMap.get(decadeStart) || [];
+    existing.push(edition);
+    decadeMap.set(decadeStart, existing);
+  }
+
+  // Sort decades descending (most recent first)
+  const sortedDecades = Array.from(decadeMap.entries())
+    .sort((a, b) => b[0] - a[0]);
+
+  return sortedDecades.map(([decadeStart, decadeEditions]) => {
+    const decadeEnd = decadeStart + 9;
+    return {
+      label: `${decadeStart}-${decadeEnd}`,
+      id: `decade-${decadeStart}`,
+      editions: decadeEditions,
+      totalEditions: decadeEditions.length,
+    };
+  });
+}
+
+const decades = groupByDecade(editions);
 ---
 
 <Layout title={`${t('citadao.title')} | Tunadão 1998`} description={t('citadao.description')}>
@@ -98,7 +134,31 @@ const editions = await getCitadaoEditions();
       <h2 class="section-title">{t('citadao.allEditions')}</h2>
       <div class="editions__list">
         {
-          editions.map((edition) => (
+          decades.map((decade, decadeIndex) => (
+            <div class="decade-section" id={decade.id}>
+              <button
+                type="button"
+                class="decade-header"
+                aria-expanded={decadeIndex === 0 ? 'true' : 'false'}
+                aria-controls={`${decade.id}-content`}
+              >
+                <div class="decade-header__left">
+                  <h3 class="decade-title">{decade.label}</h3>
+                  <span class="decade-count">
+                    {decade.totalEditions} {decade.totalEditions === 1 ? 'edição' : 'edições'}
+                  </span>
+                </div>
+                <span class="decade-header__icon" aria-hidden="true">
+                  <Icon name="chevron-down" size={24} />
+                </span>
+              </button>
+              <div
+                class="decade-content"
+                id={`${decade.id}-content`}
+                data-expanded={decadeIndex === 0 ? 'true' : 'false'}
+              >
+                <div class="decade-content__inner">
+                {decade.editions.map((edition) => (
             <article class="edition-item" id={`citadao-${edition.year}`}>
               <div class="edition-item__header">
                 <div class="edition-item__title">
@@ -227,6 +287,10 @@ const editions = await getCitadaoEditions();
                 </div>
               </div>
             </article>
+                ))}
+                </div>
+              </div>
+            </div>
           ))
         }
       </div>
@@ -244,6 +308,22 @@ const editions = await getCitadaoEditions();
 
 <script is:inline>
   (function() {
+    // Decade collapsible toggle
+    function initDecadeToggles() {
+      document.querySelectorAll('.decade-header').forEach(function(header) {
+        header.addEventListener('click', function() {
+          const isExpanded = header.getAttribute('aria-expanded') === 'true';
+          const contentId = header.getAttribute('aria-controls');
+          const content = document.getElementById(contentId);
+
+          header.setAttribute('aria-expanded', String(!isExpanded));
+          if (content) {
+            content.setAttribute('data-expanded', String(!isExpanded));
+          }
+        });
+      });
+    }
+
     function initLightbox() {
       const lightbox = document.getElementById('poster-lightbox');
       const lightboxImage = lightbox?.querySelector('.lightbox__image');
@@ -284,11 +364,16 @@ const editions = await getCitadaoEditions();
       });
     }
 
+    function init() {
+      initDecadeToggles();
+      initLightbox();
+    }
+
     // Run when DOM is ready
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initLightbox);
+      document.addEventListener('DOMContentLoaded', init);
     } else {
-      initLightbox();
+      init();
     }
   })();
 </script>
@@ -364,6 +449,95 @@ const editions = await getCitadaoEditions();
     gap: var(--space-6);
     max-width: 1000px;
     margin: 0 auto;
+  }
+
+  /* Decade Sections (Collapsible) */
+  .decade-section {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background-color: var(--color-surface);
+  }
+
+  .decade-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--space-4) var(--space-5);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-text-inverted);
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity var(--transition-fast);
+  }
+
+  .decade-header:hover {
+    opacity: 0.95;
+  }
+
+  .decade-header:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+
+  .decade-header__left {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  @media (min-width: 640px) {
+    .decade-header__left {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-4);
+    }
+  }
+
+  .decade-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .decade-count {
+    font-size: var(--text-sm);
+    opacity: 0.85;
+  }
+
+  .decade-header__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition-base);
+  }
+
+  .decade-header[aria-expanded="true"] .decade-header__icon {
+    transform: rotate(180deg);
+  }
+
+  .decade-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--transition-base);
+  }
+
+  .decade-content[data-expanded="true"] {
+    grid-template-rows: 1fr;
+  }
+
+  .decade-content__inner {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: 0;
+  }
+
+  .decade-content[data-expanded="true"] .decade-content__inner {
+    padding: var(--space-5);
   }
 
   .edition-item {
