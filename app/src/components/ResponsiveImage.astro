@@ -1,0 +1,108 @@
+---
+/**
+ * Responsive Image Component
+ * Uses Cloudinary transformations for optimal image delivery with srcset
+ */
+
+import {
+  getCloudinaryUrl,
+  getPosterSrcSet,
+  POSTER_TRANSFORMATIONS,
+  type PosterTransformation,
+} from '@lib/cms/cloudinary';
+
+interface Props {
+  /**
+   * Cloudinary public ID of the image
+   */
+  publicId: string;
+  /**
+   * Alt text for the image
+   */
+  alt: string;
+  /**
+   * Default size to use for src (for browsers without srcset support)
+   * @default 'medium'
+   */
+  defaultSize?: PosterTransformation;
+  /**
+   * sizes attribute for responsive images
+   * @example "(max-width: 768px) 100vw, 300px"
+   */
+  sizes?: string;
+  /**
+   * Additional CSS class names
+   */
+  class?: string;
+  /**
+   * Loading strategy
+   * @default 'lazy'
+   */
+  loading?: 'lazy' | 'eager';
+  /**
+   * Width attribute (pixels or auto)
+   */
+  width?: number | string;
+  /**
+   * Height attribute (pixels or auto)
+   */
+  height?: number | string;
+  /**
+   * Aspect ratio (e.g., "2/3" for posters)
+   */
+  aspectRatio?: string;
+}
+
+const {
+  publicId,
+  alt,
+  defaultSize = 'medium',
+  sizes,
+  class: className,
+  loading = 'lazy',
+  width,
+  height,
+  aspectRatio,
+} = Astro.props;
+
+// Generate URLs
+const src = getCloudinaryUrl(publicId, POSTER_TRANSFORMATIONS[defaultSize]);
+const srcset = getPosterSrcSet(publicId);
+
+// Style for aspect ratio
+const style = aspectRatio ? `aspect-ratio: ${aspectRatio};` : undefined;
+---
+
+{publicId ? (
+  <img
+    src={src}
+    srcset={srcset}
+    sizes={sizes}
+    alt={alt}
+    class:list={['responsive-image', className]}
+    loading={loading}
+    width={width}
+    height={height}
+    style={style}
+    decoding="async"
+  />
+) : (
+  <div
+    class:list={['responsive-image responsive-image--placeholder', className]}
+    style={style}
+    aria-label={alt}
+  />
+)}
+
+<style>
+  .responsive-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .responsive-image--placeholder {
+    background-color: var(--color-surface-alt, #f5f5f5);
+    min-height: 100px;
+  }
+</style>

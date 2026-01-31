@@ -1,6 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
+import HeroSection from '@components/HeroSection.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 
 export function getStaticPaths() {
@@ -79,13 +80,7 @@ const missionItems = [
 ---
 
 <Layout title={`${t('about.title')} | Tunadão 1998`} description={t('about.description')}>
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <h1 class="hero__title">{t('about.title')}</h1>
-      <p class="hero__subtitle">{t('about.subtitle')}</p>
-    </div>
-  </section>
+  <HeroSection title={t('about.title')} subtitle={t('about.subtitle')} />
 
   <!-- History Section -->
   <section class="history">
@@ -190,48 +185,6 @@ const missionItems = [
 </Layout>
 
 <style>
-  /* Hero Section */
-  .hero {
-    position: relative;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: var(--color-text-inverted);
-    padding: var(--space-12) 0;
-    text-align: center;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    pointer-events: none;
-  }
-
-  .hero::after {
-    content: '♪ ♫ ♪';
-    position: absolute;
-    bottom: var(--space-4);
-    right: var(--space-6);
-    font-size: 1.5rem;
-    opacity: 0.15;
-    letter-spacing: 0.5rem;
-    pointer-events: none;
-  }
-
-  .hero__title {
-    position: relative;
-    font-size: var(--text-4xl);
-    font-weight: 700;
-    margin-bottom: var(--space-2);
-  }
-
-  .hero__subtitle {
-    position: relative;
-    font-size: var(--text-xl);
-    opacity: 0.9;
-  }
-
   /* Section Title */
   .section-title {
     font-size: var(--text-3xl);
