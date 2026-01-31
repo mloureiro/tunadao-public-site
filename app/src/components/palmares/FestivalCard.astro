@@ -6,8 +6,9 @@
 
 import { Icon } from '@ui/icons';
 import Award from '@components/Award.astro';
+import ResponsiveImage from '@components/ResponsiveImage.astro';
 import type { FrontendPalmaresFestival } from '@lib/cms/types';
-import { sortAwards, isTopPrize } from '@lib/cms';
+import { sortAwards, isTopPrize, extractPublicId } from '@lib/cms';
 
 interface Props {
   festival: FrontendPalmaresFestival;
@@ -21,6 +22,7 @@ const sortedAwards = sortAwards(festival.awards);
 const hasTopPrize = sortedAwards.length > 0 && isTopPrize(sortedAwards[0].slug);
 const hasNoAwards = sortedAwards.length === 0;
 const festivalInitial = festival.name.charAt(0).toUpperCase();
+const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) : null;
 ---
 
 <article class:list={['festival-card', { 'festival-card--featured': hasTopPrize }]}>
@@ -33,12 +35,22 @@ const festivalInitial = festival.name.charAt(0).toUpperCase();
         data-poster-url={festival.posterUrl}
         data-poster-alt={`Cartaz ${festival.name}`}
       >
-        <img
-          src={festival.posterUrl}
-          alt={`Cartaz ${festival.name}`}
-          class="festival-card__poster-image"
-          loading="lazy"
-        />
+        {posterPublicId ? (
+          <ResponsiveImage
+            publicId={posterPublicId}
+            alt={`Cartaz ${festival.name}`}
+            class="festival-card__poster-image"
+            sizes="(max-width: 768px) 50vw, 300px"
+            aspectRatio="3/4"
+          />
+        ) : (
+          <img
+            src={festival.posterUrl}
+            alt={`Cartaz ${festival.name}`}
+            class="festival-card__poster-image"
+            loading="lazy"
+          />
+        )}
         <span class="festival-card__poster-zoom">
           <Icon name="zoom-in" size={20} />
         </span>
