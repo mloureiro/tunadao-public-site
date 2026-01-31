@@ -22,6 +22,11 @@ interface Props {
 
 const { edition, labels } = Astro.props;
 const posterPublicId = edition.posterUrl ? extractPublicId(edition.posterUrl) : null;
+
+// Get tunas with awards to filter them out from participants section (avoid duplicate display)
+const awardWinningTunas = groupAwardsByTuna(edition);
+const awardWinnerShortNames = new Set(awardWinningTunas.map(({ tuna }) => tuna.shortName));
+const tunasWithoutAwards = edition.tunas.filter((tuna) => !awardWinnerShortNames.has(tuna.shortName));
 ---
 
 <article class="edition-item" id={`citadao-${edition.year}`}>
@@ -55,7 +60,7 @@ const posterPublicId = edition.posterUrl ? extractPublicId(edition.posterUrl) : 
               publicId={posterPublicId}
               alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
               class="poster-image"
-              sizes="(max-width: 768px) 100vw, 200px"
+              sizes="(max-width: 768px) 100vw, 280px"
               aspectRatio="2/3"
             />
           ) : (
@@ -71,11 +76,12 @@ const posterPublicId = edition.posterUrl ? extractPublicId(edition.posterUrl) : 
     )}
 
     <div class="edition-item__info">
-      {/* Tunas Participantes */}
+      {/* Tunas Participantes (excluding award winners, shown separately below) */}
+      {tunasWithoutAwards.length > 0 && (
       <div class="edition-item__section edition-item__section--full">
         <h4>{labels.participatingTunas}</h4>
         <div class="tunas-avatars">
-          {edition.tunas.map((tuna) => (
+          {tunasWithoutAwards.map((tuna) => (
             <div class="tuna-avatar" title={tuna.fullName}>
               <div class="tuna-avatar__ring">
                 {tuna.logoUrl ? (
@@ -96,6 +102,7 @@ const posterPublicId = edition.posterUrl ? extractPublicId(edition.posterUrl) : 
           ))}
         </div>
       </div>
+      )}
 
       {/* Convidados */}
       {edition.guests && edition.guests.length > 0 && (
@@ -234,7 +241,7 @@ const posterPublicId = edition.posterUrl ? extractPublicId(edition.posterUrl) : 
 
     .edition-item__content.has-poster .edition-item__poster {
       flex-shrink: 0;
-      width: 200px;
+      width: 280px;
     }
 
     .edition-item__content.has-poster .edition-item__info {
@@ -267,7 +274,7 @@ const posterPublicId = edition.posterUrl ? extractPublicId(edition.posterUrl) : 
 
   .poster-link {
     display: block;
-    max-width: 200px;
+    max-width: 280px;
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-md);
