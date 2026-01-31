@@ -40,7 +40,9 @@ export {
   isTopPrize,
   sortAwards,
   groupAwardsByTuna,
+  splitTunasByAwards,
   type TunaWithAwards,
+  type TunaWithAwardsExtended,
 } from './awards';
 
 const CMS_URL = import.meta.env.CMS_URL || 'http://localhost:3000';

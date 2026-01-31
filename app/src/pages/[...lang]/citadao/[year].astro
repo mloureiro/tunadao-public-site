@@ -1,17 +1,14 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
-import Award from '@components/Award.astro';
+import TunaCard from '@components/citadao/TunaCard.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
-import { getCitadaoEditions, getCitadaoEditionByYear, getAwardPriority } from '@lib/cms';
+import { getCitadaoEditions, getCitadaoEditionByYear, splitTunasByAwards } from '@lib/cms';
 import { Icon } from '@ui/icons';
-import type { FrontendTunaWithLogo } from '@lib/cms/types';
 
 export async function getStaticPaths() {
   const languages: (string | undefined)[] = [undefined, 'en'];
   const paths: { params: { lang: string | undefined; year: string } }[] = [];
-
-  // Fetch all editions from CMS (with fallback)
   const editions = await getCitadaoEditions();
 
   for (const lang of languages) {
@@ -19,7 +16,6 @@ export async function getStaticPaths() {
       paths.push({ params: { lang, year: String(edition.year) } });
     }
   }
-
   return paths;
 }
 
@@ -28,66 +24,20 @@ const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
 const l = (path: string) => getLocalizedPath(path, currentLang);
 
-// Fetch the specific edition
 const edition = await getCitadaoEditionByYear(parseInt(year as string));
-
 if (!edition) {
   return Astro.redirect(l('/citadao'));
 }
 
-// Fetch all editions for navigation
+// Navigation between editions
 const allEditions = await getCitadaoEditions();
 const allYears = allEditions.map((e) => e.year).sort((a, b) => b - a);
 const currentIndex = allYears.indexOf(edition.year);
 const prevYear = currentIndex < allYears.length - 1 ? allYears[currentIndex + 1] : null;
 const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
 
-// Group awards by tuna
-interface TunaWithAwards {
-  tuna: FrontendTunaWithLogo;
-  awards: string[];
-  bestAwardPriority: number;
-}
-
-const tunaAwardsMap = new Map<string, string[]>();
-
-if (edition.awards) {
-  for (const [awardKey, tunaShortName] of Object.entries(edition.awards)) {
-    const existing = tunaAwardsMap.get(tunaShortName) || [];
-    existing.push(awardKey);
-    tunaAwardsMap.set(tunaShortName, existing);
-  }
-}
-
-// Build list of tunas with their awards
-const tunasWithAwards: TunaWithAwards[] = edition.tunas.map((tuna) => {
-  const awards = tunaAwardsMap.get(tuna.shortName) || [];
-  const bestAwardPriority = awards.length > 0
-    ? Math.min(...awards.map(getAwardPriority))
-    : Infinity;
-  return { tuna, awards, bestAwardPriority };
-});
-
-// Sort: tunas with awards first (by best award priority), then tunas without awards
-tunasWithAwards.sort((a, b) => {
-  // Both have awards - sort by best award priority, then alphabetically
-  if (a.awards.length > 0 && b.awards.length > 0) {
-    if (a.bestAwardPriority !== b.bestAwardPriority) {
-      return a.bestAwardPriority - b.bestAwardPriority;
-    }
-    // Same priority: sort alphabetically
-    return a.tuna.shortName.localeCompare(b.tuna.shortName, 'pt');
-  }
-  // One has awards, one doesn't - awards first
-  if (a.awards.length > 0) return -1;
-  if (b.awards.length > 0) return 1;
-  // Neither has awards - sort alphabetically
-  return a.tuna.shortName.localeCompare(b.tuna.shortName, 'pt');
-});
-
-// Split into tunas with awards and tunas without
-const tunasWithPrizes = tunasWithAwards.filter((t) => t.awards.length > 0);
-const tunasWithoutPrizes = tunasWithAwards.filter((t) => t.awards.length === 0);
+// Split tunas into those with and without prizes
+const { withPrizes: tunasWithPrizes, withoutPrizes: tunasWithoutPrizes } = splitTunasByAwards(edition);
 ---
 
 <Layout
@@ -148,33 +98,12 @@ const tunasWithoutPrizes = tunasWithAwards.filter((t) => t.awards.length === 0);
         <h2 class="section-title">{t('citadao.awards')}</h2>
         <div class="results__list">
           {tunasWithPrizes.map(({ tuna, awards }) => (
-            <div class="result-card" class:list={{ 'result-card--winner': awards.includes('melhor-tuna') }}>
-              <div class="result-card__tuna">
-                <div class="result-card__avatar">
-                  {tuna.logoUrl ? (
-                    <img
-                      src={tuna.logoUrl}
-                      alt={tuna.shortName}
-                      class="result-card__img"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div class="result-card__placeholder">
-                      <span>{tuna.shortName.charAt(0)}</span>
-                    </div>
-                  )}
-                </div>
-                <div class="result-card__info">
-                  <span class="result-card__name">{tuna.shortName}</span>
-                  <span class="result-card__fullname">{tuna.fullName}</span>
-                </div>
-              </div>
-              <div class="result-card__awards">
-                {awards.map((awardKey) => (
-                  <Award awardKey={awardKey} size="sm">{t(`awards.${awardKey}`)}</Award>
-                ))}
-              </div>
-            </div>
+            <TunaCard
+              tuna={tuna}
+              variant="result"
+              awards={awards}
+              awardLabel={(key) => t(`awards.${key}`)}
+            />
           ))}
         </div>
       </div>
@@ -188,26 +117,7 @@ const tunasWithoutPrizes = tunasWithAwards.filter((t) => t.awards.length === 0);
         <h2 class="section-title">{t('citadao.participants')}</h2>
         <div class="participants__grid">
           {tunasWithoutPrizes.map(({ tuna }) => (
-            <div class="participant-card">
-              <div class="participant-card__avatar">
-                {tuna.logoUrl ? (
-                  <img
-                    src={tuna.logoUrl}
-                    alt={tuna.shortName}
-                    class="participant-card__img"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div class="participant-card__placeholder">
-                    <span>{tuna.shortName.charAt(0)}</span>
-                  </div>
-                )}
-              </div>
-              <div class="participant-card__info">
-                <span class="participant-card__name">{tuna.shortName}</span>
-                <span class="participant-card__fullname">{tuna.fullName}</span>
-              </div>
-            </div>
+            <TunaCard tuna={tuna} variant="participant" />
           ))}
         </div>
       </div>
@@ -221,26 +131,7 @@ const tunasWithoutPrizes = tunasWithAwards.filter((t) => t.awards.length === 0);
         <h2 class="section-title">{t('citadao.guests')}</h2>
         <div class="guests__list">
           {edition.guests.map((guest) => (
-            <div class="guest-card">
-              <div class="guest-card__avatar">
-                {guest.logoUrl ? (
-                  <img
-                    src={guest.logoUrl}
-                    alt={guest.shortName}
-                    class="guest-card__img"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div class="guest-card__placeholder">
-                    <span>{guest.shortName.charAt(0)}</span>
-                  </div>
-                )}
-              </div>
-              <div class="guest-card__info">
-                <span class="guest-card__name">{guest.shortName}</span>
-                <span class="guest-card__fullname">{guest.fullName}</span>
-              </div>
-            </div>
+            <TunaCard tuna={guest} variant="guest" />
           ))}
         </div>
       </div>
@@ -282,46 +173,26 @@ const tunasWithoutPrizes = tunasWithAwards.filter((t) => t.awards.length === 0);
     text-align: center;
   }
 
-  .hero__breadcrumb {
-    margin-bottom: var(--space-4);
-  }
-
+  .hero__breadcrumb { margin-bottom: var(--space-4); }
   .hero__breadcrumb a {
-    color: var(--color-text-inverted);
-    opacity: 0.8;
-    text-decoration: none;
-    font-size: var(--text-sm);
+    color: var(--color-text-inverted); opacity: 0.8;
+    text-decoration: none; font-size: var(--text-sm);
     transition: opacity var(--transition-fast);
   }
-
-  .hero__breadcrumb a:hover {
-    opacity: 1;
-  }
+  .hero__breadcrumb a:hover { opacity: 1; }
 
   .hero__badge {
-    display: inline-block;
-    background: rgba(255, 255, 255, 0.2);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-full);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    margin-bottom: var(--space-3);
+    display: inline-block; background: rgba(255, 255, 255, 0.2);
+    padding: var(--space-1) var(--space-3); border-radius: var(--radius-full);
+    font-size: var(--text-sm); font-weight: 500; margin-bottom: var(--space-3);
   }
 
-  .hero__title {
-    font-size: var(--text-4xl);
-    font-weight: 700;
-    margin-bottom: var(--space-2);
-  }
+  .hero__title { font-size: var(--text-4xl); font-weight: 700; margin-bottom: var(--space-2); }
 
   .hero__notes {
-    font-size: var(--text-lg);
-    opacity: 0.9;
-    background: var(--color-secondary);
-    display: inline-block;
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-md);
-    margin-top: var(--space-4);
+    font-size: var(--text-lg); opacity: 0.9; background: var(--color-secondary);
+    display: inline-block; padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md); margin-top: var(--space-4);
   }
 
   /* Section Title */
@@ -351,42 +222,21 @@ const tunasWithoutPrizes = tunasWithAwards.filter((t) => t.awards.length === 0);
   }
 
   .info__item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-4);
-    background-color: var(--color-background);
-    border-radius: var(--radius-lg);
+    display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4);
+    background-color: var(--color-background); border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
   }
 
   .info__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; flex-shrink: 0;
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    border-radius: var(--radius-md);
-    color: var(--color-text-inverted);
-    flex-shrink: 0;
+    border-radius: var(--radius-md); color: var(--color-text-inverted);
   }
 
-  .info__content {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .info__label {
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-  }
-
-  .info__value {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    color: var(--color-text);
-  }
+  .info__content { display: flex; flex-direction: column; }
+  .info__label { font-size: var(--text-sm); color: var(--color-text-muted); }
+  .info__value { font-size: var(--text-lg); font-weight: 600; color: var(--color-text); }
 
   /* Results Section (Tunas with Awards) */
   .results {
@@ -400,186 +250,16 @@ const tunasWithoutPrizes = tunasWithAwards.filter((t) => t.awards.length === 0);
     gap: var(--space-4);
   }
 
-  .result-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    background-color: var(--color-surface);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-  }
-
-  @media (min-width: 640px) {
-    .result-card {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-    }
-  }
-
-  .result-card--winner {
-    background: linear-gradient(
-      135deg,
-      color-mix(in srgb, #ffd700 10%, var(--color-surface)),
-      color-mix(in srgb, #ffec80 5%, var(--color-surface))
-    );
-    border-color: var(--color-gold);
-    border-width: 2px;
-  }
-
-  .result-card__tuna {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-  }
-
-  .result-card__avatar {
-    width: 56px;
-    height: 56px;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    flex-shrink: 0;
-    background-color: var(--color-background);
-  }
-
-  .result-card--winner .result-card__avatar {
-    box-shadow: 0 0 0 3px var(--color-gold);
-  }
-
-  .result-card__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .result-card__placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    color: var(--color-text-inverted);
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-  }
-
-  .result-card__info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  .result-card__name {
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    color: var(--color-text);
-  }
-
-  .result-card__fullname {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .result-card__awards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  /* Participants Section (Tunas without Awards) */
-  .participants {
-    padding: var(--space-12) 0;
-    background-color: var(--color-surface);
-  }
-
-  .participants__grid {
-    display: grid;
-    gap: var(--space-3);
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  @media (min-width: 640px) {
-    .participants__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .participants__grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .participant-card {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-3);
-    background-color: var(--color-background);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-  }
-
-  .participant-card__avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    flex-shrink: 0;
-    background-color: var(--color-surface);
-  }
-
-  .participant-card__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .participant-card__placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--color-neutral-400), var(--color-neutral-500));
-    color: var(--color-text-inverted);
-    font-size: var(--font-size-base);
-    font-weight: 600;
-  }
-
-  .participant-card__info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  .participant-card__name {
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    color: var(--color-text);
-  }
-
-  .participant-card__fullname {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  /* Guests Section */
+  /* Participants & Guests Sections */
+  .participants,
   .guests {
     padding: var(--space-12) 0;
-    background-color: var(--color-background);
   }
 
+  .participants { background-color: var(--color-surface); }
+  .guests { background-color: var(--color-background); }
+
+  .participants__grid,
   .guests__list {
     display: grid;
     gap: var(--space-3);
@@ -587,73 +267,13 @@ const tunasWithoutPrizes = tunasWithAwards.filter((t) => t.awards.length === 0);
   }
 
   @media (min-width: 640px) {
-    .guests__list {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .participants__grid,
+    .guests__list { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (min-width: 1024px) {
-    .guests__list {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .guest-card {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-3);
-    background-color: var(--color-surface);
-    border-radius: var(--radius-lg);
-    border: 1px dashed var(--color-border);
-  }
-
-  .guest-card__avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    flex-shrink: 0;
-    background-color: var(--color-background);
-  }
-
-  .guest-card__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .guest-card__placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--color-text-muted), var(--color-neutral-400));
-    color: var(--color-text-inverted);
-    font-size: var(--font-size-base);
-    font-weight: 600;
-  }
-
-  .guest-card__info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  .guest-card__name {
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    color: var(--color-text);
-  }
-
-  .guest-card__fullname {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    .participants__grid,
+    .guests__list { grid-template-columns: repeat(3, 1fr); }
   }
 
   /* Navigation Section */

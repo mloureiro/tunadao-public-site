@@ -1,0 +1,212 @@
+---
+/**
+ * TunaCard - Displays a tuna with avatar and info
+ * Used in citadao/[year].astro for participants, guests, and award winners.
+ *
+ * Variants:
+ * - "result": Award winner with awards display (highlighted if melhor-tuna)
+ * - "participant": Simple participant card
+ * - "guest": Guest card (dashed border)
+ */
+
+import Award from '@components/Award.astro';
+import type { FrontendTunaWithLogo } from '@lib/cms/types';
+
+interface Props {
+  tuna: FrontendTunaWithLogo;
+  variant: 'result' | 'participant' | 'guest';
+  awards?: string[];
+  awardLabel?: (_key: string) => string;
+}
+
+const { tuna, variant, awards = [], awardLabel } = Astro.props;
+const isWinner = variant === 'result' && awards.includes('melhor-tuna');
+---
+
+<div
+  class:list={[
+    'tuna-card',
+    `tuna-card--${variant}`,
+    { 'tuna-card--winner': isWinner }
+  ]}
+>
+  <div class="tuna-card__main">
+    <div class="tuna-card__avatar">
+      {tuna.logoUrl ? (
+        <img
+          src={tuna.logoUrl}
+          alt={tuna.shortName}
+          class="tuna-card__img"
+          loading="lazy"
+        />
+      ) : (
+        <div class="tuna-card__placeholder">
+          <span>{tuna.shortName.charAt(0)}</span>
+        </div>
+      )}
+    </div>
+    <div class="tuna-card__info">
+      <span class="tuna-card__name">{tuna.shortName}</span>
+      <span class="tuna-card__fullname">{tuna.fullName}</span>
+    </div>
+  </div>
+  {variant === 'result' && awards.length > 0 && awardLabel && (
+    <div class="tuna-card__awards">
+      {awards.map((awardKey) => (
+        <Award awardKey={awardKey} size="sm">{awardLabel(awardKey)}</Award>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .tuna-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background-color: var(--color-background);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Result variant (award winners) */
+  .tuna-card--result {
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background-color: var(--color-surface);
+  }
+
+  @media (min-width: 640px) {
+    .tuna-card--result {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  .tuna-card--winner {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, #ffd700 10%, var(--color-surface)),
+      color-mix(in srgb, #ffec80 5%, var(--color-surface))
+    );
+    border-color: var(--color-gold);
+    border-width: 2px;
+  }
+
+  .tuna-card--winner .tuna-card__avatar {
+    box-shadow: 0 0 0 3px var(--color-gold);
+  }
+
+  /* Guest variant */
+  .tuna-card--guest {
+    background-color: var(--color-surface);
+    border-style: dashed;
+  }
+
+  /* Main content (avatar + info) */
+  .tuna-card__main {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  /* Avatar */
+  .tuna-card__avatar {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--color-surface);
+  }
+
+  .tuna-card--result .tuna-card__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-background);
+  }
+
+  .tuna-card--participant .tuna-card__avatar,
+  .tuna-card--guest .tuna-card__avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .tuna-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tuna-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-inverted);
+    font-weight: 600;
+  }
+
+  .tuna-card--result .tuna-card__placeholder {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+  }
+
+  .tuna-card--participant .tuna-card__placeholder {
+    background: linear-gradient(135deg, var(--color-neutral-400), var(--color-neutral-500));
+    font-size: var(--font-size-base);
+  }
+
+  .tuna-card--guest .tuna-card__placeholder {
+    background: linear-gradient(135deg, var(--color-text-muted), var(--color-neutral-400));
+    font-size: var(--font-size-base);
+  }
+
+  /* Info */
+  .tuna-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .tuna-card__name {
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .tuna-card--result .tuna-card__name {
+    font-size: var(--font-size-lg);
+  }
+
+  .tuna-card--participant .tuna-card__name,
+  .tuna-card--guest .tuna-card__name {
+    font-size: var(--font-size-sm);
+  }
+
+  .tuna-card__fullname {
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tuna-card--result .tuna-card__fullname {
+    font-size: var(--font-size-sm);
+  }
+
+  .tuna-card--participant .tuna-card__fullname,
+  .tuna-card--guest .tuna-card__fullname {
+    font-size: var(--font-size-xs);
+  }
+
+  /* Awards (result variant only) */
+  .tuna-card__awards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+</style>

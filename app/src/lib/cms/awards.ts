@@ -53,6 +53,58 @@ export interface TunaWithAwards {
 }
 
 /**
+ * Extended tuna with awards info (for year detail page)
+ */
+export interface TunaWithAwardsExtended extends TunaWithAwards {
+  bestAwardPriority: number;
+}
+
+/**
+ * Split edition tunas into those with and without prizes
+ * Used by citadao/[year].astro for detailed edition view
+ */
+export function splitTunasByAwards(edition: FrontendCitadaoEdition): {
+  withPrizes: TunaWithAwardsExtended[];
+  withoutPrizes: TunaWithAwardsExtended[];
+} {
+  // Build map of tuna shortName -> awards
+  const tunaAwardsMap = new Map<string, string[]>();
+  if (edition.awards) {
+    for (const [awardKey, tunaShortName] of Object.entries(edition.awards)) {
+      const existing = tunaAwardsMap.get(tunaShortName) || [];
+      existing.push(awardKey);
+      tunaAwardsMap.set(tunaShortName, existing);
+    }
+  }
+
+  // Build list with award info
+  const allTunas: TunaWithAwardsExtended[] = edition.tunas.map((tuna) => {
+    const awards = tunaAwardsMap.get(tuna.shortName) || [];
+    const bestAwardPriority = awards.length > 0
+      ? Math.min(...awards.map((k) => AWARD_PRIORITY[k] ?? 100))
+      : Infinity;
+    return { tuna, awards, bestAwardPriority };
+  });
+
+  // Sort: by best award priority, then alphabetically
+  allTunas.sort((a, b) => {
+    if (a.awards.length > 0 && b.awards.length > 0) {
+      if (a.bestAwardPriority !== b.bestAwardPriority) {
+        return a.bestAwardPriority - b.bestAwardPriority;
+      }
+    }
+    if (a.awards.length > 0 && b.awards.length === 0) return -1;
+    if (a.awards.length === 0 && b.awards.length > 0) return 1;
+    return a.tuna.shortName.localeCompare(b.tuna.shortName, 'pt');
+  });
+
+  return {
+    withPrizes: allTunas.filter((t) => t.awards.length > 0),
+    withoutPrizes: allTunas.filter((t) => t.awards.length === 0),
+  };
+}
+
+/**
  * Group awards by tuna (citadao index page)
  */
 export function groupAwardsByTuna(edition: FrontendCitadaoEdition): TunaWithAwards[] {
