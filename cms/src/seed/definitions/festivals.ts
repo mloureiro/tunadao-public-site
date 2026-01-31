@@ -628,7 +628,7 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'XV FITUP-IDH',
-    date: '2009-06-15',
+    date: '2009-02-27',
     location: 'Porto',
     organizingTuna: 'TAUP',
     awards: [
