@@ -5,8 +5,9 @@
  */
 
 import Award from '@components/Award.astro';
+import ResponsiveImage from '@components/ResponsiveImage.astro';
 import type { FrontendCitadaoEdition } from '@lib/cms/types';
-import { groupAwardsByTuna } from '@lib/cms';
+import { groupAwardsByTuna, extractPublicId } from '@lib/cms';
 
 interface Props {
   edition: FrontendCitadaoEdition;
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const { edition, labels } = Astro.props;
+const posterPublicId = edition.posterUrl ? extractPublicId(edition.posterUrl) : null;
 ---
 
 <article class="edition-item" id={`citadao-${edition.year}`}>
@@ -48,12 +50,22 @@ const { edition, labels } = Astro.props;
           data-poster-url={edition.posterUrl}
           data-poster-alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
         >
-          <img
-            src={edition.posterUrl}
-            alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
-            class="poster-image"
-            loading="lazy"
-          />
+          {posterPublicId ? (
+            <ResponsiveImage
+              publicId={posterPublicId}
+              alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
+              class="poster-image"
+              sizes="(max-width: 768px) 100vw, 200px"
+              aspectRatio="2/3"
+            />
+          ) : (
+            <img
+              src={edition.posterUrl}
+              alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
+              class="poster-image"
+              loading="lazy"
+            />
+          )}
         </button>
       </div>
     )}
