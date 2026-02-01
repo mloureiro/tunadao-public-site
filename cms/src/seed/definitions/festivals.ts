@@ -142,6 +142,7 @@ export const FESTIVALS: FestivalData[] = [
     date: '2024-03-01',
     location: 'Guimaraes',
     organizingTuna: 'Afonsina',
+    posterPublicId: 'tunadao/festivais/xviii-cidade-berco-2024',
     awards: [],
   },
   // 2023
@@ -631,6 +632,7 @@ export const FESTIVALS: FestivalData[] = [
     date: '2009-02-27',
     location: 'Porto',
     organizingTuna: 'TAUP',
+    posterPublicId: 'tunadao/festivais/xv-fitup-idh-2009',
     awards: [
       { slug: 'melhor-tuna' },
       { slug: 'melhor-pandeireta' },
@@ -659,9 +661,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'VI Cidade Berco',
-    date: '2009-06-15',
+    date: '2009-11-20',
     location: 'Guimaraes',
     organizingTuna: 'Afonsina',
+    posterPublicId: 'tunadao/festivais/vi-cidade-berco-2009',
     awards: [
       { slug: 'segunda-melhor-tuna' },
       { slug: 'tuna-mais-tuna' },
@@ -670,9 +673,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'XVI Celta',
-    date: '2009-06-15',
+    date: '2009-12-11',
     location: 'Braga',
     organizingTuna: 'Azeituna',
+    posterPublicId: 'tunadao/festivais/xvi-celta-2009',
     awards: [
       { slug: 'tuna-mais-tuna' },
       { slug: 'premio-tema-especial', customNote: 'Premio Tema Cabaret' },
@@ -864,9 +868,10 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'III Festubi',
-    date: '2005-06-15',
+    date: '2005-03-12',
     location: 'Covilha',
     organizingTuna: 'Desertuna',
+    posterPublicId: 'tunadao/festivais/iii-festubi-2005',
     awards: [{ slug: 'melhor-instrumental' }],
   },
   {
