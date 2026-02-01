@@ -905,7 +905,7 @@ export const FESTIVALS: FestivalData[] = [
   },
   {
     name: 'I Collipo',
-    date: '2004-06-15',
+    date: '2004-03-12',
     location: 'Leiria',
     organizingTuna: 'Trovantina',
     awards: [{ slug: 'premio-participacao' }],
