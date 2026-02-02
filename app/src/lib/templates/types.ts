@@ -72,3 +72,27 @@ export function getDefaultTemplate(): Template {
  * Cookie name for template persistence
  */
 export const TEMPLATE_COOKIE_NAME = 'tunadao-template';
+
+/**
+ * Parse cookies from a cookie header string
+ */
+export function parseCookies(cookieHeader: string): Record<string, string> {
+  return Object.fromEntries(
+    cookieHeader.split(';').map((c) => {
+      const [key, ...rest] = c.trim().split('=');
+      return [key, rest.join('=')];
+    })
+  );
+}
+
+/**
+ * Get the current template from request cookies
+ */
+export function getTemplateFromCookies(cookieHeader: string | null): Template {
+  if (!cookieHeader) return getDefaultTemplate();
+
+  const cookies = parseCookies(cookieHeader);
+  const templateId = cookies[TEMPLATE_COOKIE_NAME];
+
+  return getTemplate(templateId) || getDefaultTemplate();
+}
