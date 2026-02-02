@@ -1,0 +1,135 @@
+---
+import DevLayout from '@layouts/DevLayout.astro';
+---
+
+<DevLayout title="Timeline" currentPage="timeline">
+  <section class="placeholder-section">
+    <div class="placeholder-content">
+      <span class="placeholder-icon">📅</span>
+      <h2>Timeline Component</h2>
+      <p class="placeholder-description">
+        This page will showcase the modernized timeline/year navigation component.
+      </p>
+      <div class="placeholder-checklist">
+        <h3>Planned Features</h3>
+        <ul>
+          <li>
+            <span class="status pending"></span>
+            Vertical timeline layout (replacing horizontal YearNavigation)
+          </li>
+          <li>
+            <span class="status pending"></span>
+            Scroll-based year tracking
+          </li>
+          <li>
+            <span class="status pending"></span>
+            Mobile-responsive design
+          </li>
+          <li>
+            <span class="status pending"></span>
+            Accessibility features (keyboard navigation, ARIA)
+          </li>
+          <li>
+            <span class="status pending"></span>
+            Current vs new comparison
+          </li>
+        </ul>
+      </div>
+      <p class="placeholder-note">
+        <strong>Note:</strong> This component will be implemented in Stream B (Timeline Modernization).
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .placeholder-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 60vh;
+    }
+
+    .placeholder-content {
+      text-align: center;
+      max-width: 500px;
+      padding: var(--space-8);
+      background-color: var(--color-surface);
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-xl);
+    }
+
+    .placeholder-icon {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: var(--space-4);
+    }
+
+    .placeholder-content h2 {
+      font-size: var(--font-size-2xl);
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .placeholder-description {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-6);
+    }
+
+    .placeholder-checklist {
+      text-align: left;
+      background-color: var(--color-background);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+
+    .placeholder-checklist h3 {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-3);
+    }
+
+    .placeholder-checklist ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .placeholder-checklist li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--font-size-sm);
+    }
+
+    .status {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status.pending {
+      background-color: var(--color-warning-light);
+      border: 2px solid var(--color-warning);
+    }
+
+    .status.done {
+      background-color: var(--color-success);
+    }
+
+    .placeholder-note {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      padding: var(--space-3);
+      background-color: var(--color-primary-light);
+      border-radius: var(--radius-md);
+    }
+  </style>
+</DevLayout>
