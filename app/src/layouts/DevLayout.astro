@@ -9,16 +9,23 @@ interface Props {
 
 const { title, currentPage } = Astro.props;
 
-// Only available in development
-if (import.meta.env.PROD) {
+// Only available in development, or in production with preview param
+const isPreviewMode =
+  Astro.url.searchParams.get('preview') === '1' ||
+  Astro.url.searchParams.get('dev') === 'true';
+
+if (import.meta.env.PROD && !isPreviewMode) {
   return Astro.redirect('/');
 }
 
+// Preserve preview param in navigation links
+const previewSuffix = isPreviewMode ? '?preview=1' : '';
+
 const navItems = [
-  { href: '/dev/', label: 'Overview', key: 'index' },
-  { href: '/dev/components/', label: 'Components', key: 'components' },
-  { href: '/dev/components/timeline', label: 'Timeline', key: 'timeline' },
-  { href: '/dev/layout', label: 'Layout', key: 'layout' },
+  { href: `/dev/${previewSuffix}`, label: 'Overview', key: 'index' },
+  { href: `/dev/components/${previewSuffix}`, label: 'Components', key: 'components' },
+  { href: `/dev/components/timeline${previewSuffix}`, label: 'Timeline', key: 'timeline' },
+  { href: `/dev/layout${previewSuffix}`, label: 'Layout', key: 'layout' },
 ];
 ---
 
