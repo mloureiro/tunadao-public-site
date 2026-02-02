@@ -1,0 +1,259 @@
+---
+/**
+ * TemplateSwitcher - Switch between UI templates
+ *
+ * Shows all available templates and allows switching between them.
+ * Selection is persisted in cookies for server-side reading.
+ */
+import { TEMPLATES, TEMPLATE_COOKIE_CONFIG } from '@lib/templates';
+
+interface Props {
+  /** Current template ID (read from cookie on server) */
+  currentTemplate?: string;
+  /** Show as compact (inline) or full (cards) */
+  variant?: 'compact' | 'full';
+}
+
+const { currentTemplate = 'classic', variant = 'full' } = Astro.props;
+const TEMPLATE_COOKIE_NAME = TEMPLATE_COOKIE_CONFIG.name;
+---
+
+<div class:list={['template-switcher', `template-switcher--${variant}`]} data-current={currentTemplate}>
+  {variant === 'full' ? (
+    <div class="template-grid">
+      {TEMPLATES.map(template => (
+        <button
+          class:list={[
+            'template-card',
+            { 'template-card--active': template.id === currentTemplate },
+            { 'template-card--unavailable': !template.enabled }
+          ]}
+          data-template={template.id}
+          disabled={!template.enabled}
+          aria-pressed={template.id === currentTemplate ? 'true' : 'false'}
+        >
+          <div class="template-card__header">
+            <span class="template-card__name">{template.name}</span>
+            {template.id === currentTemplate && (
+              <span class="template-card__badge">Ativo</span>
+            )}
+            {!template.enabled && (
+              <span class="template-card__badge template-card__badge--soon">Em breve</span>
+            )}
+          </div>
+          <p class="template-card__description">{template.description}</p>
+          {template.inspirations && template.inspirations.length > 0 && (
+            <div class="template-card__inspirations">
+              {template.inspirations.map(insp => (
+                <span class="template-card__tag">{insp}</span>
+              ))}
+            </div>
+          )}
+        </button>
+      ))}
+    </div>
+  ) : (
+    <div class="template-inline">
+      <span class="template-inline__label">Template:</span>
+      <select class="template-inline__select" aria-label="Select template">
+        {TEMPLATES.map(template => (
+          <option
+            value={template.id}
+            selected={template.id === currentTemplate}
+            disabled={!template.enabled}
+          >
+            {template.name}{!template.enabled ? ' (em breve)' : ''}
+          </option>
+        ))}
+      </select>
+    </div>
+  )}
+</div>
+
+<style>
+  /* Full variant - Card grid */
+  .template-switcher--full .template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .template-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding: var(--space-4);
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .template-card:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    background-color: var(--color-surface-hover);
+  }
+
+  .template-card:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .template-card--active {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+  }
+
+  .template-card--unavailable {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .template-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    margin-bottom: var(--space-2);
+  }
+
+  .template-card__name {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .template-card__badge {
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-full);
+    background-color: var(--color-primary);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .template-card__badge--soon {
+    background-color: var(--color-text-muted);
+  }
+
+  .template-card__description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-3) 0;
+    line-height: 1.5;
+  }
+
+  .template-card__inspirations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-top: auto;
+  }
+
+  .template-card__tag {
+    font-size: var(--font-size-xs);
+    padding: var(--space-1) var(--space-2);
+    background-color: var(--color-background);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* Compact variant - Inline select */
+  .template-switcher--compact .template-inline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .template-inline__label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .template-inline__select {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  .template-inline__select:hover {
+    border-color: var(--color-primary);
+  }
+
+  .template-inline__select:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+</style>
+
+<script define:vars={{ TEMPLATE_COOKIE_NAME }}>
+  (function() {
+    const switcher = document.querySelector('.template-switcher');
+    if (!switcher) return;
+
+    const _currentTemplate = switcher.getAttribute('data-current') || 'classic';
+
+    // Set cookie helper
+    function setTemplateCookie(templateId) {
+      // Set cookie for 1 year
+      const expires = new Date();
+      expires.setFullYear(expires.getFullYear() + 1);
+      document.cookie = `${TEMPLATE_COOKIE_NAME}=${templateId};path=/;expires=${expires.toUTCString()};SameSite=Lax`;
+    }
+
+    // Handle card clicks (full variant)
+    const cards = switcher.querySelectorAll('.template-card:not(:disabled)');
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const templateId = card.getAttribute('data-template');
+        if (!templateId) return;
+
+        // Update cookie
+        setTemplateCookie(templateId);
+
+        // Update UI immediately
+        cards.forEach(c => {
+          const isActive = c.getAttribute('data-template') === templateId;
+          c.classList.toggle('template-card--active', isActive);
+          c.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+
+          // Update badge
+          const existingBadge = c.querySelector('.template-card__badge:not(.template-card__badge--soon)');
+          if (isActive && !existingBadge) {
+            const badge = document.createElement('span');
+            badge.className = 'template-card__badge';
+            badge.textContent = 'Ativo';
+            c.querySelector('.template-card__header').appendChild(badge);
+          } else if (!isActive && existingBadge) {
+            existingBadge.remove();
+          }
+        });
+
+        // Update data attribute
+        switcher.setAttribute('data-current', templateId);
+
+        // Reload to apply template
+        window.location.reload();
+      });
+    });
+
+    // Handle select change (compact variant)
+    const select = switcher.querySelector('.template-inline__select');
+    if (select) {
+      select.addEventListener('change', (e) => {
+        const templateId = e.target.value;
+        setTemplateCookie(templateId);
+        window.location.reload();
+      });
+    }
+  })();
+</script>
