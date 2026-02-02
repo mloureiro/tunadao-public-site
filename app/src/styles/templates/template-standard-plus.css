@@ -1,0 +1,62 @@
+/**
+ * Template: Standard+
+ *
+ * Refined and polished - conventional improvement.
+ * Inspired by: Radical Face, Bon Iver, Preston Thompson
+ *
+ * IMPORTANT: Template CSS files are isolated. Each template loads only its own CSS.
+ * Do NOT import other template CSS files here.
+ *
+ * TODO: Implementation by purple agent
+ */
+
+/* Template-specific design tokens override */
+[data-template='standard-plus'] {
+  /* Typography - cleaner, more refined */
+  --template-font-heading: var(--font-family-heading);
+  --template-heading-weight: 600;
+  --template-heading-tracking: -0.02em;
+
+  /* Layout - slightly more spacious */
+  --template-hero-padding: var(--space-16);
+  --template-section-gap: var(--space-12);
+  --template-container-max-width: 1100px;
+
+  /* Cards - softer, less boxy */
+  --template-card-radius: var(--radius-xl);
+  --template-card-padding: var(--space-5);
+  --template-card-border-width: 0;
+  --template-card-shadow: var(--shadow-lg);
+
+  /* Colors - warm neutrals */
+  --color-background: #faf9f7;
+  --color-surface: #ffffff;
+  --color-text: #2c2c2c;
+  --color-text-muted: #666666;
+
+  /* Effects */
+  --template-glow: none;
+  --template-backdrop-blur: 0;
+
+  /* Animation */
+  --template-transition: 250ms ease-out;
+}
+
+/* Dark mode adjustments for Standard+ */
+[data-theme='dark'][data-template='standard-plus'] {
+  --color-background: #1a1a1a;
+  --color-surface: #242424;
+  --color-text: #f0f0f0;
+  --color-text-muted: #999999;
+}
+
+/* Placeholder styles - to be implemented */
+[data-template='standard-plus'] .hero-section {
+  padding: var(--template-hero-padding) 0;
+}
+
+[data-template='standard-plus'] .card {
+  border-radius: var(--template-card-radius);
+  padding: var(--template-card-padding);
+  box-shadow: var(--template-card-shadow);
+}

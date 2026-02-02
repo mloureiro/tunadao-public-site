@@ -1,0 +1,77 @@
+/**
+ * Template: Mashup
+ *
+ * Best of all worlds - curated combination.
+ * Inspired by: Blue Note, Moog Music, ECM Records
+ *
+ * IMPORTANT: Template CSS files are isolated. Each template loads only its own CSS.
+ * Do NOT import other template CSS files here.
+ *
+ * TODO: Implementation by magenta agent
+ */
+
+/* Template-specific design tokens override */
+[data-template='mashup'] {
+  /* Typography - heritage meets modern */
+  --template-font-heading: var(--font-family-heading);
+  --template-heading-weight: 700;
+  --template-heading-tracking: -0.01em;
+
+  /* Layout - balanced, intentional */
+  --template-hero-padding: var(--space-16);
+  --template-section-gap: var(--space-12);
+  --template-container-max-width: 1200px;
+
+  /* Cards - refined with subtle depth */
+  --template-card-radius: var(--radius-xl);
+  --template-card-padding: var(--space-5);
+  --template-card-border-width: 1px;
+  --template-card-shadow: var(--shadow-md);
+
+  /* Colors - sophisticated palette */
+  --color-background: #f5f5f0;
+  --color-surface: #ffffff;
+  --color-text: #1a1a1a;
+  --color-text-muted: #555555;
+  --color-primary: #29166f;
+  --color-secondary: #bf0029;
+
+  /* Effects - subtle */
+  --template-glow: none;
+  --template-backdrop-blur: 0;
+
+  /* Animation */
+  --template-transition: 200ms ease;
+}
+
+/* Dark mode for Mashup - elegant, not harsh */
+[data-theme='dark'][data-template='mashup'] {
+  --color-background: #121212;
+  --color-surface: #1e1e1e;
+  --color-text: #f5f5f5;
+  --color-text-muted: #aaaaaa;
+  --color-primary: #6b5adf;
+}
+
+/* Placeholder styles - to be implemented */
+[data-template='mashup'] .hero-section {
+  padding: var(--template-hero-padding) 0;
+}
+
+[data-template='mashup'] .card {
+  border-radius: var(--template-card-radius);
+  padding: var(--template-card-padding);
+  border: var(--template-card-border-width) solid var(--color-border);
+  box-shadow: var(--template-card-shadow);
+}
+
+/* Heritage timeline element - Blue Note inspired */
+[data-template='mashup'] .timeline {
+  border-left: 2px solid var(--color-primary);
+  padding-left: var(--space-6);
+}
+
+/* Gallery grid - ECM inspired minimal */
+[data-template='mashup'] .gallery-grid {
+  gap: var(--space-2);
+}
