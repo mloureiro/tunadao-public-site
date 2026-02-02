@@ -5,6 +5,10 @@ import { getPalmaresYears } from '@lib/cms';
 import Lightbox from '@components/Lightbox.astro';
 import FestivalCard from '@components/palmares/FestivalCard.astro';
 import YearNavigation from '@components/YearNavigation.astro';
+import VerticalTimeline from '@components/VerticalTimeline.astro';
+
+// Feature flag for new timeline (default: true)
+const useVerticalTimeline = import.meta.env.PUBLIC_USE_VERTICAL_TIMELINE !== 'false';
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
@@ -71,7 +75,11 @@ const melhorTunaCount = palmaresData.reduce((total, year) => {
   </section>
 
   <!-- Year Navigation -->
-  <YearNavigation years={allYears} ariaLabel={t('palmares.jumpToYear') || 'Jump to year'} />
+  {useVerticalTimeline ? (
+    <VerticalTimeline years={allYears} ariaLabel={t('palmares.jumpToYear') || 'Jump to year'} />
+  ) : (
+    <YearNavigation years={allYears} ariaLabel={t('palmares.jumpToYear') || 'Jump to year'} />
+  )}
 
   <!-- Timeline Section -->
   <section class="palmares-timeline">

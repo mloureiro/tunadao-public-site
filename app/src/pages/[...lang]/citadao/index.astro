@@ -5,6 +5,10 @@ import { getCitadaoEditions } from '@lib/cms';
 import Lightbox from '@components/Lightbox.astro';
 import EditionCard from '@components/citadao/EditionCard.astro';
 import YearNavigation from '@components/YearNavigation.astro';
+import VerticalTimeline from '@components/VerticalTimeline.astro';
+
+// Feature flag for new timeline (default: true)
+const useVerticalTimeline = import.meta.env.PUBLIC_USE_VERTICAL_TIMELINE !== 'false';
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
@@ -43,7 +47,11 @@ const allYears = editions.map((edition) => edition.year);
   </section>
 
   <!-- Year Navigation -->
-  <YearNavigation years={allYears} ariaLabel={t('citadao.jumpToYear') || 'Jump to edition'} />
+  {useVerticalTimeline ? (
+    <VerticalTimeline years={allYears} ariaLabel={t('citadao.jumpToYear') || 'Jump to edition'} />
+  ) : (
+    <YearNavigation years={allYears} ariaLabel={t('citadao.jumpToYear') || 'Jump to edition'} />
+  )}
 
   <!-- All Editions -->
   <section class="editions">
