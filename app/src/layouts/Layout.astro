@@ -1,8 +1,16 @@
 ---
 import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
-import '@styles/global.css';
+// Template system CSS - base styles shared by all templates
+import '@styles/templates/base.css';
+// Template-specific CSS (scoped by data-template attribute)
+import '@styles/templates/template-classic.css';
+import '@styles/templates/template-standard-plus.css';
+import '@styles/templates/template-experimental.css';
+import '@styles/templates/template-mashup.css';
 import { getLang, type Language } from '@i18n/index';
+import { DEFAULT_TEMPLATE } from '@lib/templates';
+import type { TemplateId } from '@lib/templates';
 
 interface Props {
   title: string;
@@ -19,10 +27,13 @@ const {
 
 const lang: Language = getLang(Astro.currentLocale, Astro.url);
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// For SSG, use default template at build time. Client-side script reads cookie and updates attribute.
+const templateId: TemplateId = DEFAULT_TEMPLATE;
 ---
 
 <!doctype html>
-<html lang={lang === 'en' ? 'en' : 'pt'} data-lang={lang}>
+<html lang={lang === 'en' ? 'en' : 'pt'} data-lang={lang} data-template={templateId}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -73,6 +84,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         localStorage.getItem('theme') ||
         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
+    </script>
+
+    <!-- Prevent FOUC on template (read from cookie client-side) -->
+    <script is:inline>
+      (function() {
+        const match = document.cookie.match(/(^| )tunadao-template=([^;]+)/);
+        if (match) {
+          document.documentElement.setAttribute('data-template', match[2]);
+        }
+      })();
     </script>
   </head>
   <body>

@@ -1,0 +1,94 @@
+/**
+ * Template: Classic
+ *
+ * The original Tunadão look - clean and traditional.
+ * This template preserves the existing site design as a baseline.
+ *
+ * IMPORTANT: Template CSS files are isolated. Each template loads only its own CSS.
+ * Do NOT import other template CSS files here.
+ */
+
+/* Template-specific design tokens override */
+[data-template='classic'] {
+  /* Typography */
+  --template-font-heading: var(--font-family-heading);
+  --template-heading-weight: 700;
+  --template-heading-tracking: var(--letter-spacing-tight);
+
+  /* Layout */
+  --template-hero-padding: var(--space-12);
+  --template-section-gap: var(--space-10);
+  --template-container-max-width: var(--container-max-width);
+
+  /* Cards */
+  --template-card-radius: var(--radius-lg);
+  --template-card-padding: var(--space-4);
+  --template-card-border-width: 1px;
+  --template-card-shadow: var(--shadow-md);
+
+  /* Effects */
+  --template-glow: none;
+  --template-backdrop-blur: 0;
+
+  /* Animation */
+  --template-transition: var(--transition-base);
+}
+
+/* Classic Hero Section */
+[data-template='classic'] .hero-section {
+  padding: var(--template-hero-padding) 0;
+}
+
+/* Classic Card Styles */
+[data-template='classic'] .card {
+  border-radius: var(--template-card-radius);
+  padding: var(--template-card-padding);
+  border: var(--template-card-border-width) solid var(--color-border);
+  box-shadow: var(--template-card-shadow);
+}
+
+/* Classic Festival Card */
+[data-template='classic'] .festival-card {
+  border-radius: var(--template-card-radius);
+  border: var(--template-card-border-width) solid var(--color-border);
+  transition: transform var(--template-transition), box-shadow var(--template-transition);
+}
+
+[data-template='classic'] .festival-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Classic Navigation */
+[data-template='classic'] .main-nav {
+  backdrop-filter: none;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Classic Buttons */
+[data-template='classic'] .btn-primary {
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Classic Typography */
+[data-template='classic'] h1,
+[data-template='classic'] h2,
+[data-template='classic'] h3 {
+  font-weight: var(--template-heading-weight);
+  letter-spacing: var(--template-heading-tracking);
+}
+
+/* Responsive adjustments for Classic */
+@media (min-width: 768px) {
+  [data-template='classic'] {
+    --template-hero-padding: var(--space-16);
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-template='classic'] {
+    --template-hero-padding: var(--space-20);
+  }
+}
