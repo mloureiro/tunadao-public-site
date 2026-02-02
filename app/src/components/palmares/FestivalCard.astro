@@ -132,15 +132,15 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
 </article>
 
 <style>
-  /* Festival Card */
+  /* Festival Card - Theme-aware styling */
   .festival-card {
     background-color: var(--color-surface);
-    border-radius: var(--radius-xl);
+    border-radius: var(--design-card-radius);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     box-shadow: var(--shadow-sm);
-    border: 1px solid var(--color-border-light);
+    border: var(--design-border-width) var(--design-border-style) var(--color-border-light);
     transition:
       transform var(--transition-base),
       box-shadow var(--transition-base),
@@ -161,6 +161,24 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
   .festival-card--featured:hover {
     border-color: var(--color-gold);
     box-shadow: var(--shadow-lg), 0 0 0 1px var(--color-gold);
+  }
+
+  /* Noite theme enhancements */
+  :global([data-design='noite']) .festival-card {
+    box-shadow: var(--shadow-md);
+  }
+
+  :global([data-design='noite']) .festival-card:hover {
+    box-shadow: var(--shadow-xl), var(--glow-primary);
+    transform: translateY(-6px);
+  }
+
+  :global([data-design='noite']) .festival-card--featured {
+    box-shadow: var(--shadow-md), 0 0 20px rgba(255, 215, 0, 0.15);
+  }
+
+  :global([data-design='noite']) .festival-card--featured:hover {
+    box-shadow: var(--shadow-xl), 0 0 30px rgba(255, 215, 0, 0.25);
   }
 
   /* Poster Section */
