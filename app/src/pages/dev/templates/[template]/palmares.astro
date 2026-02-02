@@ -1,0 +1,222 @@
+---
+import { getTemplate, TEMPLATES } from '@templates/core';
+import type { TemplateId } from '@templates/core';
+import { useTranslations, defaultLang } from '@i18n/index';
+import { getPalmaresYears } from '@lib/cms';
+import FestivalCard from '@components/palmares/FestivalCard.astro';
+import VerticalTimeline from '@components/VerticalTimeline.astro';
+import Lightbox from '@components/Lightbox.astro';
+
+export function getStaticPaths() {
+  // Only generate paths for enabled templates
+  return TEMPLATES.filter((t) => t.enabled).map((t) => ({
+    params: { template: t.id },
+  }));
+}
+
+const { template } = Astro.params as { template: TemplateId };
+const { Layout, Hero } = await getTemplate(template);
+
+const base = import.meta.env.BASE_URL;
+const templateInfo = TEMPLATES.find((t) => t.id === template);
+const t = useTranslations(defaultLang);
+
+// Fetch Palmares data from CMS (with fallback)
+const palmaresData = await getPalmaresYears();
+const allYears = palmaresData.map((yearData) => yearData.year);
+
+// Calculate statistics
+const totalAwards = palmaresData.reduce((total, year) => {
+  return total + year.festivals.reduce((festTotal, fest) => festTotal + fest.awards.length, 0);
+}, 0);
+const totalFestivals = palmaresData.reduce((total, year) => total + year.festivals.length, 0);
+---
+
+<Layout title={`Palmares (${templateInfo?.name || template}) | Tunadao Dev`}>
+  <div class="dev-banner">
+    <span class="dev-banner__label">Template Preview:</span>
+    <strong>{templateInfo?.name || template}</strong>
+    <nav class="dev-banner__nav">
+      <a href={`${base}dev/templates/${template}/`}>Home</a>
+      <a href={`${base}dev/templates/${template}/citadao`}>Citadao</a>
+      <a href={`${base}dev/templates/${template}/palmares`} class="active">Palmares</a>
+    </nav>
+    <a href={`${base}dev/templates`} class="dev-banner__back">All Templates</a>
+  </div>
+
+  <div class="page-content">
+    <Hero title={t('palmares.title')} subtitle={t('palmares.subtitle')} />
+
+    <section class="stats">
+      <div class="container">
+        <div class="stats__grid">
+          <div class="stats__item">
+            <span class="stats__value">{totalAwards}+</span>
+            <span class="stats__label">{t('palmares.stats.awards')}</span>
+          </div>
+          <div class="stats__item">
+            <span class="stats__value">{totalFestivals}</span>
+            <span class="stats__label">{t('palmares.stats.festivals')}</span>
+          </div>
+          <div class="stats__item">
+            <span class="stats__value">{palmaresData.length}</span>
+            <span class="stats__label">{t('palmares.stats.yearsOfAwards')}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <VerticalTimeline years={allYears} ariaLabel={t('palmares.jumpToYear') || 'Jump to year'} />
+
+    <section class="palmares-timeline">
+      <div class="container">
+        {
+          palmaresData.map((yearData) => (
+            <div class="year-section" id={`year-${yearData.year}`}>
+              <div class="year-header">
+                <h2 class="year-title">{yearData.year}</h2>
+                <span class="year-count">
+                  {yearData.festivals.reduce((total, f) => total + f.awards.length, 0)}{' '}
+                  {t('palmares.awardsCount')}
+                </span>
+              </div>
+              <div class="festivals-grid">
+                {yearData.festivals.map((festival) => (
+                  <FestivalCard festival={festival} />
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <Lightbox closeLabel={t('common.close')} />
+  </div>
+</Layout>
+
+<style>
+  .dev-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #1a1a2e;
+    color: white;
+    padding: var(--space-2) var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    z-index: 1000;
+    font-size: var(--font-size-sm);
+  }
+
+  .dev-banner__label {
+    color: #888;
+  }
+
+  .dev-banner__nav {
+    display: flex;
+    gap: var(--space-2);
+    margin-left: auto;
+  }
+
+  .dev-banner__nav a {
+    color: #aaa;
+    text-decoration: none;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .dev-banner__nav a:hover,
+  .dev-banner__nav a.active {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .dev-banner__back {
+    color: #888;
+    text-decoration: none;
+  }
+
+  .dev-banner__back:hover {
+    color: white;
+  }
+
+  .page-content {
+    margin-top: 48px; /* Account for fixed banner */
+  }
+
+  /* Stats Section */
+  .stats {
+    padding: var(--space-8) 0;
+    background: var(--color-surface);
+  }
+
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-6);
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .stats__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .stats__value {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .stats__label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Timeline Section */
+  .palmares-timeline {
+    padding: var(--space-12) 0;
+  }
+
+  .year-section {
+    margin-bottom: var(--space-12);
+    scroll-margin-top: 128px; /* Extra offset for dev banner + sticky nav */
+  }
+
+  .year-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .year-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .year-count {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+  }
+
+  .festivals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-6);
+  }
+</style>

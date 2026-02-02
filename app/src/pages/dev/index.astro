@@ -2,32 +2,34 @@
 import DevLayout from '@layouts/DevLayout.astro';
 import Card from '@components/Card.astro';
 
+const base = import.meta.env.BASE_URL;
+
 const devPages = [
   {
     title: 'Components',
     description: 'UI component library showcase with all variants, sizes, and states.',
-    href: '/dev/components/',
+    href: `${base}dev/components/`,
     icon: '🧩',
     status: 'complete',
   },
   {
     title: 'Timeline',
     description: 'Year navigation and timeline component exploration.',
-    href: '/dev/components/timeline',
+    href: `${base}dev/components/timeline`,
     icon: '📅',
     status: 'wip',
   },
   {
     title: 'Layout',
     description: 'Page layout patterns and structure showcase.',
-    href: '/dev/layout',
+    href: `${base}dev/layout`,
     icon: '📐',
     status: 'wip',
   },
   {
     title: 'Templates',
-    description: 'Switch between UI templates - Classic, Standard+, Experimental, and Mashup.',
-    href: '/dev/templates',
+    description: 'Preview and compare UI templates - Classic, Advanced, Experimental, and Mashup.',
+    href: `${base}dev/templates`,
     icon: '🎨',
     status: 'wip',
   },

@@ -1,68 +1,81 @@
 ---
 /**
- * TemplateSwitcher - Switch between UI templates
+ * TemplateSwitcher - Navigate between template previews
  *
- * Shows all available templates and allows switching between them.
- * Selection is persisted in cookies for server-side reading.
+ * Uses URL-based navigation instead of cookies.
+ * Full variant: Shows cards with links
+ * Compact variant: Select dropdown that redirects
  */
-import { TEMPLATES, TEMPLATE_COOKIE_CONFIG } from '@templates/core';
+import { TEMPLATES } from '@templates/core';
+import type { TemplateId } from '@templates/core';
 
 interface Props {
-  /** Current template ID (read from cookie on server) */
-  currentTemplate?: string;
+  /** Current template ID */
+  currentTemplate: TemplateId;
+  /** Current URL path (for extracting page path) */
+  currentPath?: string;
   /** Show as compact (inline) or full (cards) */
   variant?: 'compact' | 'full';
 }
 
-const { currentTemplate = 'classic', variant = 'full' } = Astro.props;
-const TEMPLATE_COOKIE_NAME = TEMPLATE_COOKIE_CONFIG.name;
+const { currentTemplate, currentPath = '', variant = 'full' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+/**
+ * Extract the page path from a template preview URL
+ * e.g., /dev/templates/classic/citadao -> /citadao
+ * e.g., /dev/templates/advanced/ -> /
+ */
+function getPagePath(path: string): string {
+  const templateMatch = path.match(/\/dev\/templates\/[^/]+(\/.*)$/);
+  if (templateMatch) {
+    const pagePath = templateMatch[1];
+    return pagePath === '/' ? '' : pagePath;
+  }
+  return '';
+}
+
+const pagePath = getPagePath(currentPath);
 ---
 
-<div class:list={['template-switcher', `template-switcher--${variant}`]} data-current={currentTemplate}>
+<div class:list={['template-switcher', `template-switcher--${variant}`]} data-base={base} data-page-path={pagePath}>
   {variant === 'full' ? (
     <div class="template-grid">
       {TEMPLATES.map(template => (
-        <button
+        <a
+          href={template.enabled ? `${base}dev/templates/${template.id}${pagePath || '/'}` : undefined}
           class:list={[
             'template-card',
             { 'template-card--active': template.id === currentTemplate },
             { 'template-card--unavailable': !template.enabled }
           ]}
-          data-template={template.id}
-          disabled={!template.enabled}
-          aria-pressed={template.id === currentTemplate ? 'true' : 'false'}
+          aria-current={template.id === currentTemplate ? 'page' : undefined}
         >
           <div class="template-card__header">
             <span class="template-card__name">{template.name}</span>
             {template.id === currentTemplate && (
-              <span class="template-card__badge">Ativo</span>
+              <span class="template-card__badge">Active</span>
             )}
             {!template.enabled && (
-              <span class="template-card__badge template-card__badge--soon">Em breve</span>
+              <span class="template-card__badge template-card__badge--soon">Coming Soon</span>
             )}
           </div>
           <p class="template-card__description">{template.description}</p>
-          {template.inspirations && template.inspirations.length > 0 && (
-            <div class="template-card__inspirations">
-              {template.inspirations.map(insp => (
-                <span class="template-card__tag">{insp}</span>
-              ))}
-            </div>
-          )}
-        </button>
+        </a>
       ))}
     </div>
   ) : (
     <div class="template-inline">
-      <span class="template-inline__label">Template:</span>
-      <select class="template-inline__select" aria-label="Select template">
+      <label class="template-inline__label" for="template-select">Template:</label>
+      <select class="template-inline__select" id="template-select" aria-label="Select template">
         {TEMPLATES.map(template => (
           <option
             value={template.id}
             selected={template.id === currentTemplate}
             disabled={!template.enabled}
+            data-href={template.enabled ? `${base}dev/templates/${template.id}${pagePath || '/'}` : ''}
           >
-            {template.name}{!template.enabled ? ' (em breve)' : ''}
+            {template.name}{!template.enabled ? ' (coming soon)' : ''}
           </option>
         ))}
       </select>
@@ -87,11 +100,12 @@ const TEMPLATE_COOKIE_NAME = TEMPLATE_COOKIE_CONFIG.name;
     background-color: var(--color-surface);
     border: 2px solid var(--color-border);
     border-radius: var(--radius-lg);
-    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
     transition: all var(--transition-fast);
   }
 
-  .template-card:hover:not(:disabled) {
+  .template-card:hover:not(.template-card--unavailable) {
     border-color: var(--color-primary);
     background-color: var(--color-surface-hover);
   }
@@ -109,6 +123,7 @@ const TEMPLATE_COOKIE_NAME = TEMPLATE_COOKIE_CONFIG.name;
   .template-card--unavailable {
     opacity: 0.6;
     cursor: not-allowed;
+    pointer-events: none;
   }
 
   .template-card__header {
@@ -143,23 +158,8 @@ const TEMPLATE_COOKIE_NAME = TEMPLATE_COOKIE_CONFIG.name;
   .template-card__description {
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
-    margin: 0 0 var(--space-3) 0;
+    margin: 0;
     line-height: 1.5;
-  }
-
-  .template-card__inspirations {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-1);
-    margin-top: auto;
-  }
-
-  .template-card__tag {
-    font-size: var(--font-size-xs);
-    padding: var(--space-1) var(--space-2);
-    background-color: var(--color-background);
-    border-radius: var(--radius-sm);
-    color: var(--color-text-muted);
   }
 
   /* Compact variant - Inline select */
@@ -195,65 +195,16 @@ const TEMPLATE_COOKIE_NAME = TEMPLATE_COOKIE_CONFIG.name;
   }
 </style>
 
-<script define:vars={{ TEMPLATE_COOKIE_NAME }}>
-  (function() {
-    const switcher = document.querySelector('.template-switcher');
-    if (!switcher) return;
-
-    const _currentTemplate = switcher.getAttribute('data-current') || 'classic';
-
-    // Set cookie helper
-    function setTemplateCookie(templateId) {
-      // Set cookie for 1 year
-      const expires = new Date();
-      expires.setFullYear(expires.getFullYear() + 1);
-      document.cookie = `${TEMPLATE_COOKIE_NAME}=${templateId};path=/;expires=${expires.toUTCString()};SameSite=Lax`;
-    }
-
-    // Handle card clicks (full variant)
-    const cards = switcher.querySelectorAll('.template-card:not(:disabled)');
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        const templateId = card.getAttribute('data-template');
-        if (!templateId) return;
-
-        // Update cookie
-        setTemplateCookie(templateId);
-
-        // Update UI immediately
-        cards.forEach(c => {
-          const isActive = c.getAttribute('data-template') === templateId;
-          c.classList.toggle('template-card--active', isActive);
-          c.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-
-          // Update badge
-          const existingBadge = c.querySelector('.template-card__badge:not(.template-card__badge--soon)');
-          if (isActive && !existingBadge) {
-            const badge = document.createElement('span');
-            badge.className = 'template-card__badge';
-            badge.textContent = 'Ativo';
-            c.querySelector('.template-card__header').appendChild(badge);
-          } else if (!isActive && existingBadge) {
-            existingBadge.remove();
-          }
-        });
-
-        // Update data attribute
-        switcher.setAttribute('data-current', templateId);
-
-        // Reload to apply template
-        window.location.reload();
-      });
+<script>
+  // Handle select change (compact variant) - redirect to selected template
+  document.querySelectorAll('.template-switcher .template-inline__select').forEach(select => {
+    select.addEventListener('change', (e) => {
+      const target = e.target as HTMLSelectElement;
+      const selectedOption = target.options[target.selectedIndex];
+      const href = selectedOption.getAttribute('data-href');
+      if (href) {
+        window.location.href = href;
+      }
     });
-
-    // Handle select change (compact variant)
-    const select = switcher.querySelector('.template-inline__select');
-    if (select) {
-      select.addEventListener('change', (e) => {
-        const templateId = e.target.value;
-        setTemplateCookie(templateId);
-        window.location.reload();
-      });
-    }
-  })();
+  });
 </script>

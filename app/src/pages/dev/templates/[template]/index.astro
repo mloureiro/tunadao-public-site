@@ -1,0 +1,128 @@
+---
+import { getTemplate, TEMPLATES } from '@templates/core';
+import type { TemplateId } from '@templates/core';
+
+export function getStaticPaths() {
+  // Only generate paths for enabled templates
+  return TEMPLATES.filter((t) => t.enabled).map((t) => ({
+    params: { template: t.id },
+  }));
+}
+
+const { template } = Astro.params as { template: TemplateId };
+const { Layout, Hero } = await getTemplate(template);
+
+const base = import.meta.env.BASE_URL;
+const templateInfo = TEMPLATES.find((t) => t.id === template);
+---
+
+<Layout title={`${templateInfo?.name || template} Template | Tunadao Dev`}>
+  <div class="dev-banner">
+    <span class="dev-banner__label">Template Preview:</span>
+    <strong>{templateInfo?.name || template}</strong>
+    <nav class="dev-banner__nav">
+      <a href={`${base}dev/templates/${template}/`} class="active">Home</a>
+      <a href={`${base}dev/templates/${template}/citadao`}>Citadao</a>
+      <a href={`${base}dev/templates/${template}/palmares`}>Palmares</a>
+    </nav>
+    <a href={`${base}dev/templates`} class="dev-banner__back">All Templates</a>
+  </div>
+
+  <Hero title="Tunadao 1998" subtitle="Template Preview - Home Page" />
+
+  <section class="preview-content">
+    <div class="container">
+      <h2>Template: {templateInfo?.name}</h2>
+      <p>{templateInfo?.description}</p>
+      <p>This is a preview of the <strong>{template}</strong> template applied to the home page.</p>
+
+      <h3>Navigate to other pages:</h3>
+      <ul>
+        <li><a href={`${base}dev/templates/${template}/citadao`}>Citadao (Festival Archive)</a></li>
+        <li><a href={`${base}dev/templates/${template}/palmares`}>Palmares (Awards History)</a></li>
+      </ul>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .dev-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #1a1a2e;
+    color: white;
+    padding: var(--space-2) var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    z-index: 1000;
+    font-size: var(--font-size-sm);
+  }
+
+  .dev-banner__label {
+    color: #888;
+  }
+
+  .dev-banner__nav {
+    display: flex;
+    gap: var(--space-2);
+    margin-left: auto;
+  }
+
+  .dev-banner__nav a {
+    color: #aaa;
+    text-decoration: none;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .dev-banner__nav a:hover,
+  .dev-banner__nav a.active {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .dev-banner__back {
+    color: #888;
+    text-decoration: none;
+  }
+
+  .dev-banner__back:hover {
+    color: white;
+  }
+
+  .preview-content {
+    padding: var(--space-8) 0;
+    margin-top: 48px; /* Account for fixed banner */
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+  }
+
+  h2 {
+    margin-bottom: var(--space-4);
+  }
+
+  h3 {
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-2);
+  }
+
+  ul {
+    list-style: disc;
+    padding-left: var(--space-6);
+  }
+
+  li {
+    margin-bottom: var(--space-2);
+  }
+
+  a {
+    color: var(--color-primary);
+  }
+</style>
