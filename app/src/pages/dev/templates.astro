@@ -1,11 +1,11 @@
 ---
 import DevLayout from '@layouts/DevLayout.astro';
 import TemplateSwitcher from '@components/TemplateSwitcher.astro';
-import { getTemplateFromRequest, getTemplate } from '@lib/templates';
+import { getTemplateFromRequest, getTemplateById } from '@templates/core';
 
 // Read current template from cookie (server-side)
 const templateId = getTemplateFromRequest(Astro.request.headers.get('cookie'));
-const currentTemplate = getTemplate(templateId);
+const currentTemplate = getTemplateById(templateId);
 ---
 
 <DevLayout title="Templates" currentPage="templates">

@@ -15,6 +15,7 @@
       "@data/*": ["src/data/*"],
       "@lib/*": ["src/lib/*"],
       "@ui/*": ["src/ui/*"],
+      "@templates/*": ["src/templates/*"],
       "@cms/types": ["../cms/src/payload-types"]
     },
     "jsx": "react-jsx",

@@ -1,0 +1,2 @@
+declare const HeroSection: typeof import('astro/runtime/server/index.js').AstroComponentFactory;
+export default HeroSection;
