@@ -4,7 +4,7 @@ import ThemeToggle from '@components/ThemeToggle.astro';
 
 interface Props {
   title: string;
-  currentPage: 'index' | 'components' | 'timeline' | 'layout';
+  currentPage: 'index' | 'components' | 'timeline' | 'layout' | 'templates';
 }
 
 const { title, currentPage } = Astro.props;
@@ -15,6 +15,7 @@ const navItems = [
   { href: '/dev/components/', label: 'Components', key: 'components' },
   { href: '/dev/components/timeline', label: 'Timeline', key: 'timeline' },
   { href: '/dev/layout', label: 'Layout', key: 'layout' },
+  { href: '/dev/templates', label: 'Templates', key: 'templates' },
 ];
 ---
 

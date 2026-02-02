@@ -1,0 +1,129 @@
+---
+import DevLayout from '@layouts/DevLayout.astro';
+import TemplateSwitcher from '@components/TemplateSwitcher.astro';
+import { getTemplateFromRequest, getTemplate } from '@lib/templates';
+
+// Read current template from cookie (server-side)
+const templateId = getTemplateFromRequest(Astro.request.headers.get('cookie'));
+const currentTemplate = getTemplate(templateId);
+---
+
+<DevLayout title="Templates" currentPage="templates">
+  <section class="templates-intro">
+    <h2>Template System</h2>
+    <p>
+      Switch between different UI templates for the Tunadao website.
+      Templates control layout, typography, and overall design - not just colors.
+    </p>
+  </section>
+
+  <section class="templates-current">
+    <h3>Current Template</h3>
+    <div class="current-info">
+      <span class="current-name">{currentTemplate.name}</span>
+      <span class="current-description">{currentTemplate.description}</span>
+    </div>
+  </section>
+
+  <section class="templates-switcher">
+    <h3>Available Templates</h3>
+    <TemplateSwitcher currentTemplate={templateId} variant="full" />
+  </section>
+
+  <section class="templates-notes">
+    <h3>Notes</h3>
+    <ul>
+      <li>Template selection is saved in a cookie and persists across sessions</li>
+      <li>Templates marked "Em breve" are still in development</li>
+      <li>Each template has completely isolated CSS - no style conflicts</li>
+      <li>The page will reload when you switch templates</li>
+    </ul>
+  </section>
+
+  <style>
+    .templates-intro {
+      margin-bottom: var(--space-8);
+    }
+
+    .templates-intro h2 {
+      font-size: var(--font-size-2xl);
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .templates-intro p {
+      color: var(--color-text-muted);
+      max-width: 600px;
+    }
+
+    .templates-current {
+      margin-bottom: var(--space-8);
+      padding: var(--space-6);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+
+    .templates-current h3 {
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-3);
+    }
+
+    .current-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .current-name {
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .current-description {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+    }
+
+    .templates-switcher {
+      margin-bottom: var(--space-8);
+    }
+
+    .templates-switcher h3 {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+    }
+
+    .templates-notes {
+      padding: var(--space-6);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+
+    .templates-notes h3 {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+    }
+
+    .templates-notes ul {
+      list-style: disc;
+      padding-left: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .templates-notes li {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+    }
+  </style>
+</DevLayout>
