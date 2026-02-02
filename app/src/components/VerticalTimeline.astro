@@ -24,7 +24,7 @@ const sortedYears = [...years].sort((a, b) => b - a);
   <div class="vertical-timeline__track">
     <div class="vertical-timeline__line" aria-hidden="true"></div>
     <ul class="vertical-timeline__list" role="list">
-      {sortedYears.map((year, index) => (
+      {sortedYears.map((year) => (
         <li class="vertical-timeline__item">
           <a
             href={`#${idPrefix}-${year}`}
@@ -187,7 +187,8 @@ const sortedYears = [...years].sort((a, b) => b - a);
       });
 
       // Keyboard navigation for timeline
-      nav.addEventListener('keydown', (e: KeyboardEvent) => {
+      nav.addEventListener('keydown', (event) => {
+        const e = event as KeyboardEvent;
         const links = Array.from(yearLinks);
         const currentIndex = links.findIndex(link => link === document.activeElement);
 
