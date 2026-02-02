@@ -178,3 +178,97 @@
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
 */
+
+/* ============================================
+   DESIGN THEMES
+   - 'classic': Current traditional look
+   - 'noite': Modern, darker aesthetic with structural changes
+   ============================================ */
+
+/* Classic Theme (default) - uses base :root values */
+[data-design='classic'] {
+  /* Structural tokens - traditional feel */
+  --design-hero-padding: var(--space-12);
+  --design-section-gap: var(--space-10);
+  --design-card-radius: var(--radius-lg);
+  --design-card-padding: var(--space-4);
+  --design-heading-weight: 700;
+  --design-heading-tracking: var(--letter-spacing-normal);
+  --design-border-style: solid;
+  --design-border-width: 1px;
+
+  /* Layout tokens */
+  --design-grid-gap: var(--space-5);
+  --design-container-padding: var(--space-4);
+
+  /* Typography scale modifiers */
+  --design-title-scale: 1;
+  --design-body-scale: 1;
+}
+
+/* Noite Theme - Modern, bold, atmospheric */
+[data-design='noite'] {
+  /* Force dark mode colors */
+  --color-background: #0a0a0f;
+  --color-background-alt: #12121a;
+  --color-surface: #16161f;
+  --color-surface-hover: #1e1e2a;
+  --color-surface-elevated: #1a1a25;
+
+  --color-text: #f0f0f5;
+  --color-text-muted: #8888a0;
+
+  --color-border: #2a2a3a;
+  --color-border-light: #222230;
+
+  /* Vibrant primary for dark background */
+  --color-primary: #7c6aff;
+  --color-primary-light: #9d8fff;
+  --color-primary-dark: #5a48cc;
+
+  /* Structural tokens - modern, spacious feel */
+  --design-hero-padding: var(--space-16);
+  --design-section-gap: var(--space-12);
+  --design-card-radius: var(--radius-2xl);
+  --design-card-padding: var(--space-6);
+  --design-heading-weight: 800;
+  --design-heading-tracking: var(--letter-spacing-tight);
+  --design-border-style: solid;
+  --design-border-width: 0;
+
+  /* Layout tokens - more generous */
+  --design-grid-gap: var(--space-6);
+  --design-container-padding: var(--space-6);
+
+  /* Typography scale modifiers - larger headings */
+  --design-title-scale: 1.15;
+  --design-body-scale: 1.05;
+
+  /* Enhanced shadows for depth */
+  --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.5);
+  --shadow-xl: 0 24px 48px -8px rgb(0 0 0 / 0.6);
+
+  /* Glow effects for modern feel */
+  --glow-primary: 0 0 20px rgba(124, 106, 255, 0.3);
+  --glow-secondary: 0 0 20px rgba(255, 77, 109, 0.3);
+}
+
+/* Default design theme values for components */
+:root {
+  --design-hero-padding: var(--space-12);
+  --design-section-gap: var(--space-10);
+  --design-card-radius: var(--radius-lg);
+  --design-card-padding: var(--space-4);
+  --design-heading-weight: 700;
+  --design-heading-tracking: var(--letter-spacing-normal);
+  --design-border-style: solid;
+  --design-border-width: 1px;
+  --design-grid-gap: var(--space-5);
+  --design-container-padding: var(--space-4);
+  --design-title-scale: 1;
+  --design-body-scale: 1;
+  --glow-primary: none;
+  --glow-secondary: none;
+}
