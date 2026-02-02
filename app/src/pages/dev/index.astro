@@ -1,0 +1,178 @@
+---
+import DevLayout from '@layouts/DevLayout.astro';
+import Card from '@components/Card.astro';
+
+const devPages = [
+  {
+    title: 'Components',
+    description: 'UI component library showcase with all variants, sizes, and states.',
+    href: '/dev/components/',
+    icon: '🧩',
+    status: 'complete',
+  },
+  {
+    title: 'Timeline',
+    description: 'Year navigation and timeline component exploration.',
+    href: '/dev/components/timeline',
+    icon: '📅',
+    status: 'wip',
+  },
+  {
+    title: 'Layout',
+    description: 'Page layout patterns and structure showcase.',
+    href: '/dev/layout',
+    icon: '📐',
+    status: 'wip',
+  },
+];
+---
+
+<DevLayout title="Overview" currentPage="index">
+  <section class="dev-intro">
+    <h2>Development Pages</h2>
+    <p>
+      Internal development tools for the Tunadao website. These pages are only accessible in
+      development mode and help with component development and design system exploration.
+    </p>
+  </section>
+
+  <section class="dev-cards">
+    {devPages.map(page => (
+      <Card href={page.href} variant="outlined" class="dev-card">
+        <div class="dev-card__content">
+          <div class="dev-card__header">
+            <span class="dev-card__icon">{page.icon}</span>
+            <span class:list={['dev-card__status', `dev-card__status--${page.status}`]}>
+              {page.status === 'complete' ? 'Complete' : 'WIP'}
+            </span>
+          </div>
+          <h3 class="dev-card__title">{page.title}</h3>
+          <p class="dev-card__description">{page.description}</p>
+        </div>
+      </Card>
+    ))}
+  </section>
+
+  <section class="dev-info">
+    <h3>Quick Links</h3>
+    <ul>
+      <li>
+        <strong>Design Tokens:</strong>
+        <code>app/src/styles/tokens.css</code>
+      </li>
+      <li>
+        <strong>Global Styles:</strong>
+        <code>app/src/styles/global.css</code>
+      </li>
+      <li>
+        <strong>Components:</strong>
+        <code>app/src/components/</code>
+      </li>
+    </ul>
+  </section>
+
+  <style>
+    .dev-intro {
+      margin-bottom: var(--space-8);
+    }
+
+    .dev-intro h2 {
+      font-size: var(--font-size-2xl);
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .dev-intro p {
+      color: var(--color-text-muted);
+      max-width: 600px;
+    }
+
+    .dev-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+
+    .dev-card__content {
+      padding: var(--space-4);
+    }
+
+    .dev-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+    }
+
+    .dev-card__icon {
+      font-size: var(--font-size-2xl);
+    }
+
+    .dev-card__status {
+      font-size: var(--font-size-xs);
+      font-weight: 500;
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .dev-card__status--complete {
+      background-color: var(--color-success-light);
+      color: var(--color-success);
+    }
+
+    .dev-card__status--wip {
+      background-color: var(--color-warning-light);
+      color: var(--color-warning);
+    }
+
+    .dev-card__title {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .dev-card__description {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      margin: 0;
+    }
+
+    .dev-info {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+    }
+
+    .dev-info h3 {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+    }
+
+    .dev-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .dev-info li {
+      font-size: var(--font-size-sm);
+    }
+
+    .dev-info code {
+      font-family: monospace;
+      font-size: var(--font-size-sm);
+      background-color: var(--color-background);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-sm);
+      color: var(--color-primary);
+    }
+  </style>
+</DevLayout>

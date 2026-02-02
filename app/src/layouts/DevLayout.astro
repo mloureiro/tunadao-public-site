@@ -1,0 +1,161 @@
+---
+import '@styles/global.css';
+import ThemeToggle from '@components/ThemeToggle.astro';
+
+interface Props {
+  title: string;
+  currentPage: 'index' | 'components' | 'timeline' | 'layout';
+}
+
+const { title, currentPage } = Astro.props;
+
+// Only available in development
+if (import.meta.env.PROD) {
+  return Astro.redirect('/');
+}
+
+const navItems = [
+  { href: '/dev/', label: 'Overview', key: 'index' },
+  { href: '/dev/components/', label: 'Components', key: 'components' },
+  { href: '/dev/components/timeline', label: 'Timeline', key: 'timeline' },
+  { href: '/dev/layout', label: 'Layout', key: 'layout' },
+];
+---
+
+<!doctype html>
+<html lang="pt" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} | Dev</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      const theme =
+        localStorage.getItem('theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    </script>
+  </head>
+  <body>
+    <div class="dev-page">
+      <header class="dev-header">
+        <div class="dev-header__left">
+          <a href="/dev/" class="dev-header__logo">Dev</a>
+          <span class="dev-header__separator">/</span>
+          <h1>{title}</h1>
+        </div>
+        <div class="dev-header__actions">
+          <ThemeToggle />
+        </div>
+      </header>
+
+      <nav class="dev-nav">
+        {navItems.map(item => (
+          <a
+            href={item.href}
+            class:list={['dev-nav__link', { 'dev-nav__link--active': currentPage === item.key }]}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <main class="dev-main">
+        <slot />
+      </main>
+    </div>
+
+    <style>
+      .dev-page {
+        min-height: 100vh;
+        background-color: var(--color-background);
+      }
+
+      .dev-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-4) var(--space-6);
+        border-bottom: 1px solid var(--color-border);
+        background-color: var(--color-surface);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .dev-header__left {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .dev-header__logo {
+        font-size: var(--font-size-sm);
+        font-weight: 600;
+        color: var(--color-primary);
+        text-decoration: none;
+        padding: var(--space-1) var(--space-2);
+        background-color: var(--color-primary-light);
+        border-radius: var(--radius-sm);
+      }
+
+      .dev-header__logo:hover {
+        background-color: var(--color-primary);
+        color: white;
+      }
+
+      .dev-header__separator {
+        color: var(--color-text-muted);
+      }
+
+      .dev-header h1 {
+        font-size: var(--font-size-xl);
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .dev-nav {
+        display: flex;
+        gap: var(--space-1);
+        padding: var(--space-3) var(--space-6);
+        border-bottom: 1px solid var(--color-border);
+        background-color: var(--color-surface);
+        overflow-x: auto;
+      }
+
+      .dev-nav__link {
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-size: var(--font-size-sm);
+        white-space: nowrap;
+        padding: var(--space-2) var(--space-3);
+        border-radius: var(--radius-md);
+        transition: all var(--transition-fast);
+      }
+
+      .dev-nav__link:hover {
+        color: var(--color-text);
+        background-color: var(--color-surface-hover);
+      }
+
+      .dev-nav__link--active {
+        color: var(--color-primary);
+        background-color: var(--color-primary-light);
+        font-weight: 500;
+      }
+
+      .dev-main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-8) var(--space-6);
+      }
+    </style>
+    <slot name="styles" />
+  </body>
+</html>
