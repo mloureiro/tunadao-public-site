@@ -8,7 +8,8 @@ import VerticalTimeline from '@components/VerticalTimeline.astro';
 import Lightbox from '@components/Lightbox.astro';
 
 export function getStaticPaths() {
-  return TEMPLATES.map((t) => ({
+  // Only generate paths for enabled templates
+  return TEMPLATES.filter((t) => t.enabled).map((t) => ({
     params: { template: t.id },
   }));
 }

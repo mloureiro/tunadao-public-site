@@ -3,7 +3,8 @@ import { getTemplate, TEMPLATES } from '@templates/core';
 import type { TemplateId } from '@templates/core';
 
 export function getStaticPaths() {
-  return TEMPLATES.map((t) => ({
+  // Only generate paths for enabled templates
+  return TEMPLATES.filter((t) => t.enabled).map((t) => ({
     params: { template: t.id },
   }));
 }
