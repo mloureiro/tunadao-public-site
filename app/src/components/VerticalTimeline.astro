@@ -1,0 +1,485 @@
+---
+/**
+ * VerticalTimeline - Modern vertical year navigation
+ * Displays years as a vertical timeline with scroll-based tracking
+ * Desktop: Fixed sidebar on the left
+ * Mobile: Floating year indicator
+ */
+interface Props {
+  years: number[];
+  /** CSS class prefix for year section IDs (e.g., "year" for id="year-2024") */
+  idPrefix?: string;
+  /** Label for screen readers */
+  ariaLabel?: string;
+}
+
+const { years, idPrefix = 'year', ariaLabel = 'Jump to year' } = Astro.props;
+
+// Sort years descending (most recent first)
+const sortedYears = [...years].sort((a, b) => b - a);
+---
+
+<!-- Desktop: Vertical sidebar timeline -->
+<nav class="vertical-timeline" aria-label={ariaLabel} data-id-prefix={idPrefix}>
+  <div class="vertical-timeline__track">
+    <div class="vertical-timeline__line" aria-hidden="true"></div>
+    <ul class="vertical-timeline__list" role="list">
+      {sortedYears.map((year, index) => (
+        <li class="vertical-timeline__item">
+          <a
+            href={`#${idPrefix}-${year}`}
+            class="vertical-timeline__link"
+            data-year={year}
+            aria-label={`Jump to ${year}`}
+          >
+            <span class="vertical-timeline__dot" aria-hidden="true"></span>
+            <span class="vertical-timeline__label">{year}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<!-- Mobile: Floating year indicator -->
+<div class="year-indicator" aria-hidden="true">
+  <button class="year-indicator__button" type="button" aria-label="Current year navigation">
+    <span class="year-indicator__text"></span>
+    <svg class="year-indicator__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M6 9l6 6 6-6"/>
+    </svg>
+  </button>
+  <div class="year-indicator__dropdown">
+    <ul class="year-indicator__list" role="list">
+      {sortedYears.map((year) => (
+        <li>
+          <a href={`#${idPrefix}-${year}`} class="year-indicator__dropdown-link" data-year={year}>
+            {year}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initVerticalTimeline() {
+      const nav = document.querySelector('.vertical-timeline');
+      const indicator = document.querySelector('.year-indicator');
+      const indicatorText = indicator?.querySelector('.year-indicator__text');
+      const indicatorButton = indicator?.querySelector('.year-indicator__button');
+      const dropdown = indicator?.querySelector('.year-indicator__dropdown');
+
+      if (!nav) return;
+
+      const idPrefix = nav.getAttribute('data-id-prefix') || 'year';
+
+      // Get all year links and sections
+      const yearLinks = nav.querySelectorAll('.vertical-timeline__link');
+      const dropdownLinks = indicator?.querySelectorAll('.year-indicator__dropdown-link');
+      const yearSections: Element[] = [];
+
+      yearLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href) {
+          const section = document.querySelector(href);
+          if (section) yearSections.push(section);
+        }
+      });
+
+      if (yearSections.length === 0) return;
+
+      // Track current year
+      let currentYear: string | null = null;
+
+      function updateActiveYear(year: string) {
+        if (year === currentYear) return;
+        currentYear = year;
+
+        // Update timeline
+        yearLinks.forEach(link => {
+          const linkYear = link.getAttribute('data-year');
+          const isActive = linkYear === year;
+          link.classList.toggle('vertical-timeline__link--active', isActive);
+          link.setAttribute('aria-current', isActive ? 'true' : 'false');
+        });
+
+        // Update indicator
+        if (indicatorText) {
+          indicatorText.textContent = year;
+        }
+
+        // Update dropdown links
+        dropdownLinks?.forEach(link => {
+          const linkYear = link.getAttribute('data-year');
+          link.classList.toggle('year-indicator__dropdown-link--active', linkYear === year);
+        });
+      }
+
+      // Intersection Observer for tracking current year
+      const observer = new IntersectionObserver((entries) => {
+        const visibleEntries = entries.filter(e => e.isIntersecting);
+
+        if (visibleEntries.length > 0) {
+          visibleEntries.sort((a, b) =>
+            a.boundingClientRect.top - b.boundingClientRect.top
+          );
+
+          const topSection = visibleEntries[0].target;
+          const year = topSection.id.replace(new RegExp(`^${idPrefix}-`), '');
+          updateActiveYear(year);
+        }
+      }, {
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0
+      });
+
+      yearSections.forEach(section => observer.observe(section));
+
+      // Show/hide indicator based on scroll position
+      const showObserver = new IntersectionObserver((entries) => {
+        const isNavVisible = entries[0].isIntersecting;
+        indicator?.classList.toggle('year-indicator--visible', !isNavVisible);
+        nav.classList.toggle('vertical-timeline--active', !isNavVisible);
+      }, { threshold: 0.5 });
+
+      // Observe the first year section to determine when to show indicator
+      if (yearSections[0]) {
+        showObserver.observe(yearSections[0]);
+      }
+
+      // Smooth scroll for timeline links
+      function handleLinkClick(e: Event) {
+        e.preventDefault();
+        const link = e.currentTarget as HTMLElement;
+        const href = link.getAttribute('href');
+        if (!href) return;
+
+        const target = document.querySelector(href);
+        if (!target) return;
+
+        // Close dropdown if open
+        dropdown?.classList.remove('year-indicator__dropdown--open');
+
+        const offset = 100;
+        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }
+
+      yearLinks.forEach(link => link.addEventListener('click', handleLinkClick));
+      dropdownLinks?.forEach(link => link.addEventListener('click', handleLinkClick));
+
+      // Toggle dropdown
+      indicatorButton?.addEventListener('click', () => {
+        dropdown?.classList.toggle('year-indicator__dropdown--open');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!indicator?.contains(e.target as Node)) {
+          dropdown?.classList.remove('year-indicator__dropdown--open');
+        }
+      });
+
+      // Keyboard navigation for timeline
+      nav.addEventListener('keydown', (e: KeyboardEvent) => {
+        const links = Array.from(yearLinks);
+        const currentIndex = links.findIndex(link => link === document.activeElement);
+
+        if (currentIndex === -1) return;
+
+        let nextIndex = currentIndex;
+
+        switch (e.key) {
+          case 'ArrowDown':
+          case 'ArrowRight':
+            e.preventDefault();
+            nextIndex = Math.min(currentIndex + 1, links.length - 1);
+            break;
+          case 'ArrowUp':
+          case 'ArrowLeft':
+            e.preventDefault();
+            nextIndex = Math.max(currentIndex - 1, 0);
+            break;
+          case 'Home':
+            e.preventDefault();
+            nextIndex = 0;
+            break;
+          case 'End':
+            e.preventDefault();
+            nextIndex = links.length - 1;
+            break;
+        }
+
+        if (nextIndex !== currentIndex) {
+          (links[nextIndex] as HTMLElement).focus();
+        }
+      });
+
+      // Set initial state
+      if (yearSections[0]) {
+        const firstYear = yearSections[0].id.replace(new RegExp(`^${idPrefix}-`), '');
+        updateActiveYear(firstYear);
+        if (indicatorText) indicatorText.textContent = firstYear;
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initVerticalTimeline);
+    } else {
+      initVerticalTimeline();
+    }
+  })();
+</script>
+
+<style>
+  /* Desktop Vertical Timeline */
+  .vertical-timeline {
+    display: none;
+    position: fixed;
+    left: var(--space-4);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    pointer-events: none;
+  }
+
+  .vertical-timeline--active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (min-width: 1200px) {
+    .vertical-timeline {
+      display: block;
+    }
+  }
+
+  .vertical-timeline__track {
+    position: relative;
+    padding: var(--space-4) 0;
+  }
+
+  .vertical-timeline__line {
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--color-border) 10%,
+      var(--color-border) 90%,
+      transparent
+    );
+  }
+
+  .vertical-timeline__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .vertical-timeline__item {
+    margin: 0;
+  }
+
+  .vertical-timeline__link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2) var(--space-1) 0;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    border-radius: var(--radius-md);
+  }
+
+  .vertical-timeline__link:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .vertical-timeline__dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--color-background);
+    border: 2px solid var(--color-border);
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .vertical-timeline__label {
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+  }
+
+  .vertical-timeline__link:hover .vertical-timeline__dot,
+  .vertical-timeline__link:focus-visible .vertical-timeline__dot {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+  }
+
+  .vertical-timeline__link:hover .vertical-timeline__label,
+  .vertical-timeline__link:focus-visible .vertical-timeline__label {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--color-text);
+  }
+
+  .vertical-timeline__link--active .vertical-timeline__dot {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: scale(1.2);
+  }
+
+  .vertical-timeline__link--active .vertical-timeline__label {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  /* Mobile Year Indicator */
+  .year-indicator {
+    position: fixed;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    z-index: 50;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all var(--transition-base);
+    pointer-events: none;
+  }
+
+  .year-indicator--visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  @media (min-width: 1200px) {
+    .year-indicator {
+      display: none;
+    }
+  }
+
+  .year-indicator__button {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverted);
+    border: none;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-fast);
+  }
+
+  .year-indicator__button:hover {
+    background-color: var(--color-primary-dark);
+    transform: scale(1.05);
+  }
+
+  .year-indicator__button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+  }
+
+  .year-indicator__icon {
+    width: 16px;
+    height: 16px;
+    transition: transform var(--transition-fast);
+  }
+
+  .year-indicator__dropdown--open + .year-indicator__button .year-indicator__icon,
+  .year-indicator__dropdown--open ~ .year-indicator__button .year-indicator__icon {
+    transform: rotate(180deg);
+  }
+
+  .year-indicator__dropdown {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: var(--space-2);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    max-height: 300px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all var(--transition-fast);
+  }
+
+  .year-indicator__dropdown--open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .year-indicator__list {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .year-indicator__dropdown-link {
+    display: block;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    text-align: center;
+    min-width: 80px;
+  }
+
+  .year-indicator__dropdown-link:hover {
+    background-color: var(--color-surface-hover);
+  }
+
+  .year-indicator__dropdown-link--active {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverted);
+  }
+
+  @media (max-width: 640px) {
+    .year-indicator {
+      bottom: var(--space-4);
+      right: var(--space-4);
+    }
+
+    .year-indicator__button {
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--font-size-base);
+    }
+  }
+</style>
