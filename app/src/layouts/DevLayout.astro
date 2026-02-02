@@ -1,6 +1,8 @@
 ---
 import '@styles/global.css';
 import ThemeToggle from '@components/ThemeToggle.astro';
+import TemplateSwitcher from '@components/TemplateSwitcher.astro';
+import { getTemplateFromCookies } from '@lib/templates/types';
 
 interface Props {
   title: string;
@@ -9,6 +11,7 @@ interface Props {
 
 const { title, currentPage } = Astro.props;
 const isProd = import.meta.env.PROD;
+const currentTemplate = getTemplateFromCookies(Astro.request.headers.get('cookie'));
 
 const navItems = [
   { href: '/dev/', label: 'Overview', key: 'index' },
@@ -60,6 +63,7 @@ const navItems = [
           <h1>{title}</h1>
         </div>
         <div class="dev-header__actions">
+          <TemplateSwitcher currentTemplate={currentTemplate.id} variant="compact" />
           <ThemeToggle />
         </div>
       </header>
