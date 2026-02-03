@@ -1,0 +1,111 @@
+---
+/**
+ * Advanced Template Award
+ *
+ * Minimal, typographic awards. No emoji icons.
+ * Uses simple geometric indicators and subtle color differences.
+ * Gold awards get a subtle gold text color.
+ */
+export type AwardVariant = 'default' | 'gold' | 'special' | 'public';
+
+interface Props {
+  awardKey: string;
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { awardKey, size = 'sm', class: className = '' } = Astro.props;
+
+function getVariant(key: string): AwardVariant {
+  if (key === 'melhor-tuna') return 'gold';
+  if (key === 'tuna-mais-tuna') return 'special';
+  if (key === 'tuna-do-publico') return 'public';
+  return 'default';
+}
+
+const VARIANT_MARKERS: Record<AwardVariant, string> = {
+  gold: '\u25C6',
+  special: '\u25C8',
+  public: '\u25CF',
+  default: '\u25CB',
+};
+
+const variant = getVariant(awardKey);
+const marker = VARIANT_MARKERS[variant];
+---
+
+<span
+  class:list={[
+    'adv-award',
+    `adv-award--${size}`,
+    `adv-award--${variant}`,
+    className,
+  ]}
+>
+  <span class="adv-award__marker" aria-hidden="true">{marker}</span>
+  <slot />
+</span>
+
+<style>
+  .adv-award {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-weight: 400;
+    color: var(--advanced-text-secondary);
+    border: 1px solid var(--advanced-border);
+    border-radius: 2px;
+    background: transparent;
+    white-space: nowrap;
+  }
+
+  .adv-award__marker {
+    line-height: 1;
+    flex-shrink: 0;
+    font-size: 0.5em;
+  }
+
+  /* Size: sm */
+  .adv-award--sm {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* Size: md */
+  .adv-award--md {
+    padding: 0.375rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  /* Variant: gold */
+  .adv-award--gold {
+    color: var(--advanced-accent);
+    border-color: var(--advanced-accent-muted);
+    font-weight: 500;
+  }
+
+  .adv-award--gold .adv-award__marker {
+    color: var(--advanced-accent);
+  }
+
+  /* Variant: special */
+  .adv-award--special {
+    color: #c4b5fd;
+    border-color: rgba(196, 181, 253, 0.3);
+  }
+
+  .adv-award--special .adv-award__marker {
+    color: #a78bfa;
+  }
+
+  /* Variant: public */
+  .adv-award--public {
+    color: #fca5a5;
+    border-color: rgba(252, 165, 165, 0.3);
+  }
+
+  .adv-award--public .adv-award__marker {
+    color: #f87171;
+  }
+</style>

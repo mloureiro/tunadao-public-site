@@ -1,0 +1,45 @@
+---
+/**
+ * Advanced Template Section
+ *
+ * Clean section wrapper with generous vertical padding.
+ * Title in light weight, uppercase, with letter-spacing.
+ * Subtle top border as separator.
+ */
+interface Props {
+  title?: string;
+  class?: string;
+}
+const { title, class: className } = Astro.props;
+---
+
+<section class:list={['adv-section', className]}>
+  {title && <h2 class="adv-section__title">{title}</h2>}
+  <div class="adv-section__content">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .adv-section {
+    padding: var(--advanced-section-padding) 0;
+    border-top: 1px solid var(--advanced-border-subtle);
+  }
+
+  .adv-section:first-of-type {
+    border-top: none;
+  }
+
+  .adv-section__title {
+    font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--advanced-text-muted);
+    margin: 0 0 var(--advanced-content-gap) 0;
+  }
+
+  .adv-section__content {
+    width: 100%;
+  }
+</style>
