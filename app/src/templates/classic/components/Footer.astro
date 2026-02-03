@@ -1,0 +1,242 @@
+---
+/**
+ * Classic Template Footer
+ * Purple-themed footer with brand, links, and contact info
+ */
+import SocialLinks from '@components/SocialLinks.astro';
+import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import { getContactInfo } from '@lib/cms';
+import { footerSections } from '@data/navigation';
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = defaultLang } = Astro.props;
+const t = useTranslations(lang);
+
+const currentYear = new Date().getFullYear();
+const foundingYear = 1998;
+
+// Fetch contact info from CMS (with fallback)
+const contactInfo = await getContactInfo();
+
+const footerLinks = footerSections
+  .map((section) => ({
+    title: t(section.titleKey),
+    links: section.items
+      .filter((item) => !item.hidden)
+      .map((item) => ({
+        label: t(item.labelKey),
+        href: getLocalizedPath(item.href, lang),
+      })),
+  }))
+  .filter((section) => section.links.length > 0);
+
+const yearsText = lang === 'en' ? 'years of history' : 'anos de historia';
+const sinceText = lang === 'en' ? 'Since' : 'Desde';
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href={getLocalizedPath('/', lang)} class="footer__logo">
+          <span class="footer__logo-text">Tunadao</span>
+          <span class="footer__logo-year">1998</span>
+        </a>
+        <p class="footer__tagline">{t('home.subtitle')}</p>
+        <p class="footer__history">
+          {sinceText}
+          {foundingYear} • {currentYear - foundingYear}
+          {yearsText}
+        </p>
+        <SocialLinks />
+      </div>
+
+      {
+        footerLinks.map((section) => (
+          <div class="footer__section">
+            <h3 class="footer__title">{section.title}</h3>
+            <ul class="footer__list">
+              {section.links.map((link) => (
+                <li>
+                  <a href={link.href} class="footer__link">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+
+      <div class="footer__section">
+        <h3 class="footer__title">{t('footer.contact')}</h3>
+        <address class="footer__address">
+          {contactInfo.address && contactInfo.address.split(', ').map((line) => <p>{line}</p>)}
+          {
+            contactInfo.email && (
+              <p>
+                <a href={`mailto:${contactInfo.email}`} class="footer__link">
+                  {contactInfo.email}
+                </a>
+              </p>
+            )
+          }
+          {
+            contactInfo.phone && (
+              <p>
+                <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} class="footer__link">
+                  {contactInfo.phone}
+                </a>
+              </p>
+            )
+          }
+        </address>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copyright">
+        &copy; {currentYear} Tunadao 1998. {t('footer.copyright')}.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--color-primary-dark);
+    color: var(--color-text-inverted);
+    padding: var(--space-8) 0 var(--space-6);
+    margin-top: auto;
+  }
+
+  @media (min-width: 768px) {
+    .footer {
+      padding: var(--space-12) 0 var(--space-6);
+    }
+  }
+
+  .footer__grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 640px) {
+    .footer__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .footer__grid {
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: var(--space-8);
+    }
+  }
+
+  /* Brand section */
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 1024px) {
+    .footer__brand {
+      grid-column: 1 / 2;
+    }
+  }
+
+  .footer__logo {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    font-family: var(--font-family-heading);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-inverted);
+    text-decoration: none;
+  }
+
+  .footer__logo-text {
+    font-size: var(--font-size-2xl);
+  }
+
+  .footer__logo-year {
+    font-size: var(--font-size-base);
+    color: var(--color-secondary-light);
+  }
+
+  .footer__tagline {
+    margin-top: var(--space-2);
+    font-size: var(--font-size-lg);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .footer__history {
+    margin-top: var(--space-1);
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Sections */
+  .footer__section {
+    min-width: 0;
+  }
+
+  .footer__title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: var(--space-4);
+  }
+
+  .footer__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer__list li {
+    margin-bottom: var(--space-2);
+  }
+
+  .footer__link {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    transition: color var(--transition-fast);
+  }
+
+  .footer__link:hover {
+    color: var(--color-text-inverted);
+  }
+
+  /* Address */
+  .footer__address {
+    font-style: normal;
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.85);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .footer__address p {
+    margin-bottom: var(--space-1);
+  }
+
+  /* Bottom */
+  .footer__bottom {
+    margin-top: var(--space-10);
+    padding-top: var(--space-6);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+  }
+
+  .footer__copyright {
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.6);
+  }
+</style>
