@@ -1,0 +1,440 @@
+---
+/**
+ * Mashup Template - YearNav
+ * Heritage timeline navigation with Blue Note vinyl catalog feel.
+ * Desktop: vertical sidebar with serif year labels and gold line.
+ * Mobile: floating pill in deep navy with gold border.
+ * IntersectionObserver scroll tracking, smooth scroll, keyboard navigation.
+ */
+interface Props {
+  years: number[];
+  idPrefix?: string;
+  ariaLabel?: string;
+}
+
+const { years, idPrefix = 'year', ariaLabel = 'Jump to year' } = Astro.props;
+
+const sortedYears = [...years].sort((a, b) => b - a);
+---
+
+<!-- Desktop: Vertical sidebar -->
+<nav class="mash-yearnav" aria-label={ariaLabel} data-id-prefix={idPrefix}>
+  <div class="mash-yearnav__track">
+    <div class="mash-yearnav__line" aria-hidden="true"></div>
+    <ul class="mash-yearnav__list" role="list">
+      {sortedYears.map((year) => (
+        <li class="mash-yearnav__item">
+          <a
+            href={`#${idPrefix}-${year}`}
+            class="mash-yearnav__link"
+            data-year={year}
+            aria-label={`Jump to ${year}`}
+          >
+            <span class="mash-yearnav__dot" aria-hidden="true"></span>
+            <span class="mash-yearnav__label">{year}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<!-- Mobile: Floating pill -->
+<div class="mash-yearnav-mobile" aria-hidden="true">
+  <button class="mash-yearnav-mobile__btn" type="button" aria-label="Current year navigation">
+    <span class="mash-yearnav-mobile__text"></span>
+    <svg class="mash-yearnav-mobile__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M6 9l6 6 6-6"/>
+    </svg>
+  </button>
+  <div class="mash-yearnav-mobile__dropdown">
+    <ul class="mash-yearnav-mobile__list" role="list">
+      {sortedYears.map((year) => (
+        <li>
+          <a href={`#${idPrefix}-${year}`} class="mash-yearnav-mobile__link" data-year={year}>
+            {year}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  /* Desktop sidebar */
+  .mash-yearnav {
+    position: fixed;
+    left: var(--space-4, 1rem);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .mash-yearnav {
+      display: block;
+    }
+  }
+
+  .mash-yearnav__track {
+    position: relative;
+    padding-left: 0.75rem;
+  }
+
+  /* Gold connecting line */
+  .mash-yearnav__line {
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--mash-accent-muted, #9a7b3e) 10%,
+      var(--mash-accent-muted, #9a7b3e) 90%,
+      transparent
+    );
+  }
+
+  .mash-yearnav__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .mash-yearnav__item {
+    position: relative;
+  }
+
+  .mash-yearnav__link {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.25rem 0.5rem 0.25rem 0;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+
+  /* Gold dot */
+  .mash-yearnav__dot {
+    position: absolute;
+    left: -0.75rem;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--mash-border, #2a2a3a);
+    border: 1px solid var(--mash-border, #2a2a3a);
+    transition: all 0.2s ease;
+    transform: translateX(-50%);
+    margin-left: -0.5px;
+  }
+
+  .mash-yearnav__label {
+    font-family: var(--mash-font-display, 'Playfair Display', Georgia, serif);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--mash-text-muted, #6b6560);
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+
+  /* Hover */
+  .mash-yearnav__link:hover .mash-yearnav__dot {
+    background-color: var(--mash-accent-muted, #9a7b3e);
+    border-color: var(--mash-accent-muted, #9a7b3e);
+  }
+
+  .mash-yearnav__link:hover .mash-yearnav__label {
+    color: var(--mash-text-secondary, #a8a091);
+  }
+
+  /* Active state */
+  .mash-yearnav__link.is-active .mash-yearnav__dot {
+    background-color: var(--mash-accent, #d4a853);
+    border-color: var(--mash-accent, #d4a853);
+    box-shadow: 0 0 6px var(--mash-accent-glow, rgba(212, 168, 83, 0.15));
+    width: 9px;
+    height: 9px;
+  }
+
+  .mash-yearnav__link.is-active .mash-yearnav__label {
+    font-weight: 700;
+    color: var(--mash-accent, #d4a853);
+  }
+
+  /* Focus */
+  .mash-yearnav__link:focus-visible {
+    outline: 1px solid var(--mash-accent, #d4a853);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* ── Mobile floating pill ── */
+  .mash-yearnav-mobile {
+    position: fixed;
+    bottom: var(--space-4, 1rem);
+    right: var(--space-4, 1rem);
+    z-index: 40;
+    display: block;
+  }
+
+  @media (min-width: 1024px) {
+    .mash-yearnav-mobile {
+      display: none;
+    }
+  }
+
+  .mash-yearnav-mobile__btn {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.875rem;
+    background-color: var(--mash-navy, #1a1a2e);
+    border: 1px solid var(--mash-accent-muted, #9a7b3e);
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: all 0.15s ease;
+  }
+
+  .mash-yearnav-mobile__btn:hover {
+    border-color: var(--mash-accent, #d4a853);
+  }
+
+  .mash-yearnav-mobile__text {
+    font-family: var(--mash-font-display, 'Playfair Display', Georgia, serif);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--mash-accent, #d4a853);
+    min-width: 2.5rem;
+    text-align: center;
+  }
+
+  .mash-yearnav-mobile__icon {
+    width: 14px;
+    height: 14px;
+    color: var(--mash-accent-muted, #9a7b3e);
+    transition: transform 0.2s ease;
+  }
+
+  /* Dropdown */
+  .mash-yearnav-mobile__dropdown {
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    right: 0;
+    background-color: var(--mash-navy, #1a1a2e);
+    border: 1px solid var(--mash-accent-muted, #9a7b3e);
+    border-radius: 2px;
+    max-height: 280px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all 0.2s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    min-width: 80px;
+  }
+
+  .mash-yearnav-mobile__dropdown.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .mash-yearnav-mobile__list {
+    list-style: none;
+    padding: 0.25rem 0;
+    margin: 0;
+  }
+
+  .mash-yearnav-mobile__link {
+    display: block;
+    padding: 0.375rem 0.875rem;
+    font-family: var(--mash-font-display, 'Playfair Display', Georgia, serif);
+    font-size: 0.8125rem;
+    color: var(--mash-text-muted, #6b6560);
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.1s ease;
+  }
+
+  .mash-yearnav-mobile__link:hover {
+    color: var(--mash-text, #f0ebe3);
+    background-color: rgba(212, 168, 83, 0.08);
+  }
+
+  .mash-yearnav-mobile__link.is-active {
+    color: var(--mash-accent, #d4a853);
+    font-weight: 700;
+  }
+
+  /* Scrollbar for dropdown */
+  .mash-yearnav-mobile__dropdown::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .mash-yearnav-mobile__dropdown::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .mash-yearnav-mobile__dropdown::-webkit-scrollbar-thumb {
+    background: var(--mash-border, #2a2a3a);
+    border-radius: 2px;
+  }
+</style>
+
+<script>
+  function initMashYearNav() {
+    const nav = document.querySelector('.mash-yearnav') as HTMLElement | null;
+    const mobileBtn = document.querySelector('.mash-yearnav-mobile__btn') as HTMLButtonElement | null;
+    const mobileDropdown = document.querySelector('.mash-yearnav-mobile__dropdown') as HTMLElement | null;
+    const mobileText = document.querySelector('.mash-yearnav-mobile__text') as HTMLElement | null;
+
+    if (!nav) return;
+
+    const prefix = nav.dataset.idPrefix || 'year';
+    const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('.mash-yearnav__link'));
+    const mobileLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.mash-yearnav-mobile__link'));
+
+    if (links.length === 0) return;
+
+    // Set initial mobile text
+    const firstYear = links[0]?.dataset.year;
+    if (mobileText && firstYear) {
+      mobileText.textContent = firstYear;
+    }
+
+    // IntersectionObserver for scroll tracking
+    const sections = links
+      .map((link) => {
+        const year = link.dataset.year;
+        return year ? document.getElementById(`${prefix}-${year}`) : null;
+      })
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (sections.length > 0) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              const year = id.replace(`${prefix}-`, '');
+              setActiveYear(year);
+            }
+          }
+        },
+        {
+          rootMargin: '-20% 0px -60% 0px',
+          threshold: 0,
+        }
+      );
+
+      sections.forEach((section) => observer.observe(section));
+    }
+
+    function setActiveYear(year: string) {
+      // Desktop
+      links.forEach((link) => {
+        link.classList.toggle('is-active', link.dataset.year === year);
+      });
+
+      // Mobile
+      mobileLinks.forEach((link) => {
+        link.classList.toggle('is-active', link.dataset.year === year);
+      });
+
+      if (mobileText) {
+        mobileText.textContent = year;
+      }
+    }
+
+    // Smooth scroll
+    function scrollToYear(year: string) {
+      const target = document.getElementById(`${prefix}-${year}`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Desktop click handlers
+    links.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const year = link.dataset.year;
+        if (year) scrollToYear(year);
+      });
+    });
+
+    // Mobile dropdown toggle
+    if (mobileBtn && mobileDropdown) {
+      mobileBtn.addEventListener('click', () => {
+        const isOpen = mobileDropdown.classList.contains('is-open');
+        mobileDropdown.classList.toggle('is-open', !isOpen);
+        mobileBtn.setAttribute('aria-expanded', String(!isOpen));
+      });
+
+      // Close dropdown on outside click
+      document.addEventListener('click', (e) => {
+        if (!mobileBtn.contains(e.target as Node) && !mobileDropdown.contains(e.target as Node)) {
+          mobileDropdown.classList.remove('is-open');
+          mobileBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Mobile link clicks
+      mobileLinks.forEach((link) => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const year = link.dataset.year;
+          if (year) {
+            scrollToYear(year);
+            mobileDropdown.classList.remove('is-open');
+            mobileBtn.setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+    }
+
+    // Keyboard navigation
+    nav.addEventListener('keydown', (e: KeyboardEvent) => {
+      const activeLink = document.activeElement as HTMLElement;
+      const currentIndex = links.indexOf(activeLink as HTMLAnchorElement);
+      if (currentIndex === -1) return;
+
+      let nextIndex = currentIndex;
+
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          nextIndex = Math.min(currentIndex + 1, links.length - 1);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          nextIndex = Math.max(currentIndex - 1, 0);
+          break;
+        case 'Home':
+          e.preventDefault();
+          nextIndex = 0;
+          break;
+        case 'End':
+          e.preventDefault();
+          nextIndex = links.length - 1;
+          break;
+        default:
+          return;
+      }
+
+      links[nextIndex].focus();
+    });
+  }
+
+  // Initialize on page load and view transitions
+  initMashYearNav();
+  document.addEventListener('astro:page-load', initMashYearNav);
+</script>
