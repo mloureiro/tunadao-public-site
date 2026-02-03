@@ -1,0 +1,151 @@
+---
+/**
+ * Experimental Template - Footer
+ * Minimal, integrated into design language with broken text styling
+ */
+import type { Language } from '@i18n/index';
+
+interface Props {
+  lang: Language;
+}
+
+const { lang } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="exp-footer">
+  <div class="exp-footer__inner">
+    <div class="exp-footer__left">
+      <span class="exp-broken-text exp-footer__brand">
+        T<span>_</span>u<span>_</span>n<span>_</span>a<span>_</span>d<span>_</span>ã<span>_</span>o
+      </span>
+      <span class="exp-footer__year">1998</span>
+    </div>
+
+    <nav class="exp-footer__nav" aria-label="Links do rodapé">
+      <a href={`${base}palmares`} class="exp-footer__link">
+        {lang === 'en' ? 'Awards' : 'Palmares'}
+      </a>
+      <a href={`${base}citadao`} class="exp-footer__link">
+        Citadão
+      </a>
+    </nav>
+
+    <div class="exp-footer__right">
+      <p class="exp-footer__copyright">
+        © 1998–{currentYear}
+      </p>
+    </div>
+  </div>
+
+  <!-- Decorative line -->
+  <div class="exp-footer__line" aria-hidden="true"></div>
+</footer>
+
+<style>
+  .exp-footer {
+    margin-top: auto;
+    padding: var(--exp-space-xl) var(--exp-space-md) var(--exp-space-md);
+    background: var(--exp-bg);
+    position: relative;
+  }
+
+  .exp-footer__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: var(--exp-space-md);
+  }
+
+  .exp-footer__left {
+    display: flex;
+    align-items: baseline;
+    gap: var(--exp-space-sm);
+  }
+
+  .exp-footer__brand {
+    font-size: 0.9rem;
+    color: var(--exp-text-muted);
+  }
+
+  .exp-footer__brand span {
+    color: var(--exp-accent);
+    opacity: 0.5;
+  }
+
+  .exp-footer__year {
+    font-family: var(--exp-font-display);
+    font-size: 0.75rem;
+    color: var(--exp-accent);
+    opacity: 0.6;
+  }
+
+  .exp-footer__nav {
+    display: flex;
+    gap: var(--exp-space-lg);
+  }
+
+  .exp-footer__link {
+    font-family: var(--exp-font-display);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: var(--exp-letter-spacing-normal);
+    color: var(--exp-text-muted);
+    text-decoration: none;
+    transition: color var(--exp-transition-fast);
+  }
+
+  .exp-footer__link:hover {
+    color: var(--exp-accent);
+  }
+
+  .exp-footer__right {
+    text-align: right;
+  }
+
+  .exp-footer__copyright {
+    font-family: var(--exp-font-display);
+    font-size: 0.7rem;
+    color: var(--exp-text-muted);
+    opacity: 0.5;
+    margin: 0;
+  }
+
+  .exp-footer__line {
+    position: absolute;
+    top: 0;
+    left: var(--exp-space-md);
+    right: var(--exp-space-md);
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--exp-border) 20%,
+      var(--exp-accent) 50%,
+      var(--exp-border) 80%,
+      transparent 100%
+    );
+    opacity: 0.3;
+  }
+
+  @media (max-width: 768px) {
+    .exp-footer__inner {
+      flex-direction: column;
+      text-align: center;
+      gap: var(--exp-space-md);
+    }
+
+    .exp-footer__left {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--exp-space-xs);
+    }
+
+    .exp-footer__nav {
+      gap: var(--exp-space-md);
+    }
+  }
+</style>

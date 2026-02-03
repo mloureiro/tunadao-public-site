@@ -18,7 +18,7 @@ export const TEMPLATES: TemplateInfo[] = [
     id: 'experimental',
     name: 'Experimental',
     description: 'Bold typography and unique interactions',
-    enabled: false,
+    enabled: true,
   },
   {
     id: 'mashup',

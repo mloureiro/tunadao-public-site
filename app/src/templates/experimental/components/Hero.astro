@@ -1,0 +1,211 @@
+---
+/**
+ * Experimental Template - Hero
+ * Typography-driven hero with Ólafur Arnalds inspired broken text
+ * Features: asymmetric layout, atmospheric dark, subtle animation
+ */
+interface Props {
+  title: string;
+  subtitle?: string;
+  icon?: string;
+}
+
+const { title, subtitle, icon } = Astro.props;
+
+// Convert title to broken text format (T_i_t_l_e)
+function toBrokenText(text: string): string {
+  return text
+    .split('')
+    .map((char, i, arr) => {
+      if (char === ' ') return ' ';
+      if (i < arr.length - 1 && arr[i + 1] !== ' ') {
+        return `${char}<span class="exp-underscore">_</span>`;
+      }
+      return char;
+    })
+    .join('');
+}
+
+const brokenTitle = toBrokenText(title);
+---
+
+<section class="exp-hero">
+  <!-- Background gradient -->
+  <div class="exp-hero__bg" aria-hidden="true">
+    <div class="exp-hero__gradient"></div>
+    <div class="exp-hero__noise"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="exp-hero__content">
+    {icon && (
+      <span class="exp-hero__icon" aria-hidden="true">{icon}</span>
+    )}
+
+    <h1 class="exp-hero__title">
+      <span class="exp-hero__title-text" set:html={brokenTitle} />
+    </h1>
+
+    {subtitle && (
+      <p class="exp-hero__subtitle">{subtitle}</p>
+    )}
+
+    <!-- Decorative elements -->
+    <div class="exp-hero__deco" aria-hidden="true">
+      <span class="exp-hero__line"></span>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="exp-hero__scroll" aria-hidden="true">
+    <span class="exp-vertical-text">scroll</span>
+    <span class="exp-hero__scroll-line"></span>
+  </div>
+</section>
+
+<style>
+  .exp-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: var(--exp-space-xl) var(--exp-space-md);
+    padding-top: calc(var(--exp-space-xl) + 80px); /* Account for fixed header */
+  }
+
+  /* Background layers */
+  .exp-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .exp-hero__gradient {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at 30% 20%,
+      rgba(255, 61, 61, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 70% 80%,
+      rgba(255, 61, 61, 0.05) 0%,
+      transparent 40%
+    );
+  }
+
+  .exp-hero__noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+  }
+
+  /* Content */
+  .exp-hero__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 1000px;
+  }
+
+  .exp-hero__icon {
+    display: block;
+    font-size: 3rem;
+    margin-bottom: var(--exp-space-md);
+    opacity: 0.7;
+    filter: grayscale(0.5);
+    animation: exp-float 6s ease-in-out infinite;
+  }
+
+  @keyframes exp-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .exp-hero__title {
+    margin: 0;
+    font-family: var(--exp-font-display);
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    color: var(--exp-text);
+  }
+
+  .exp-hero__title-text :global(.exp-underscore) {
+    color: var(--exp-accent);
+    opacity: 0.6;
+    font-weight: 400;
+    animation: exp-pulse 3s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.1s);
+  }
+
+  @keyframes exp-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.2; }
+  }
+
+  .exp-hero__subtitle {
+    margin: var(--exp-space-md) 0 0;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--exp-text-muted);
+    letter-spacing: var(--exp-letter-spacing-normal);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Decorative line */
+  .exp-hero__deco {
+    margin-top: var(--exp-space-lg);
+  }
+
+  .exp-hero__line {
+    display: inline-block;
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--exp-accent), transparent);
+  }
+
+  /* Scroll indicator */
+  .exp-hero__scroll {
+    position: absolute;
+    bottom: var(--exp-space-md);
+    left: var(--exp-space-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--exp-space-sm);
+    color: var(--exp-text-muted);
+    opacity: 0.5;
+    animation: exp-bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes exp-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+
+  .exp-hero__scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--exp-text-muted), transparent);
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .exp-hero {
+      min-height: 80vh;
+    }
+
+    .exp-hero__scroll {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,165 @@
+/**
+ * Experimental Template - Global Styles
+ * Inspired by: Ólafur Arnalds, KIKK Festival, Moog Music
+ *
+ * Key characteristics:
+ * - Bold typography with word-breaking underscores
+ * - Dark atmospheric background
+ * - Horizontal scroll sections
+ * - Asymmetric layouts
+ * - Creative interactions
+ */
+
+:root {
+  /* Color palette */
+  --exp-bg: #0a0a0a;
+  --exp-bg-elevated: #141414;
+  --exp-bg-surface: #1a1a1a;
+  --exp-text: #f5f5f5;
+  --exp-text-muted: #888;
+  --exp-accent: #ff3d3d;
+  --exp-accent-glow: rgba(255, 61, 61, 0.4);
+  --exp-border: #2a2a2a;
+
+  /* Typography */
+  --exp-font-display: 'Space Mono', monospace;
+  --exp-font-body: 'Inter', system-ui, sans-serif;
+  --exp-letter-spacing-wide: 0.3em;
+  --exp-letter-spacing-normal: 0.05em;
+
+  /* Spacing */
+  --exp-space-xs: 0.5rem;
+  --exp-space-sm: 1rem;
+  --exp-space-md: 2rem;
+  --exp-space-lg: 4rem;
+  --exp-space-xl: 8rem;
+
+  /* Animation */
+  --exp-transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  --exp-transition-medium: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --exp-transition-fast: 0.15s ease;
+}
+
+/* Base styles */
+body {
+  background: var(--exp-bg);
+  color: var(--exp-text);
+  font-family: var(--exp-font-body);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Typography experiments - Ólafur Arnalds inspired */
+.exp-broken-text {
+  letter-spacing: var(--exp-letter-spacing-wide);
+  text-transform: uppercase;
+  font-family: var(--exp-font-display);
+  font-weight: 400;
+}
+
+.exp-broken-text span {
+  opacity: 0.4;
+}
+
+/* Horizontal scroll sections - Moog inspired */
+.exp-horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: var(--exp-space-md);
+  padding: var(--exp-space-md) 0;
+}
+
+.exp-horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.exp-horizontal-scroll > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* Staggered grid - KIKK inspired */
+.exp-staggered-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--exp-space-md);
+}
+
+.exp-staggered-grid > *:nth-child(3n + 2) {
+  transform: translateY(var(--exp-space-lg));
+}
+
+/* Glowing accent effects */
+.exp-glow {
+  box-shadow: 0 0 30px var(--exp-accent-glow);
+}
+
+.exp-glow-text {
+  text-shadow: 0 0 40px var(--exp-accent-glow);
+}
+
+/* Asymmetric section */
+.exp-asymmetric {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: var(--exp-space-lg);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .exp-asymmetric {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Links */
+a {
+  color: var(--exp-text);
+  text-decoration: none;
+  transition: color var(--exp-transition-fast);
+}
+
+a:hover {
+  color: var(--exp-accent);
+}
+
+/* Container */
+.exp-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--exp-space-md);
+}
+
+/* Section spacing */
+.exp-section {
+  padding: var(--exp-space-xl) 0;
+}
+
+/* Vertical text - creative navigation element */
+.exp-vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: var(--exp-letter-spacing-wide);
+  font-family: var(--exp-font-display);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--exp-space-md);
+  padding: var(--exp-space-xs) var(--exp-space-sm);
+  background: var(--exp-accent);
+  color: var(--exp-bg);
+  z-index: 1000;
+  border-radius: 4px;
+}
+
+.skip-link:focus {
+  top: var(--exp-space-md);
+}

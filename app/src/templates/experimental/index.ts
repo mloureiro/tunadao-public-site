@@ -1,11 +1,15 @@
-import type { TemplateExports } from '../core/types';
-
-const notImplemented = () => {
-  throw new Error('Experimental template not yet implemented');
-};
-
-// Placeholder exports that throw when used
-export const Layout = notImplemented as unknown as TemplateExports['Layout'];
-export const Hero = notImplemented as unknown as TemplateExports['Hero'];
-export const Header = notImplemented as unknown as TemplateExports['Header'];
-export const Footer = notImplemented as unknown as TemplateExports['Footer'];
+/**
+ * Experimental Template Exports
+ *
+ * Bold, unconventional design inspired by:
+ * - Ólafur Arnalds (distinctive typography)
+ * - KIKK Festival (creative energy)
+ * - Moog Music (dark mode, horizontal scrolling)
+ */
+export { default as Layout } from './layouts/Layout.astro';
+export { default as Hero } from './components/Hero.astro';
+export { default as Header } from './components/Header.astro';
+export { default as Footer } from './components/Footer.astro';
+export { default as Section } from './components/Section.astro';
+export { default as FestivalCard } from './components/FestivalCard.astro';
+export { default as EditionsGrid } from './components/EditionsGrid.astro';
