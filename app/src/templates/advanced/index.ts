@@ -1,11 +1,8 @@
-import type { TemplateExports } from '../core/types';
+// Advanced Template Exports
+// Dark, refined, content-first design
+// Inspirations: Radical Face, Bon Iver, Preston Thompson
 
-const notImplemented = () => {
-  throw new Error('Advanced template not yet implemented');
-};
-
-// Placeholder exports that throw when used
-export const Layout = notImplemented as unknown as TemplateExports['Layout'];
-export const Hero = notImplemented as unknown as TemplateExports['Hero'];
-export const Header = notImplemented as unknown as TemplateExports['Header'];
-export const Footer = notImplemented as unknown as TemplateExports['Footer'];
+export { default as Layout } from './layouts/Layout.astro';
+export { default as Hero } from './components/Hero.astro';
+export { default as Header } from './components/Header.astro';
+export { default as Footer } from './components/Footer.astro';
