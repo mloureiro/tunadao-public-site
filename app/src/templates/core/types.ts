@@ -5,11 +5,17 @@ export type TemplateId = 'classic' | 'advanced' | 'experimental' | 'mashup';
 
 // What a template must export
 export interface TemplateExports {
+  // Shell
   Layout: AstroComponentFactory;
   Hero: AstroComponentFactory;
   Header: AstroComponentFactory;
   Footer: AstroComponentFactory;
-  // Add more as needed
+  // Content
+  EditionCard: AstroComponentFactory;
+  FestivalCard: AstroComponentFactory;
+  Award: AstroComponentFactory;
+  Section: AstroComponentFactory;
+  YearNav: AstroComponentFactory;
 }
 
 // Template metadata
