@@ -1,0 +1,88 @@
+---
+/**
+ * Mashup Template Layout
+ *
+ * Blue Note heritage + modern touches
+ * Deep navy, warm gold accents, bold serif headings
+ * Inspirations: Blue Note Records, Advanced template, Experimental template
+ */
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getLang, type Language } from '@i18n/index';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const base = import.meta.env.BASE_URL;
+const {
+  title,
+  description = 'Tunadao 1998 - Tuna do Instituto Politecnico de Viseu. Desde 1998 a representar a academia e a cidade de Viseu.',
+  image = `${base}og-image.jpg`,
+} = Astro.props;
+
+const lang: Language = getLang(Astro.currentLocale, Astro.url);
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={lang === 'en' ? 'en' : 'pt'} data-lang={lang} data-template="mashup">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+
+    <!-- Canonical -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <link rel="apple-touch-icon" sizes="180x180" href={`${base}apple-touch-icon.png`} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.url)} />
+    <meta property="og:locale" content="pt_PT" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+    <!-- Theme Color - Deep navy for mashup -->
+    <meta name="theme-color" content="#0d1117" />
+
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Fonts: Playfair Display for display headings, Inter for body -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="mashup-template mash-grain">
+    <a href="#main-content" class="skip-link">Ir para conteudo principal</a>
+
+    <Header lang={lang} />
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <Footer lang={lang} />
+  </body>
+</html>
