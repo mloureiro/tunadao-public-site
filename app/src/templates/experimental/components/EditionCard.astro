@@ -1,0 +1,595 @@
+---
+/**
+ * Experimental Template - EditionCard
+ * Radically different card layout: bold asymmetric design, large edition numbers,
+ * broken text section headers, staggered tuna/award display.
+ * Inspirations: Ólafur Arnalds, KIKK Festival, Moog Music
+ */
+
+import Award from './Award.astro';
+import ResponsiveImage from '@components/ResponsiveImage.astro';
+import type { FrontendCitadaoEdition } from '@lib/cms/types';
+import { groupAwardsByTuna, extractPublicId } from '@lib/cms';
+
+interface Props {
+  edition: FrontendCitadaoEdition;
+  labels: {
+    edition: string;
+    participatingTunas: string;
+    guests: string;
+    awards: string;
+    awardLabel: (_key: string) => string;
+  };
+}
+
+const { edition, labels } = Astro.props;
+const posterPublicId = edition.posterUrl ? extractPublicId(edition.posterUrl) : null;
+
+const awardWinningTunas = groupAwardsByTuna(edition);
+const awardWinnerShortNames = new Set(awardWinningTunas.map(({ tuna }) => tuna.shortName));
+const tunasWithoutAwards = edition.tunas.filter((tuna) => !awardWinnerShortNames.has(tuna.shortName));
+
+function toBrokenText(text: string): string {
+  return text
+    .split('')
+    .map((char, i, arr) => {
+      if (char === ' ') return ' ';
+      if (i < arr.length - 1 && arr[i + 1] !== ' ') {
+        return `${char}<span class="exp-underscore">_</span>`;
+      }
+      return char;
+    })
+    .join('');
+}
+---
+
+<article class="exp-edition" id={`citadao-${edition.year}`}>
+  {/* Giant edition number as background element */}
+  <div class="exp-edition__number-bg" aria-hidden="true">
+    {String(edition.edition).padStart(2, '0')}
+  </div>
+
+  <div class="exp-edition__layout">
+    {/* Left column: poster + meta */}
+    <div class="exp-edition__left">
+      {edition.posterUrl && (
+        <div class="exp-edition__poster">
+          <button
+            type="button"
+            class="exp-edition__poster-btn"
+            data-poster-url={edition.posterUrl}
+            data-poster-alt={`Cartaz do ${edition.edition}. Citadao (${edition.year})`}
+          >
+            {posterPublicId ? (
+              <ResponsiveImage
+                publicId={posterPublicId}
+                alt={`Cartaz do ${edition.edition}. Citadao (${edition.year})`}
+                class="exp-edition__poster-img"
+                sizes="(max-width: 768px) 100vw, 320px"
+                aspectRatio="2/3"
+              />
+            ) : (
+              <img
+                src={edition.posterUrl}
+                alt={`Cartaz do ${edition.edition}. Citadao (${edition.year})`}
+                class="exp-edition__poster-img"
+                loading="lazy"
+              />
+            )}
+            <div class="exp-edition__poster-overlay" aria-hidden="true">
+              <span class="exp-edition__poster-zoom">+</span>
+            </div>
+          </button>
+        </div>
+      )}
+
+      <div class="exp-edition__meta">
+        <span class="exp-edition__label">
+          {edition.edition}{labels.edition}
+        </span>
+        <h3 class="exp-edition__title">
+          CITADAO<span class="exp-edition__year">{edition.year}</span>
+        </h3>
+        <div class="exp-edition__details">
+          <span class="exp-edition__date">{edition.date}</span>
+          <span class="exp-edition__venue">{edition.venue}</span>
+        </div>
+        {edition.notes && (
+          <span class="exp-edition__badge">{edition.notes}</span>
+        )}
+      </div>
+    </div>
+
+    {/* Right column: tunas + awards */}
+    <div class="exp-edition__right">
+      {/* Participating tunas */}
+      {tunasWithoutAwards.length > 0 && (
+        <div class="exp-edition__section">
+          <h4 class="exp-edition__section-title">
+            <span set:html={toBrokenText(labels.participatingTunas)} />
+          </h4>
+          <div class="exp-edition__tunas">
+            {tunasWithoutAwards.map((tuna, i) => (
+              <div
+                class="exp-tuna"
+                style={`--offset: ${(i % 3) * 4}px`}
+                title={tuna.fullName}
+              >
+                <div class="exp-tuna__avatar">
+                  {tuna.logoUrl ? (
+                    <img
+                      src={tuna.logoUrl}
+                      alt={tuna.shortName}
+                      class="exp-tuna__img"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span class="exp-tuna__initial">{tuna.shortName.charAt(0)}</span>
+                  )}
+                </div>
+                <span class="exp-tuna__name">{tuna.shortName}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Guests */}
+      {edition.guests && edition.guests.length > 0 && (
+        <div class="exp-edition__section">
+          <h4 class="exp-edition__section-title">
+            <span set:html={toBrokenText(labels.guests)} />
+          </h4>
+          <div class="exp-edition__tunas">
+            {edition.guests.map((guest, i) => (
+              <div
+                class="exp-tuna exp-tuna--guest"
+                style={`--offset: ${(i % 3) * 4}px`}
+                title={guest.fullName}
+              >
+                <div class="exp-tuna__avatar">
+                  {guest.logoUrl ? (
+                    <img
+                      src={guest.logoUrl}
+                      alt={guest.shortName}
+                      class="exp-tuna__img"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span class="exp-tuna__initial">{guest.shortName.charAt(0)}</span>
+                  )}
+                </div>
+                <span class="exp-tuna__name">{guest.shortName}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Awards grouped by tuna */}
+      {edition.awards && Object.keys(edition.awards).length > 0 && (
+        <div class="exp-edition__section exp-edition__section--awards">
+          <h4 class="exp-edition__section-title">
+            <span set:html={toBrokenText(labels.awards)} />
+          </h4>
+          <div class="exp-edition__awards">
+            {awardWinningTunas.map(({ tuna, awards }, i) => (
+              <div class="exp-award-row" style={`--stagger: ${i * 8}px`}>
+                <div class="exp-award-row__tuna">
+                  <div class="exp-award-row__avatar">
+                    {tuna.logoUrl ? (
+                      <img
+                        src={tuna.logoUrl}
+                        alt={tuna.shortName}
+                        class="exp-award-row__img"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span class="exp-award-row__initial">{tuna.shortName.charAt(0)}</span>
+                    )}
+                  </div>
+                  <span class="exp-award-row__name">{tuna.shortName}</span>
+                </div>
+                <div class="exp-award-row__badges">
+                  {awards.map((key) => (
+                    <Award awardKey={key} size="sm">{labels.awardLabel(key)}</Award>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+
+  {/* Bottom accent line */}
+  <div class="exp-edition__accent" aria-hidden="true"></div>
+</article>
+
+<style>
+  .exp-edition {
+    position: relative;
+    background: var(--exp-bg-surface);
+    border: 1px solid var(--exp-border);
+    overflow: hidden;
+    transition: border-color var(--exp-transition-medium);
+  }
+
+  .exp-edition:hover {
+    border-color: var(--exp-accent);
+  }
+
+  /* Giant background number */
+  .exp-edition__number-bg {
+    position: absolute;
+    top: -0.15em;
+    right: -0.02em;
+    font-family: var(--exp-font-display);
+    font-size: clamp(8rem, 20vw, 14rem);
+    font-weight: 700;
+    color: var(--exp-accent);
+    opacity: 0.04;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Two-column layout */
+  .exp-edition__layout {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--exp-space-md);
+    padding: var(--exp-space-md);
+  }
+
+  @media (min-width: 768px) {
+    .exp-edition__layout {
+      flex-direction: row;
+      padding: var(--exp-space-lg) var(--exp-space-md);
+    }
+
+    .exp-edition__left {
+      flex-shrink: 0;
+      width: 280px;
+    }
+
+    .exp-edition__right {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  /* Poster */
+  .exp-edition__poster {
+    margin-bottom: var(--exp-space-md);
+  }
+
+  .exp-edition__poster-btn {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 280px;
+    border: 1px solid var(--exp-border);
+    padding: 0;
+    background: none;
+    cursor: zoom-in;
+    overflow: hidden;
+    transition: border-color var(--exp-transition-medium);
+  }
+
+  .exp-edition__poster-btn:hover {
+    border-color: var(--exp-accent);
+  }
+
+  .exp-edition__poster-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(0.2) contrast(1.05);
+    transition: filter var(--exp-transition-slow);
+  }
+
+  .exp-edition__poster-btn:hover .exp-edition__poster-img {
+    filter: grayscale(0) contrast(1);
+  }
+
+  .exp-edition__poster-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--exp-transition-medium);
+  }
+
+  .exp-edition__poster-btn:hover .exp-edition__poster-overlay {
+    opacity: 1;
+  }
+
+  .exp-edition__poster-zoom {
+    font-family: var(--exp-font-display);
+    font-size: 2rem;
+    color: var(--exp-accent);
+    text-shadow: 0 0 20px var(--exp-accent-glow);
+  }
+
+  /* Meta */
+  .exp-edition__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--exp-space-xs);
+  }
+
+  .exp-edition__label {
+    font-family: var(--exp-font-display);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: var(--exp-letter-spacing-wide);
+    color: var(--exp-text-muted);
+  }
+
+  .exp-edition__title {
+    margin: 0;
+    font-family: var(--exp-font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--exp-text);
+    letter-spacing: 0.05em;
+  }
+
+  .exp-edition__year {
+    display: block;
+    font-size: 2.5rem;
+    color: var(--exp-accent);
+    line-height: 1;
+    margin-top: 0.1em;
+  }
+
+  .exp-edition__details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    font-size: 0.8rem;
+    color: var(--exp-text-muted);
+  }
+
+  .exp-edition__badge {
+    display: inline-block;
+    margin-top: var(--exp-space-xs);
+    padding: 0.2em 0.6em;
+    font-family: var(--exp-font-display);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--exp-accent);
+    color: var(--exp-accent);
+    width: fit-content;
+  }
+
+  /* Section headers with broken text */
+  .exp-edition__section {
+    margin-bottom: var(--exp-space-md);
+  }
+
+  .exp-edition__section:last-child {
+    margin-bottom: 0;
+  }
+
+  .exp-edition__section-title {
+    margin: 0 0 var(--exp-space-sm);
+    font-family: var(--exp-font-display);
+    font-size: 0.7rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: var(--exp-letter-spacing-wide);
+    color: var(--exp-text-muted);
+    padding-bottom: var(--exp-space-xs);
+    border-bottom: 1px solid var(--exp-border);
+  }
+
+  .exp-edition__section-title :global(.exp-underscore) {
+    color: var(--exp-accent);
+    opacity: 0.5;
+  }
+
+  /* Tunas grid with staggered offset */
+  .exp-edition__tunas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--exp-space-sm);
+  }
+
+  .exp-tuna {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--exp-border);
+    transform: translateY(var(--offset));
+    transition: all var(--exp-transition-fast);
+  }
+
+  .exp-tuna:hover {
+    border-color: var(--exp-accent);
+    transform: translateY(calc(var(--offset) - 2px));
+  }
+
+  .exp-tuna--guest {
+    border-style: dashed;
+  }
+
+  .exp-tuna__avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--exp-bg-elevated);
+  }
+
+  .exp-tuna__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.3);
+    transition: filter var(--exp-transition-fast);
+  }
+
+  .exp-tuna:hover .exp-tuna__img {
+    filter: grayscale(0);
+  }
+
+  .exp-tuna__initial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-family: var(--exp-font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--exp-accent);
+    background: var(--exp-bg-elevated);
+  }
+
+  .exp-tuna__name {
+    font-family: var(--exp-font-display);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--exp-text-muted);
+    white-space: nowrap;
+  }
+
+  /* Awards section */
+  .exp-edition__awards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--exp-space-sm);
+  }
+
+  .exp-award-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--exp-space-xs);
+    padding: var(--exp-space-sm);
+    background: var(--exp-bg-elevated);
+    border-left: 2px solid var(--exp-border);
+    margin-left: var(--stagger);
+    transition: border-color var(--exp-transition-fast);
+  }
+
+  .exp-award-row:hover {
+    border-left-color: var(--exp-accent);
+  }
+
+  @media (min-width: 480px) {
+    .exp-award-row {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .exp-award-row__tuna {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .exp-award-row__avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .exp-award-row__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .exp-award-row__initial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-family: var(--exp-font-display);
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--exp-accent);
+    background: var(--exp-bg);
+  }
+
+  .exp-award-row__name {
+    font-family: var(--exp-font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--exp-text);
+  }
+
+  .exp-award-row__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  /* Bottom accent line */
+  .exp-edition__accent {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--exp-accent);
+    transition: width var(--exp-transition-medium);
+  }
+
+  .exp-edition:hover .exp-edition__accent {
+    width: 100%;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 767px) {
+    .exp-edition__number-bg {
+      font-size: 6rem;
+      top: -0.1em;
+      right: 0;
+    }
+
+    .exp-edition__poster-btn {
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    .exp-edition__tunas {
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: var(--exp-space-xs);
+    }
+
+    .exp-edition__tunas::-webkit-scrollbar {
+      display: none;
+    }
+
+    .exp-tuna {
+      transform: none;
+    }
+
+    .exp-award-row {
+      margin-left: 0;
+    }
+  }
+</style>
