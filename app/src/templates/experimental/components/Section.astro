@@ -1,163 +1,82 @@
 ---
 /**
  * Experimental Template - Section
- * Flexible section with optional horizontal scrolling (Moog-inspired)
- * Features: asymmetric layouts, bold visual anchors
+ * Full-viewport-width band. Content constrained to centered column (~960px).
+ * Structural divider between sections (thick line with generous vertical spacing).
  */
 interface Props {
   title?: string;
-  /** Enable horizontal scrolling mode for content */
-  horizontal?: boolean;
-  /** Add extra visual weight */
-  featured?: boolean;
+  class?: string;
 }
 
-const { title, horizontal = false, featured = false } = Astro.props;
-
-// Convert title to broken text format
-function toBrokenText(text: string): string {
-  return text
-    .split('')
-    .map((char, i, arr) => {
-      if (char === ' ') return ' ';
-      if (i < arr.length - 1 && arr[i + 1] !== ' ') {
-        return `${char}<span>_</span>`;
-      }
-      return char;
-    })
-    .join('');
-}
-
-const brokenTitle = title ? toBrokenText(title) : null;
+const { title, class: className = '' } = Astro.props;
 ---
 
-<section class:list={[
-  'exp-section-wrapper',
-  { 'exp-section-wrapper--horizontal': horizontal },
-  { 'exp-section-wrapper--featured': featured }
-]}>
+<section class:list={['exp-section', className]}>
   {title && (
-    <header class="exp-section-header">
-      <h2 class="exp-section-title">
-        <span class="exp-broken-text" set:html={brokenTitle} />
-      </h2>
-      <div class="exp-section-line" aria-hidden="true"></div>
+    <header class="exp-section__header">
+      <h2 class="exp-section__title">{title}</h2>
     </header>
   )}
 
-  <div class:list={[
-    'exp-section-content',
-    { 'exp-horizontal-scroll': horizontal }
-  ]}>
+  <div class="exp-section__content">
     <slot />
   </div>
 
-  {featured && (
-    <div class="exp-section-accent" aria-hidden="true"></div>
-  )}
+  <div class="exp-section__divider" aria-hidden="true"></div>
 </section>
 
 <style>
-  .exp-section-wrapper {
+  .exp-section {
     position: relative;
+    width: 100%;
     padding: var(--exp-space-xl) 0;
   }
 
-  .exp-section-wrapper--featured {
-    background: var(--exp-bg-elevated);
-    margin: var(--exp-space-lg) 0;
-  }
-
-  .exp-section-header {
-    max-width: 1400px;
+  .exp-section__header {
+    max-width: 960px;
     margin: 0 auto var(--exp-space-lg);
     padding: 0 var(--exp-space-md);
-    display: flex;
-    align-items: center;
-    gap: var(--exp-space-md);
   }
 
-  .exp-section-title {
+  .exp-section__title {
     margin: 0;
     font-family: var(--exp-font-display);
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
-    font-weight: 400;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: var(--exp-letter-spacing-wide);
+    letter-spacing: 0.08em;
     color: var(--exp-text);
-    white-space: nowrap;
+    line-height: 1.1;
   }
 
-  .exp-section-title .exp-broken-text span {
-    color: var(--exp-accent);
-    opacity: 0.5;
-  }
-
-  .exp-section-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--exp-border), transparent);
-  }
-
-  .exp-section-content {
-    max-width: 1400px;
+  .exp-section__content {
+    max-width: 960px;
     margin: 0 auto;
     padding: 0 var(--exp-space-md);
   }
 
-  /* Horizontal scrolling mode */
-  .exp-section-wrapper--horizontal .exp-section-content {
-    max-width: none;
+  .exp-section__divider {
+    max-width: 960px;
+    margin: var(--exp-space-xl) auto 0;
     padding: 0 var(--exp-space-md);
+    height: 3px;
+    background: var(--exp-border);
   }
 
-  .exp-horizontal-scroll {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: var(--exp-space-md);
-    padding: var(--exp-space-sm) 0;
-    margin: 0 calc(-1 * var(--exp-space-md));
-    padding-left: var(--exp-space-md);
-    padding-right: var(--exp-space-md);
-  }
-
-  .exp-horizontal-scroll::-webkit-scrollbar {
+  /* Last section hides its divider */
+  .exp-section:last-child .exp-section__divider {
     display: none;
   }
 
-  .exp-horizontal-scroll > :global(*) {
-    scroll-snap-align: start;
-    flex-shrink: 0;
-  }
-
-  /* Featured section accent */
-  .exp-section-accent {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(to bottom, var(--exp-accent), transparent);
-    opacity: 0.3;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .exp-section-wrapper {
+  @media (max-width: 767px) {
+    .exp-section {
       padding: var(--exp-space-lg) 0;
     }
 
-    .exp-section-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--exp-space-sm);
-    }
-
-    .exp-section-line {
-      width: 60px;
+    .exp-section__divider {
+      margin-top: var(--exp-space-lg);
+      height: 2px;
     }
   }
 </style>
