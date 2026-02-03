@@ -13,12 +13,13 @@ const { title, currentPage } = Astro.props;
 const isProd = import.meta.env.PROD;
 const currentTemplateId = getTemplateFromRequest(Astro.request.headers.get('cookie'));
 
+const base = import.meta.env.BASE_URL;
 const navItems = [
-  { href: '/dev/', label: 'Overview', key: 'index' },
-  { href: '/dev/components/', label: 'Components', key: 'components' },
-  { href: '/dev/components/timeline', label: 'Timeline', key: 'timeline' },
-  { href: '/dev/layout', label: 'Layout', key: 'layout' },
-  { href: '/dev/templates', label: 'Templates', key: 'templates' },
+  { href: `${base}dev/`, label: 'Overview', key: 'index' },
+  { href: `${base}dev/components/`, label: 'Components', key: 'components' },
+  { href: `${base}dev/components/timeline`, label: 'Timeline', key: 'timeline' },
+  { href: `${base}dev/layout`, label: 'Layout', key: 'layout' },
+  { href: `${base}dev/templates`, label: 'Templates', key: 'templates' },
 ];
 ---
 
@@ -42,13 +43,13 @@ const navItems = [
       document.documentElement.setAttribute('data-theme', theme);
     </script>
     {isProd && (
-      <script is:inline>
+      <script is:inline define:vars={{ baseUrl: import.meta.env.BASE_URL }}>
         // In production, redirect unless ?preview=1 or ?dev=true is present
         (function() {
           const params = new URLSearchParams(window.location.search);
           const hasPreview = params.get('preview') === '1' || params.get('dev') === 'true';
           if (!hasPreview) {
-            window.location.replace('/');
+            window.location.replace(baseUrl);
           }
         })();
       </script>
@@ -58,7 +59,7 @@ const navItems = [
     <div class="dev-page">
       <header class="dev-header">
         <div class="dev-header__left">
-          <a href="/dev/" class="dev-header__logo">Dev</a>
+          <a href={`${base}dev/`} class="dev-header__logo">Dev</a>
           <span class="dev-header__separator">/</span>
           <h1>{title}</h1>
         </div>
