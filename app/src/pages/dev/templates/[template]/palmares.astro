@@ -3,8 +3,6 @@ import { getTemplate, TEMPLATES } from '@templates/core';
 import type { TemplateId } from '@templates/core';
 import { useTranslations, defaultLang } from '@i18n/index';
 import { getPalmaresYears } from '@lib/cms';
-import FestivalCard from '@components/palmares/FestivalCard.astro';
-import VerticalTimeline from '@components/VerticalTimeline.astro';
 import Lightbox from '@components/Lightbox.astro';
 
 export function getStaticPaths() {
@@ -15,7 +13,7 @@ export function getStaticPaths() {
 }
 
 const { template } = Astro.params as { template: TemplateId };
-const { Layout, Hero } = await getTemplate(template);
+const { Layout, Hero, FestivalCard, YearNav } = await getTemplate(template);
 
 const base = import.meta.env.BASE_URL;
 const templateInfo = TEMPLATES.find((t) => t.id === template);
@@ -66,7 +64,7 @@ const totalFestivals = palmaresData.reduce((total, year) => total + year.festiva
       </div>
     </section>
 
-    <VerticalTimeline years={allYears} ariaLabel={t('palmares.jumpToYear') || 'Jump to year'} />
+    <YearNav years={allYears} ariaLabel={t('palmares.jumpToYear') || 'Jump to year'} />
 
     <section class="palmares-timeline">
       <div class="container">
