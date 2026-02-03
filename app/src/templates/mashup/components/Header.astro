@@ -8,6 +8,7 @@
  */
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
 import { navItems as navItemsConfig } from '@data/navigation';
+import { getDevPreviewHref } from '@templates/core';
 
 interface Props {
   lang?: Language;
@@ -15,21 +16,22 @@ interface Props {
 
 const { lang = defaultLang } = Astro.props;
 const t = useTranslations(lang);
+const currentPath = Astro.url.pathname;
 
 const navItems = navItemsConfig
   .filter((item) => !item.hidden)
   .map((item) => ({
     label: t(item.labelKey),
-    href: getLocalizedPath(item.href, lang),
+    href: getDevPreviewHref(getLocalizedPath(item.href, lang), currentPath),
   }));
 
-const currentPath = Astro.url.pathname;
+const logoHref = getDevPreviewHref(getLocalizedPath('/', lang), currentPath);
 ---
 
 <header class="mash-header">
   <div class="mash-header__container mash-container">
     <!-- Logo: serif font with monospace year -->
-    <a href={getLocalizedPath('/', lang)} class="mash-header__logo">
+    <a href={logoHref} class="mash-header__logo">
       <span class="mash-header__logo-text">Tunadão</span>
       <span class="mash-header__logo-divider" aria-hidden="true"></span>
       <span class="mash-header__logo-year">1998</span>

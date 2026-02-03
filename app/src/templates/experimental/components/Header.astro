@@ -5,6 +5,7 @@
  * Features: broken text, minimalist, creative hover states
  */
 import type { Language } from '@i18n/index';
+import { getDevPreviewHref } from '@templates/core';
 
 interface Props {
   lang: Language;
@@ -12,18 +13,21 @@ interface Props {
 
 const { lang } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname;
 
 const navigation = [
-  { href: `${base}`, labelPt: 'In_í_cio', labelEn: 'Ho_m_e' },
-  { href: `${base}palmares`, labelPt: 'Pa_l_ma_r_és', labelEn: 'Aw_a_rds' },
-  { href: `${base}citadao`, labelPt: 'Ci_t_adão', labelEn: 'Ci_t_adão' },
+  { href: getDevPreviewHref(`${base}`, currentPath), labelPt: 'In_í_cio', labelEn: 'Ho_m_e' },
+  { href: getDevPreviewHref(`${base}palmares`, currentPath), labelPt: 'Pa_l_ma_r_és', labelEn: 'Aw_a_rds' },
+  { href: getDevPreviewHref(`${base}citadao`, currentPath), labelPt: 'Ci_t_adão', labelEn: 'Ci_t_adão' },
 ];
+
+const logoHref = getDevPreviewHref(base, currentPath);
 ---
 
 <header class="exp-header">
   <div class="exp-header__inner">
     <!-- Logo with broken text -->
-    <a href={base} class="exp-header__logo" aria-label="Tunadão 1998">
+    <a href={logoHref} class="exp-header__logo" aria-label="Tunadão 1998">
       <span class="exp-broken-text">T<span>_</span>u<span>_</span>n<span>_</span>a<span>_</span>d<span>_</span>ã<span>_</span>o</span>
     </a>
 
