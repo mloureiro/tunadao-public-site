@@ -1,14 +1,14 @@
 ---
 /**
  * Experimental Template - FestivalCard
- * Bold, unconventional festival card with overlapping elements,
- * typographic experimentation, and creative hover states.
- * Inspirations: Ólafur Arnalds, KIKK Festival, Moog Music
+ * Horizontal data row — not a card. Multiple FestivalCards stack to form a scannable list.
+ * Desktop: poster thumbnail + org logo + festival name + location + award pills.
+ * Mobile: stacked lines; poster hidden, logo stays.
  */
 import Award from './Award.astro';
 import ResponsiveImage from '@components/ResponsiveImage.astro';
 import type { FrontendPalmaresFestival } from '@lib/cms/types';
-import { sortAwards, isTopPrize, extractPublicId } from '@lib/cms';
+import { sortAwards, extractPublicId } from '@lib/cms';
 
 interface Props {
   festival: FrontendPalmaresFestival;
@@ -19,336 +19,216 @@ interface Props {
 const { festival, organizerLabel = 'Organização', participationLabel = 'Participação' } = Astro.props;
 
 const sortedAwards = sortAwards(festival.awards);
-const hasTopPrize = sortedAwards.length > 0 && isTopPrize(sortedAwards[0].slug);
 const hasNoAwards = sortedAwards.length === 0;
-const festivalInitial = festival.name.charAt(0).toUpperCase();
 const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) : null;
 ---
 
-<article class:list={['exp-festival', { 'exp-festival--featured': hasTopPrize }]}>
-  {/* Poster */}
-  <div class="exp-festival__poster">
-    {festival.posterUrl ? (
-      <button
-        type="button"
-        class="exp-festival__poster-btn"
-        data-poster-url={festival.posterUrl}
-        data-poster-alt={`Cartaz ${festival.name}`}
-      >
+<article class="exp-fest-row">
+  {/* Line 1: thumbnails + name + location */}
+  <div class="exp-fest-row__main">
+    {/* Poster thumbnail (desktop only) */}
+    {festival.posterUrl && (
+      <div class="exp-fest-row__poster">
         {posterPublicId ? (
           <ResponsiveImage
             publicId={posterPublicId}
             alt={`Cartaz ${festival.name}`}
-            class="exp-festival__poster-img"
-            sizes="(max-width: 768px) 50vw, 300px"
+            class="exp-fest-row__poster-img"
+            sizes="48px"
             aspectRatio="3/4"
           />
         ) : (
           <img
             src={festival.posterUrl}
             alt={`Cartaz ${festival.name}`}
-            class="exp-festival__poster-img"
+            class="exp-fest-row__poster-img"
             loading="lazy"
           />
         )}
-        <div class="exp-festival__poster-overlay" aria-hidden="true">
-          <span class="exp-festival__poster-zoom">+</span>
-        </div>
-      </button>
-    ) : (
-      <div class="exp-festival__poster-placeholder">
-        <span class="exp-festival__poster-initial">{festivalInitial}</span>
       </div>
     )}
-  </div>
 
-  {/* Content */}
-  <div class="exp-festival__content">
-    <h3 class="exp-festival__name">{festival.name}</h3>
-
-    {festival.location && (
-      <span class="exp-festival__location">{festival.location}</span>
-    )}
-
-    {/* Organizer */}
+    {/* Organizer logo */}
     {festival.organizingTuna && (
-      <div class="exp-festival__organizer">
-        <div class="exp-festival__org-avatar">
-          {festival.organizingTuna.logoUrl ? (
-            <img
-              src={festival.organizingTuna.logoUrl}
-              alt={festival.organizingTuna.shortName}
-              loading="lazy"
-            />
-          ) : (
-            <span class="exp-festival__org-initial">
-              {festival.organizingTuna.shortName.charAt(0)}
-            </span>
-          )}
-        </div>
-        <div class="exp-festival__org-info">
-          <span class="exp-festival__org-label">{organizerLabel}</span>
-          {festival.organizingTuna.website ? (
-            <a
-              href={festival.organizingTuna.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="exp-festival__org-name"
-              title={festival.organizingTuna.fullName}
-            >
-              {festival.organizingTuna.shortName}
-            </a>
-          ) : (
-            <span class="exp-festival__org-name" title={festival.organizingTuna.fullName}>
-              {festival.organizingTuna.shortName}
-            </span>
-          )}
-        </div>
+      <div class="exp-fest-row__org-logo" title={`${organizerLabel}: ${festival.organizingTuna.fullName}`}>
+        {festival.organizingTuna.logoUrl ? (
+          <img
+            src={festival.organizingTuna.logoUrl}
+            alt={festival.organizingTuna.shortName}
+            loading="lazy"
+          />
+        ) : (
+          <span class="exp-fest-row__org-initial">
+            {festival.organizingTuna.shortName.charAt(0)}
+          </span>
+        )}
       </div>
     )}
 
-    {/* Awards */}
-    <div class="exp-festival__awards">
-      {hasNoAwards ? (
-        <Award awardKey="premio-participacao" size="sm">{participationLabel}</Award>
-      ) : (
-        sortedAwards.map((award) => (
-          <Award awardKey={award.slug} size="sm">{award.name}</Award>
-        ))
+    {/* Festival name + location */}
+    <div class="exp-fest-row__info">
+      <span class="exp-fest-row__name">{festival.name}</span>
+      {festival.location && (
+        <>
+          <span class="exp-fest-row__separator" aria-hidden="true">&mdash;</span>
+          <span class="exp-fest-row__location">{festival.location}</span>
+        </>
       )}
     </div>
   </div>
 
-  {/* Bottom accent */}
-  <div class="exp-festival__accent" aria-hidden="true"></div>
+  {/* Line 2: Award pills */}
+  <div class="exp-fest-row__awards">
+    {hasNoAwards ? (
+      <Award awardKey="premio-participacao" size="sm">{participationLabel}</Award>
+    ) : (
+      sortedAwards.map((award) => (
+        <Award awardKey={award.slug} size="sm">{award.name}</Award>
+      ))
+    )}
+  </div>
 </article>
 
 <style>
-  .exp-festival {
-    position: relative;
+  .exp-fest-row {
     display: flex;
     flex-direction: column;
-    background: var(--exp-bg-surface);
-    border: 1px solid var(--exp-border);
-    overflow: hidden;
-    transition: all var(--exp-transition-medium);
+    gap: var(--exp-space-xs);
+    padding: var(--exp-space-sm) var(--exp-space-md);
+    border-bottom: 1px solid var(--exp-border);
+    transition: background var(--exp-transition-fast);
   }
 
-  .exp-festival:hover {
-    border-color: var(--exp-accent);
-    transform: translateY(-4px);
-  }
-
-  .exp-festival--featured {
-    border-color: #d4a017;
-    box-shadow: 0 0 12px rgba(255, 215, 0, 0.1);
-  }
-
-  .exp-festival--featured:hover {
-    border-color: #ffd700;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-  }
-
-  /* Poster */
-  .exp-festival__poster {
-    position: relative;
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
+  .exp-fest-row:hover {
     background: var(--exp-bg-elevated);
   }
 
-  .exp-festival__poster-btn {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border: none;
-    padding: 0;
-    background: none;
-    cursor: zoom-in;
-    position: relative;
+  .exp-fest-row:last-child {
+    border-bottom: none;
   }
 
-  .exp-festival__poster-img {
+  /* Line 1: poster + logo + name/location */
+  .exp-fest-row__main {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  /* Poster thumbnail — 48px, hidden on mobile */
+  .exp-fest-row__poster {
+    width: 48px;
+    height: 64px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--exp-bg-surface);
+  }
+
+  .exp-fest-row__poster-img,
+  .exp-fest-row__poster :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(0.3) contrast(1.1);
-    transition: all var(--exp-transition-slow);
   }
 
-  .exp-festival:hover .exp-festival__poster-img {
-    filter: grayscale(0) contrast(1);
-    transform: scale(1.05);
-  }
-
-  .exp-festival__poster-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity var(--exp-transition-medium);
-  }
-
-  .exp-festival__poster-btn:hover .exp-festival__poster-overlay {
-    opacity: 1;
-  }
-
-  .exp-festival__poster-zoom {
-    font-family: var(--exp-font-display);
-    font-size: 2rem;
-    color: var(--exp-accent);
-    text-shadow: 0 0 20px var(--exp-accent-glow);
-  }
-
-  .exp-festival__poster-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--exp-bg-elevated);
-    border-bottom: 1px solid var(--exp-border);
-  }
-
-  .exp-festival__poster-initial {
-    font-family: var(--exp-font-display);
-    font-size: 4rem;
-    font-weight: 700;
-    color: var(--exp-accent);
-    opacity: 0.15;
-  }
-
-  /* Content */
-  .exp-festival__content {
-    padding: var(--exp-space-md);
-    display: flex;
-    flex-direction: column;
-    gap: var(--exp-space-sm);
-    flex: 1;
-  }
-
-  .exp-festival__name {
-    margin: 0;
-    font-family: var(--exp-font-display);
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--exp-text);
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    transition: color var(--exp-transition-fast);
-  }
-
-  .exp-festival:hover .exp-festival__name {
-    color: var(--exp-accent);
-  }
-
-  .exp-festival__location {
-    font-size: 0.75rem;
-    color: var(--exp-text-muted);
-    letter-spacing: 0.02em;
-  }
-
-  /* Organizer */
-  .exp-festival__organizer {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: var(--exp-space-xs);
-    border: 1px solid var(--exp-border);
-    margin-top: auto;
-  }
-
-  .exp-festival__org-avatar {
+  /* Org logo — 32px */
+  .exp-fest-row__org-logo {
     width: 32px;
     height: 32px;
     flex-shrink: 0;
     overflow: hidden;
     border-radius: 2px;
-    background: var(--exp-bg-elevated);
+    background: var(--exp-bg-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .exp-festival__org-avatar img {
+  .exp-fest-row__org-logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     padding: 2px;
   }
 
-  .exp-festival__org-initial {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+  .exp-fest-row__org-initial {
     font-family: var(--exp-font-display);
     font-size: 0.7rem;
     font-weight: 700;
     color: var(--exp-accent);
   }
 
-  .exp-festival__org-info {
+  /* Name + location */
+  .exp-fest-row__info {
     display: flex;
-    flex-direction: column;
-    gap: 1px;
+    align-items: baseline;
+    gap: 0.5em;
     min-width: 0;
+    flex-wrap: wrap;
   }
 
-  .exp-festival__org-label {
+  .exp-fest-row__name {
     font-family: var(--exp-font-display);
-    font-size: 0.55rem;
+    font-size: 0.85rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--exp-text-muted);
-  }
-
-  .exp-festival__org-name {
-    font-size: 0.75rem;
-    font-weight: 500;
+    letter-spacing: 0.03em;
     color: var(--exp-text);
-    text-decoration: none;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .exp-fest-row__separator {
+    color: var(--exp-text-muted);
+    font-size: 0.75rem;
+  }
+
+  .exp-fest-row__location {
+    font-size: 0.75rem;
+    color: var(--exp-text-muted);
     white-space: nowrap;
-    transition: color var(--exp-transition-fast);
   }
 
-  a.exp-festival__org-name:hover {
-    color: var(--exp-accent);
-  }
-
-  /* Awards */
-  .exp-festival__awards {
+  /* Awards row */
+  .exp-fest-row__awards {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
-    padding-top: var(--exp-space-sm);
-    border-top: 1px solid var(--exp-border);
+    padding-left: 0;
   }
 
-  /* Bottom accent */
-  .exp-festival__accent {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--exp-accent);
-    transition: width var(--exp-transition-medium);
+  /* Desktop: indent awards under the name (past poster+logo space) */
+  @media (min-width: 768px) {
+    .exp-fest-row__awards {
+      padding-left: calc(48px + 32px + 1.5rem);
+    }
+
+    /* If no poster, reduce indent */
+    .exp-fest-row:not(:has(.exp-fest-row__poster)) .exp-fest-row__awards {
+      padding-left: calc(32px + 0.75rem);
+    }
+
+    /* If neither poster nor logo */
+    .exp-fest-row:not(:has(.exp-fest-row__poster)):not(:has(.exp-fest-row__org-logo)) .exp-fest-row__awards {
+      padding-left: 0;
+    }
   }
 
-  .exp-festival:hover .exp-festival__accent {
-    width: 100%;
-  }
+  /* Mobile: hide poster, stack content */
+  @media (max-width: 767px) {
+    .exp-fest-row__poster {
+      display: none;
+    }
 
-  .exp-festival--featured .exp-festival__accent {
-    background: linear-gradient(90deg, #ffd700, var(--exp-accent));
+    .exp-fest-row__info {
+      flex-direction: column;
+      gap: 0.15em;
+    }
+
+    .exp-fest-row__separator {
+      display: none;
+    }
   }
 </style>

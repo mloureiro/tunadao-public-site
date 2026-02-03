@@ -1,8 +1,9 @@
 ---
 /**
  * Experimental Template - Award
- * Bold, unconventional award badges with glow effects and monospace typography
- * Inspirations: Ólafur Arnalds typography, neon/glow aesthetic
+ * Inline text pill badge. Always shows the award label text.
+ * sm: compact pill (~24px tall), md: slightly larger (~32px tall).
+ * Flows inline like words in a paragraph — no grid, no columns.
  */
 export type AwardVariant = 'default' | 'gold' | 'special' | 'public';
 
@@ -14,24 +15,6 @@ interface Props {
 
 const { awardKey, size = 'sm', class: className = '' } = Astro.props;
 
-const DEFAULT_ICON = '//';
-
-const AWARD_ICONS: Record<string, string> = {
-  'melhor-tuna': '01',
-  'segunda-melhor-tuna': '02',
-  'terceira-melhor-tuna': '03',
-  'tuna-mais-tuna': '>>',
-  'tuna-do-publico': '<3',
-  'melhor-serenata': '~~',
-  'melhor-passacalles': '>>',
-  'melhor-pandeireta': '||',
-  'melhor-instrumental': '##',
-  'melhor-solista': '**',
-  'melhor-original': '++',
-  'melhor-estandarte': '[]',
-  'premio-participacao': '--',
-};
-
 function getVariant(key: string): AwardVariant {
   if (key === 'melhor-tuna') return 'gold';
   if (key === 'tuna-mais-tuna') return 'special';
@@ -40,7 +23,6 @@ function getVariant(key: string): AwardVariant {
 }
 
 const variant = getVariant(awardKey);
-const icon = AWARD_ICONS[awardKey] || DEFAULT_ICON;
 ---
 
 <span
@@ -51,119 +33,60 @@ const icon = AWARD_ICONS[awardKey] || DEFAULT_ICON;
     className,
   ]}
 >
-  <span class="exp-award__icon" aria-hidden="true">{icon}</span>
-  <span class="exp-award__label"><slot /></span>
+  <slot />
 </span>
 
 <style>
   .exp-award {
     display: inline-flex;
     align-items: center;
-    gap: 0.5em;
     font-family: var(--exp-font-display);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border: 1px solid var(--exp-border);
-    color: var(--exp-text);
-    background: transparent;
-    transition: all var(--exp-transition-fast);
-  }
-
-  .exp-award:hover {
-    border-color: var(--exp-accent);
-  }
-
-  .exp-award__icon {
-    font-family: var(--exp-font-display);
-    font-weight: 700;
-    line-height: 1;
-    flex-shrink: 0;
-    opacity: 0.6;
-  }
-
-  .exp-award__label {
+    border-radius: 9999px;
+    background: var(--exp-bg-elevated);
+    color: var(--exp-text-muted);
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1;
   }
 
-  /* Size: sm */
+  /* Size: sm — compact pill ~24px tall */
   .exp-award--sm {
-    padding: 0.25em 0.5em;
-    font-size: 0.7rem;
-  }
-
-  .exp-award--sm .exp-award__icon {
+    padding: 0.25em 0.6em;
     font-size: 0.65rem;
+    height: 24px;
   }
 
-  /* Size: md */
+  /* Size: md — larger pill ~32px tall */
   .exp-award--md {
-    padding: 0.4em 0.75em;
-    font-size: 0.85rem;
-  }
-
-  .exp-award--md .exp-award__icon {
+    padding: 0.35em 0.85em;
     font-size: 0.8rem;
+    height: 32px;
   }
 
-  /* Variant: gold */
+  /* Variant: gold (melhor-tuna) */
   .exp-award--gold {
-    border-color: #d4a017;
+    background: rgba(255, 215, 0, 0.12);
     color: #ffd700;
-    box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.3);
   }
 
-  .exp-award--gold .exp-award__icon {
-    color: #ffd700;
-    opacity: 1;
-  }
-
-  .exp-award--gold:hover {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-    border-color: #ffd700;
-  }
-
-  /* Variant: special (tuna mais tuna) */
+  /* Variant: special (tuna-mais-tuna) */
   .exp-award--special {
-    border-color: var(--exp-accent);
+    background: rgba(255, 61, 61, 0.1);
     color: var(--exp-accent);
-    box-shadow: 0 0 12px var(--exp-accent-glow);
+    border: 1px solid rgba(255, 61, 61, 0.3);
   }
 
-  .exp-award--special .exp-award__icon {
-    color: var(--exp-accent);
-    opacity: 1;
-  }
-
-  .exp-award--special:hover {
-    box-shadow: var(--exp-accent-glow);
-  }
-
-  /* Variant: public (tuna do publico) */
+  /* Variant: public (tuna-do-publico) */
   .exp-award--public {
-    border-color: #ff6b9d;
+    background: rgba(255, 107, 157, 0.1);
     color: #ff6b9d;
-    box-shadow: 0 0 12px rgba(255, 107, 157, 0.2);
-  }
-
-  .exp-award--public .exp-award__icon {
-    color: #ff6b9d;
-    opacity: 1;
-  }
-
-  .exp-award--public:hover {
-    box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
-    border-color: #ff6b9d;
+    border: 1px solid rgba(255, 107, 157, 0.3);
   }
 
   /* Variant: default */
   .exp-award--default {
-    color: var(--exp-text-muted);
-    border-color: var(--exp-border);
-  }
-
-  .exp-award--default .exp-award__icon {
-    opacity: 0.4;
+    border: 1px solid var(--exp-border);
   }
 </style>

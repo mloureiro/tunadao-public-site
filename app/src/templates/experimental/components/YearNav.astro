@@ -1,9 +1,8 @@
 ---
 /**
  * Experimental Template - YearNav
- * Unconventional year navigation: horizontal monospace strip on desktop,
- * floating red pill on mobile. Scroll-based active year tracking.
- * Inspirations: Moog horizontal scrolling, Ólafur Arnalds typography
+ * Horizontal sticky bar. Years as inline items, single row, overflow-x auto.
+ * Active year tracked via IntersectionObserver, smooth scroll on click.
  */
 interface Props {
   years: number[];
@@ -15,56 +14,29 @@ const { years, idPrefix = 'year', ariaLabel = 'Jump to year' } = Astro.props;
 const sortedYears = [...years].sort((a, b) => b - a);
 ---
 
-{/* Desktop: horizontal scroll strip fixed at top */}
 <nav class="exp-yearnav" aria-label={ariaLabel} data-id-prefix={idPrefix}>
-  <div class="exp-yearnav__track">
-    <div class="exp-yearnav__scroll">
-      {sortedYears.map((year) => (
-        <a
-          href={`#${idPrefix}-${year}`}
-          class="exp-yearnav__link"
-          data-year={year}
-          aria-label={`Jump to ${year}`}
-        >
-          <span class="exp-yearnav__text">{year}</span>
-        </a>
-      ))}
-    </div>
-    <div class="exp-yearnav__fade-left" aria-hidden="true"></div>
-    <div class="exp-yearnav__fade-right" aria-hidden="true"></div>
+  <div class="exp-yearnav__scroll">
+    {sortedYears.map((year) => (
+      <a
+        href={`#${idPrefix}-${year}`}
+        class="exp-yearnav__link"
+        data-year={year}
+        aria-label={`Jump to ${year}`}
+      >
+        {year}
+      </a>
+    ))}
   </div>
 </nav>
-
-{/* Mobile: floating year pill */}
-<div class="exp-yearnav-mobile" aria-hidden="true">
-  <button class="exp-yearnav-mobile__btn" type="button" aria-label="Current year navigation">
-    <span class="exp-yearnav-mobile__year"></span>
-  </button>
-  <div class="exp-yearnav-mobile__dropdown">
-    <div class="exp-yearnav-mobile__list">
-      {sortedYears.map((year) => (
-        <a href={`#${idPrefix}-${year}`} class="exp-yearnav-mobile__link" data-year={year}>
-          {year}
-        </a>
-      ))}
-    </div>
-  </div>
-</div>
 
 <script>
   (function () {
     function initExpYearNav() {
-      const nav = document.querySelector('.exp-yearnav');
-      const mobile = document.querySelector('.exp-yearnav-mobile');
-      const mobileYear = mobile?.querySelector('.exp-yearnav-mobile__year');
-      const mobileBtn = mobile?.querySelector('.exp-yearnav-mobile__btn');
-      const mobileDropdown = mobile?.querySelector('.exp-yearnav-mobile__dropdown');
-
+      const nav = document.querySelector('.exp-yearnav') as HTMLElement | null;
       if (!nav) return;
 
       const idPrefix = nav.getAttribute('data-id-prefix') || 'year';
       const links = nav.querySelectorAll('.exp-yearnav__link');
-      const mobileLinks = mobile?.querySelectorAll('.exp-yearnav-mobile__link');
       const sections: Element[] = [];
 
       links.forEach((link) => {
@@ -89,23 +61,13 @@ const sortedYears = [...years].sort((a, b) => b - a);
           link.classList.toggle('exp-yearnav__link--active', isActive);
           link.setAttribute('aria-current', isActive ? 'true' : 'false');
 
-          // Scroll active link into view
           if (isActive) {
             link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
           }
         });
-
-        if (mobileYear) {
-          mobileYear.textContent = year;
-        }
-
-        mobileLinks?.forEach((link) => {
-          const linkYear = link.getAttribute('data-year');
-          link.classList.toggle('exp-yearnav-mobile__link--active', linkYear === year);
-        });
       }
 
-      // Intersection Observer for tracking
+      // Intersection Observer for active year tracking
       const observer = new IntersectionObserver(
         (entries) => {
           const visible = entries.filter((e) => e.isIntersecting);
@@ -120,12 +82,10 @@ const sortedYears = [...years].sort((a, b) => b - a);
 
       sections.forEach((s) => observer.observe(s));
 
-      // Show/hide nav based on scroll position
+      // Show/hide nav based on whether first section is visible
       const showObserver = new IntersectionObserver(
         (entries) => {
-          const visible = entries[0].isIntersecting;
-          nav.classList.toggle('exp-yearnav--active', !visible);
-          mobile?.classList.toggle('exp-yearnav-mobile--visible', !visible);
+          nav.classList.toggle('exp-yearnav--visible', !entries[0].isIntersecting);
         },
         { threshold: 0.5 }
       );
@@ -141,8 +101,6 @@ const sortedYears = [...years].sort((a, b) => b - a);
         const href = link.getAttribute('href');
         if (!href) return;
 
-        mobileDropdown?.classList.remove('exp-yearnav-mobile__dropdown--open');
-
         const target = document.querySelector(href);
         if (!target) return;
 
@@ -152,18 +110,6 @@ const sortedYears = [...years].sort((a, b) => b - a);
       }
 
       links.forEach((link) => link.addEventListener('click', handleClick));
-      mobileLinks?.forEach((link) => link.addEventListener('click', handleClick));
-
-      // Mobile dropdown toggle
-      mobileBtn?.addEventListener('click', () => {
-        mobileDropdown?.classList.toggle('exp-yearnav-mobile__dropdown--open');
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!mobile?.contains(e.target as Node)) {
-          mobileDropdown?.classList.remove('exp-yearnav-mobile__dropdown--open');
-        }
-      });
 
       // Keyboard navigation
       nav.addEventListener('keydown', (event) => {
@@ -215,13 +161,9 @@ const sortedYears = [...years].sort((a, b) => b - a);
 </script>
 
 <style>
-  /* Desktop: horizontal strip */
   .exp-yearnav {
-    display: none;
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
     z-index: 40;
     background: var(--exp-bg);
     border-bottom: 1px solid var(--exp-border);
@@ -231,26 +173,15 @@ const sortedYears = [...years].sort((a, b) => b - a);
     pointer-events: none;
   }
 
-  .exp-yearnav--active {
+  .exp-yearnav--visible {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
   }
 
-  @media (min-width: 768px) {
-    .exp-yearnav {
-      display: block;
-    }
-  }
-
   /* Account for dev banner when present */
-  .page-content .exp-yearnav--active {
+  .page-content .exp-yearnav {
     top: 48px;
-  }
-
-  .exp-yearnav__track {
-    position: relative;
-    overflow: hidden;
   }
 
   .exp-yearnav__scroll {
@@ -259,7 +190,6 @@ const sortedYears = [...years].sort((a, b) => b - a);
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     padding: 0 var(--exp-space-md);
-    gap: 0;
   }
 
   .exp-yearnav__scroll::-webkit-scrollbar {
@@ -290,141 +220,10 @@ const sortedYears = [...years].sort((a, b) => b - a);
     color: var(--exp-accent);
     border-bottom-color: var(--exp-accent);
     font-weight: 700;
-    text-shadow: 0 0 10px var(--exp-accent-glow);
   }
 
   .exp-yearnav__link:focus-visible {
     outline: 2px solid var(--exp-accent);
     outline-offset: -2px;
-  }
-
-  /* Fade edges */
-  .exp-yearnav__fade-left,
-  .exp-yearnav__fade-right {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 40px;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .exp-yearnav__fade-left {
-    left: 0;
-    background: linear-gradient(to right, var(--exp-bg), transparent);
-  }
-
-  .exp-yearnav__fade-right {
-    right: 0;
-    background: linear-gradient(to left, var(--exp-bg), transparent);
-  }
-
-  /* Mobile: floating pill */
-  .exp-yearnav-mobile {
-    position: fixed;
-    bottom: var(--exp-space-lg);
-    right: var(--exp-space-md);
-    z-index: 50;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all var(--exp-transition-medium);
-    pointer-events: none;
-  }
-
-  .exp-yearnav-mobile--visible {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-
-  @media (min-width: 768px) {
-    .exp-yearnav-mobile {
-      display: none;
-    }
-  }
-
-  .exp-yearnav-mobile__btn {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: var(--exp-accent);
-    color: var(--exp-bg);
-    border: none;
-    padding: 0.5rem 1rem;
-    font-family: var(--exp-font-display);
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 0 20px var(--exp-accent-glow);
-    transition: all var(--exp-transition-fast);
-  }
-
-  .exp-yearnav-mobile__btn:hover {
-    transform: scale(1.05);
-  }
-
-  .exp-yearnav-mobile__btn:focus-visible {
-    outline: 2px solid var(--exp-text);
-    outline-offset: 2px;
-  }
-
-  .exp-yearnav-mobile__dropdown {
-    position: absolute;
-    bottom: 100%;
-    right: 0;
-    margin-bottom: 0.5rem;
-    background: var(--exp-bg-surface);
-    border: 1px solid var(--exp-border);
-    max-height: 300px;
-    overflow-y: auto;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: all var(--exp-transition-fast);
-    scrollbar-width: thin;
-    scrollbar-color: var(--exp-border) transparent;
-  }
-
-  .exp-yearnav-mobile__dropdown--open {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-
-  .exp-yearnav-mobile__list {
-    display: flex;
-    flex-direction: column;
-    padding: 0.25rem;
-  }
-
-  .exp-yearnav-mobile__link {
-    display: block;
-    padding: 0.5rem 1.2rem;
-    font-family: var(--exp-font-display);
-    font-size: 0.85rem;
-    font-weight: 400;
-    color: var(--exp-text-muted);
-    text-decoration: none;
-    text-align: center;
-    transition: all var(--exp-transition-fast);
-    min-width: 80px;
-  }
-
-  .exp-yearnav-mobile__link:hover {
-    color: var(--exp-text);
-    background: var(--exp-bg-elevated);
-  }
-
-  .exp-yearnav-mobile__link--active {
-    color: var(--exp-accent);
-    font-weight: 700;
-    background: var(--exp-bg-elevated);
-  }
-
-  @media (max-width: 480px) {
-    .exp-yearnav-mobile {
-      bottom: var(--exp-space-md);
-      right: var(--exp-space-sm);
-    }
   }
 </style>
