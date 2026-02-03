@@ -1,11 +1,8 @@
-import type { TemplateExports } from '../core/types';
+// Mashup Template Exports
+// Blue Note heritage + Advanced refinement + Experimental boldness
+// Inspirations: Blue Note Records, Advanced, Experimental
 
-const notImplemented = () => {
-  throw new Error('Mashup template not yet implemented');
-};
-
-// Placeholder exports that throw when used
-export const Layout = notImplemented as unknown as TemplateExports['Layout'];
-export const Hero = notImplemented as unknown as TemplateExports['Hero'];
-export const Header = notImplemented as unknown as TemplateExports['Header'];
-export const Footer = notImplemented as unknown as TemplateExports['Footer'];
+export { default as Layout } from './layouts/Layout.astro';
+export { default as Hero } from './components/Hero.astro';
+export { default as Header } from './components/Header.astro';
+export { default as Footer } from './components/Footer.astro';

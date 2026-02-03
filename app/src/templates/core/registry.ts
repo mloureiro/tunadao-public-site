@@ -23,8 +23,9 @@ export const TEMPLATES: TemplateInfo[] = [
   {
     id: 'mashup',
     name: 'Mashup',
-    description: 'Best elements from all templates',
-    enabled: false,
+    description: 'Blue Note heritage meets modern design — bold serif, navy & gold',
+    enabled: true,
+    inspirations: ['Blue Note Records', 'Advanced', 'Experimental'],
   },
 ];
 

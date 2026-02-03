@@ -1,0 +1,188 @@
+/**
+ * Mashup Template - Global Styles
+ * Inspired by: Blue Note Records heritage + Advanced refinement + Experimental boldness
+ *
+ * Key characteristics:
+ * - Deep navy backgrounds (jazz club atmosphere)
+ * - Gold/cream accents (vintage record sleeve warmth)
+ * - Bold serif headings with clean sans-serif body
+ * - Subtle grain texture (CSS only)
+ * - Heritage timeline feel
+ */
+
+:root {
+  /* Color palette - Blue Note heritage */
+  --mash-bg: #0d1117;
+  --mash-bg-elevated: #151b24;
+  --mash-bg-surface: #1a2230;
+  --mash-bg-warm: #1c1a15;
+  --mash-text: #f0ebe3;
+  --mash-text-secondary: #a8a091;
+  --mash-text-muted: #6b6560;
+  --mash-accent: #d4a853;
+  --mash-accent-light: #e8c878;
+  --mash-accent-muted: #9a7b3e;
+  --mash-accent-glow: rgba(212, 168, 83, 0.15);
+  --mash-navy: #1a1a2e;
+  --mash-navy-light: #24243e;
+  --mash-border: #2a2a3a;
+  --mash-border-subtle: #1f1f2f;
+
+  /* Typography */
+  --mash-font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --mash-font-body: 'Inter', system-ui, sans-serif;
+  --mash-font-mono: 'Space Mono', monospace;
+  --mash-heading-weight: 700;
+  --mash-body-weight: 400;
+  --mash-letter-spacing-wide: 0.12em;
+
+  /* Spacing */
+  --mash-space-xs: 0.5rem;
+  --mash-space-sm: 1rem;
+  --mash-space-md: 2rem;
+  --mash-space-lg: 4rem;
+  --mash-space-xl: 8rem;
+  --mash-section-padding: clamp(4rem, 10vh, 8rem);
+
+  /* Animation */
+  --mash-transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --mash-transition-medium: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --mash-transition-fast: 0.15s ease;
+}
+
+/* Base styles */
+.mashup-template {
+  background-color: var(--mash-bg);
+  color: var(--mash-text);
+  font-family: var(--mash-font-body);
+  font-weight: var(--mash-body-weight);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings - bold serif, heritage feel */
+.mashup-template h1,
+.mashup-template h2,
+.mashup-template h3,
+.mashup-template h4 {
+  font-family: var(--mash-font-display);
+  font-weight: var(--mash-heading-weight);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--mash-text);
+}
+
+/* Links */
+.mashup-template a {
+  color: var(--mash-text);
+  text-decoration: none;
+  transition: color var(--mash-transition-fast);
+}
+
+.mashup-template a:hover {
+  color: var(--mash-accent);
+}
+
+/* Selection */
+.mashup-template ::selection {
+  background-color: var(--mash-accent);
+  color: var(--mash-bg);
+}
+
+/* Focus */
+.mashup-template :focus-visible {
+  outline: 1px solid var(--mash-accent);
+  outline-offset: 2px;
+}
+
+/* Container */
+.mash-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6, 1.5rem);
+}
+
+@media (min-width: 768px) {
+  .mash-container {
+    padding: 0 var(--space-8, 2rem);
+  }
+}
+
+/* Grain texture overlay - CSS only */
+.mash-grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Heritage divider - horizontal rule with gold accent */
+.mash-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--mash-border) 20%,
+    var(--mash-accent-muted) 50%,
+    var(--mash-border) 80%,
+    transparent
+  );
+  margin: var(--mash-space-lg) 0;
+}
+
+/* Gold accent text */
+.mash-accent-text {
+  color: var(--mash-accent);
+}
+
+/* Monospace label - for dates, categories */
+.mash-label {
+  font-family: var(--mash-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: var(--mash-letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--mash-accent);
+}
+
+/* Skip link for accessibility */
+.mashup-template .skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--mash-accent);
+  color: var(--mash-bg);
+  padding: var(--mash-space-xs) var(--mash-space-sm);
+  border-radius: 4px;
+  z-index: 1000;
+  transition: top 200ms ease;
+}
+
+.mashup-template .skip-link:focus {
+  top: var(--mash-space-sm);
+}
+
+/* Scrollbar styling */
+.mashup-template::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mashup-template::-webkit-scrollbar-track {
+  background: var(--mash-bg);
+}
+
+.mashup-template::-webkit-scrollbar-thumb {
+  background: var(--mash-border);
+  border-radius: 4px;
+}
+
+.mashup-template::-webkit-scrollbar-thumb:hover {
+  background: var(--mash-text-muted);
+}
