@@ -1,0 +1,148 @@
+---
+/**
+ * Advanced Template Hero
+ *
+ * Full-screen or near-full-screen
+ * Centered, minimal text
+ * Strong typographic hierarchy
+ * Dark background, light text
+ */
+interface Props {
+  title: string;
+  subtitle?: string;
+  /** Optional decorative icon (emoji) */
+  icon?: string;
+}
+
+const { title, subtitle, icon } = Astro.props;
+---
+
+<section class="adv-hero">
+  <div class="adv-hero__bg" aria-hidden="true"></div>
+  <div class="adv-hero__content">
+    {icon && <span class="adv-hero__icon">{icon}</span>}
+    <h1 class="adv-hero__title">{title}</h1>
+    {subtitle && <p class="adv-hero__subtitle">{subtitle}</p>}
+  </div>
+  <div class="adv-hero__scroll" aria-hidden="true">
+    <span class="adv-hero__scroll-line"></span>
+  </div>
+</section>
+
+<style>
+  .adv-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    padding: var(--space-16) var(--space-6);
+    text-align: center;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .adv-hero {
+      min-height: 85vh;
+      padding: var(--space-20) var(--space-8);
+    }
+  }
+
+  /* Background with subtle gradient */
+  .adv-hero__bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at 50% 0%,
+      rgba(212, 168, 83, 0.03) 0%,
+      transparent 60%
+    );
+    pointer-events: none;
+  }
+
+  .adv-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+  }
+
+  /* Icon */
+  .adv-hero__icon {
+    display: block;
+    font-size: 2.5rem;
+    margin-bottom: var(--space-6);
+    opacity: 0.7;
+    filter: grayscale(0.3);
+  }
+
+  @media (min-width: 768px) {
+    .adv-hero__icon {
+      font-size: 3.5rem;
+      margin-bottom: var(--space-8);
+    }
+  }
+
+  /* Title */
+  .adv-hero__title {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--advanced-text);
+    margin: 0;
+  }
+
+  /* Subtitle */
+  .adv-hero__subtitle {
+    margin-top: var(--space-6);
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: 400;
+    color: var(--advanced-text-secondary);
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 768px) {
+    .adv-hero__subtitle {
+      margin-top: var(--space-8);
+    }
+  }
+
+  /* Scroll indicator */
+  .adv-hero__scroll {
+    position: absolute;
+    bottom: var(--space-8);
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .adv-hero__scroll {
+      display: block;
+    }
+  }
+
+  .adv-hero__scroll-line {
+    display: block;
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--advanced-text-muted), transparent);
+    animation: scroll-hint 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-hint {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scaleY(1);
+    }
+    50% {
+      opacity: 0.2;
+      transform: scaleY(0.6);
+    }
+  }
+</style>

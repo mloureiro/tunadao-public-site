@@ -11,7 +11,8 @@ export const TEMPLATES: TemplateInfo[] = [
     id: 'advanced',
     name: 'Advanced',
     description: 'Refined and polished - content-first design',
-    enabled: false, // Enable when implemented
+    enabled: true,
+    inspirations: ['Radical Face', 'Bon Iver', 'Preston Thompson'],
   },
   {
     id: 'experimental',
