@@ -1,8 +1,9 @@
 ---
 /**
- * Experimental Template - YearNav
- * Horizontal sticky bar. Years as inline items, single row, overflow-x auto.
- * Active year tracked via IntersectionObserver, smooth scroll on click.
+ * Experimental Template - YearNav (v2)
+ * Horizontal sticky bar. Always visible — NO show/hide animation.
+ * Active year tracked via IntersectionObserver (for highlight only).
+ * Smooth scroll on click. Keyboard navigation (arrows, home, end).
  */
 interface Props {
   years: number[];
@@ -67,7 +68,7 @@ const sortedYears = [...years].sort((a, b) => b - a);
         });
       }
 
-      // Intersection Observer for active year tracking
+      // IntersectionObserver ONLY for tracking active year (highlight)
       const observer = new IntersectionObserver(
         (entries) => {
           const visible = entries.filter((e) => e.isIntersecting);
@@ -82,18 +83,6 @@ const sortedYears = [...years].sort((a, b) => b - a);
 
       sections.forEach((s) => observer.observe(s));
 
-      // Show/hide nav based on whether first section is visible
-      const showObserver = new IntersectionObserver(
-        (entries) => {
-          nav.classList.toggle('exp-yearnav--visible', !entries[0].isIntersecting);
-        },
-        { threshold: 0.5 }
-      );
-
-      if (sections[0]) {
-        showObserver.observe(sections[0]);
-      }
-
       // Smooth scroll on click
       function handleClick(e: Event) {
         e.preventDefault();
@@ -104,7 +93,7 @@ const sortedYears = [...years].sort((a, b) => b - a);
         const target = document.querySelector(href);
         if (!target) return;
 
-        const offset = 100;
+        const offset = 60;
         const pos = target.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({ top: pos, behavior: 'smooth' });
       }
@@ -145,7 +134,7 @@ const sortedYears = [...years].sort((a, b) => b - a);
         }
       });
 
-      // Initial state
+      // Initial state — highlight first year
       if (sections[0]) {
         const firstYear = sections[0].id.replace(new RegExp(`^${idPrefix}-`), '');
         updateActiveYear(firstYear);
@@ -167,16 +156,6 @@ const sortedYears = [...years].sort((a, b) => b - a);
     z-index: 40;
     background: var(--exp-bg);
     border-bottom: 1px solid var(--exp-border);
-    opacity: 0;
-    transform: translateY(-100%);
-    transition: all var(--exp-transition-medium);
-    pointer-events: none;
-  }
-
-  .exp-yearnav--visible {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
   }
 
   /* Account for dev banner when present */
@@ -207,9 +186,9 @@ const sortedYears = [...years].sort((a, b) => b - a);
     color: var(--exp-text-muted);
     text-decoration: none;
     white-space: nowrap;
-    transition: all var(--exp-transition-fast);
     border-bottom: 2px solid transparent;
     flex-shrink: 0;
+    transition: color 0.15s ease;
   }
 
   .exp-yearnav__link:hover {
