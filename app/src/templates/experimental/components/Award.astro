@@ -1,11 +1,12 @@
 ---
 /**
  * Experimental Template - Award
- * Inline text pill badge. Always shows the award label text.
- * sm: compact pill (~24px tall), md: slightly larger (~32px tall).
- * Flows inline like words in a paragraph — no grid, no columns.
+ * Simple styled text element for award names.
+ * NOT a pill or badge — just text with color coding.
+ * Top prizes get accent color, others are muted.
+ * Body font (Inter), normal case, inline display.
  */
-export type AwardVariant = 'default' | 'gold' | 'special' | 'public';
+import { isTopPrize } from '@lib/cms';
 
 interface Props {
   awardKey: string;
@@ -14,22 +15,14 @@ interface Props {
 }
 
 const { awardKey, size = 'sm', class: className = '' } = Astro.props;
-
-function getVariant(key: string): AwardVariant {
-  if (key === 'melhor-tuna') return 'gold';
-  if (key === 'tuna-mais-tuna') return 'special';
-  if (key === 'tuna-do-publico') return 'public';
-  return 'default';
-}
-
-const variant = getVariant(awardKey);
+const isTop = isTopPrize(awardKey);
 ---
 
 <span
   class:list={[
     'exp-award',
     `exp-award--${size}`,
-    `exp-award--${variant}`,
+    { 'exp-award--top': isTop },
     className,
   ]}
 >
@@ -38,55 +31,22 @@ const variant = getVariant(awardKey);
 
 <style>
   .exp-award {
-    display: inline-flex;
-    align-items: center;
-    font-family: var(--exp-font-display);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 9999px;
-    background: var(--exp-bg-elevated);
+    display: inline;
+    font-family: var(--exp-font-body);
     color: var(--exp-text-muted);
-    white-space: nowrap;
-    line-height: 1;
+    line-height: 1.4;
   }
 
-  /* Size: sm — compact pill ~24px tall */
   .exp-award--sm {
-    padding: 0.25em 0.6em;
-    font-size: 0.65rem;
-    height: 24px;
-  }
-
-  /* Size: md — larger pill ~32px tall */
-  .exp-award--md {
-    padding: 0.35em 0.85em;
     font-size: 0.8rem;
-    height: 32px;
   }
 
-  /* Variant: gold (melhor-tuna) */
-  .exp-award--gold {
-    background: rgba(255, 215, 0, 0.12);
-    color: #ffd700;
-    border: 1px solid rgba(255, 215, 0, 0.3);
+  .exp-award--md {
+    font-size: 0.95rem;
   }
 
-  /* Variant: special (tuna-mais-tuna) */
-  .exp-award--special {
-    background: rgba(255, 61, 61, 0.1);
+  .exp-award--top {
     color: var(--exp-accent);
-    border: 1px solid rgba(255, 61, 61, 0.3);
-  }
-
-  /* Variant: public (tuna-do-publico) */
-  .exp-award--public {
-    background: rgba(255, 107, 157, 0.1);
-    color: #ff6b9d;
-    border: 1px solid rgba(255, 107, 157, 0.3);
-  }
-
-  /* Variant: default */
-  .exp-award--default {
-    border: 1px solid var(--exp-border);
+    font-weight: 600;
   }
 </style>

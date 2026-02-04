@@ -1,11 +1,10 @@
 ---
 /**
- * Experimental Template - FestivalCard
- * Horizontal data row — not a card. Multiple FestivalCards stack to form a scannable list.
- * Desktop: poster thumbnail + org logo + festival name + location + award pills.
- * Mobile: stacked lines; poster hidden, logo stays.
+ * Experimental Template - FestivalCard (v2)
+ * Horizontal row — not a card. Multiple rows stack to form a scannable list.
+ * Desktop: poster (80px) + org logo (48px) + name/location + awards as text.
+ * Mobile: poster (60px), logo hidden, stacked content.
  */
-import Award from './Award.astro';
 import ResponsiveImage from '@components/ResponsiveImage.astro';
 import type { FrontendPalmaresFestival } from '@lib/cms/types';
 import { sortAwards, extractPublicId } from '@lib/cms';
@@ -23,34 +22,33 @@ const hasNoAwards = sortedAwards.length === 0;
 const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) : null;
 ---
 
-<article class="exp-fest-row">
-  {/* Line 1: thumbnails + name + location */}
-  <div class="exp-fest-row__main">
-    {/* Poster thumbnail (desktop only) */}
+<article class="exp-fest">
+  <div class="exp-fest__row">
+    {/* Poster thumbnail */}
     {festival.posterUrl && (
-      <div class="exp-fest-row__poster">
+      <div class="exp-fest__poster">
         {posterPublicId ? (
           <ResponsiveImage
             publicId={posterPublicId}
             alt={`Cartaz ${festival.name}`}
-            class="exp-fest-row__poster-img"
-            sizes="48px"
+            class="exp-fest__poster-img"
+            sizes="80px"
             aspectRatio="3/4"
           />
         ) : (
           <img
             src={festival.posterUrl}
             alt={`Cartaz ${festival.name}`}
-            class="exp-fest-row__poster-img"
+            class="exp-fest__poster-img"
             loading="lazy"
           />
         )}
       </div>
     )}
 
-    {/* Organizer logo */}
+    {/* Organizer logo — desktop only */}
     {festival.organizingTuna && (
-      <div class="exp-fest-row__org-logo" title={`${organizerLabel}: ${festival.organizingTuna.fullName}`}>
+      <div class="exp-fest__logo" title={`${organizerLabel}: ${festival.organizingTuna.fullName}`}>
         {festival.organizingTuna.logoUrl ? (
           <img
             src={festival.organizingTuna.logoUrl}
@@ -58,177 +56,130 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
             loading="lazy"
           />
         ) : (
-          <span class="exp-fest-row__org-initial">
+          <span class="exp-fest__logo-initial">
             {festival.organizingTuna.shortName.charAt(0)}
           </span>
         )}
       </div>
     )}
 
-    {/* Festival name + location */}
-    <div class="exp-fest-row__info">
-      <span class="exp-fest-row__name">{festival.name}</span>
-      {festival.location && (
-        <>
-          <span class="exp-fest-row__separator" aria-hidden="true">&mdash;</span>
-          <span class="exp-fest-row__location">{festival.location}</span>
-        </>
-      )}
+    {/* Festival info */}
+    <div class="exp-fest__info">
+      <span class="exp-fest__name">{festival.name}</span>
+      <span class="exp-fest__location">{festival.location}</span>
+      <span class="exp-fest__awards">
+        {hasNoAwards
+          ? participationLabel
+          : sortedAwards.map((a) => a.name).join(', ')}
+      </span>
     </div>
-  </div>
-
-  {/* Line 2: Award pills */}
-  <div class="exp-fest-row__awards">
-    {hasNoAwards ? (
-      <Award awardKey="premio-participacao" size="sm">{participationLabel}</Award>
-    ) : (
-      sortedAwards.map((award) => (
-        <Award awardKey={award.slug} size="sm">{award.name}</Award>
-      ))
-    )}
   </div>
 </article>
 
 <style>
-  .exp-fest-row {
-    display: flex;
-    flex-direction: column;
-    gap: var(--exp-space-xs);
-    padding: var(--exp-space-sm) var(--exp-space-md);
-    border-bottom: 1px solid var(--exp-border);
-    transition: background var(--exp-transition-fast);
-  }
-
-  .exp-fest-row:hover {
+  .exp-fest {
     background: var(--exp-bg-elevated);
+    border-bottom: 1px solid var(--exp-border);
   }
 
-  .exp-fest-row:last-child {
+  .exp-fest:last-child {
     border-bottom: none;
   }
 
-  /* Line 1: poster + logo + name/location */
-  .exp-fest-row__main {
+  .exp-fest__row {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-width: 0;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: var(--exp-space-sm) var(--exp-space-md);
   }
 
-  /* Poster thumbnail — 48px, hidden on mobile */
-  .exp-fest-row__poster {
-    width: 48px;
-    height: 64px;
+  /* Poster: 80px wide */
+  .exp-fest__poster {
+    width: 80px;
     flex-shrink: 0;
     overflow: hidden;
     border-radius: 2px;
     background: var(--exp-bg-surface);
   }
 
-  .exp-fest-row__poster-img,
-  .exp-fest-row__poster :global(img) {
+  .exp-fest__poster-img,
+  .exp-fest__poster :global(img) {
     width: 100%;
-    height: 100%;
+    height: auto;
+    display: block;
     object-fit: cover;
   }
 
-  /* Org logo — 32px */
-  .exp-fest-row__org-logo {
-    width: 32px;
-    height: 32px;
+  /* Org logo: 48px */
+  .exp-fest__logo {
+    width: 48px;
+    height: 48px;
     flex-shrink: 0;
     overflow: hidden;
-    border-radius: 2px;
+    border-radius: 4px;
     background: var(--exp-bg-surface);
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .exp-fest-row__org-logo img {
+  .exp-fest__logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding: 2px;
+    padding: 3px;
   }
 
-  .exp-fest-row__org-initial {
+  .exp-fest__logo-initial {
     font-family: var(--exp-font-display);
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--exp-accent);
   }
 
-  /* Name + location */
-  .exp-fest-row__info {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5em;
+  /* Info block */
+  .exp-fest__info {
+    flex: 1;
     min-width: 0;
-    flex-wrap: wrap;
-  }
-
-  .exp-fest-row__name {
-    font-family: var(--exp-font-display);
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: var(--exp-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .exp-fest-row__separator {
-    color: var(--exp-text-muted);
-    font-size: 0.75rem;
-  }
-
-  .exp-fest-row__location {
-    font-size: 0.75rem;
-    color: var(--exp-text-muted);
-    white-space: nowrap;
-  }
-
-  /* Awards row */
-  .exp-fest-row__awards {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    padding-left: 0;
+    flex-direction: column;
+    gap: 0.2em;
   }
 
-  /* Desktop: indent awards under the name (past poster+logo space) */
-  @media (min-width: 768px) {
-    .exp-fest-row__awards {
-      padding-left: calc(48px + 32px + 1.5rem);
-    }
-
-    /* If no poster, reduce indent */
-    .exp-fest-row:not(:has(.exp-fest-row__poster)) .exp-fest-row__awards {
-      padding-left: calc(32px + 0.75rem);
-    }
-
-    /* If neither poster nor logo */
-    .exp-fest-row:not(:has(.exp-fest-row__poster)):not(:has(.exp-fest-row__org-logo)) .exp-fest-row__awards {
-      padding-left: 0;
-    }
+  .exp-fest__name {
+    font-family: var(--exp-font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--exp-text);
+    line-height: 1.3;
   }
 
-  /* Mobile: hide poster, stack content */
+  .exp-fest__location {
+    font-family: var(--exp-font-body);
+    font-size: 0.8rem;
+    color: var(--exp-text-muted);
+  }
+
+  .exp-fest__awards {
+    font-family: var(--exp-font-body);
+    font-size: 0.8rem;
+    color: var(--exp-text-muted);
+    line-height: 1.4;
+    margin-top: 0.15em;
+  }
+
+  /* Mobile */
   @media (max-width: 767px) {
-    .exp-fest-row__poster {
+    .exp-fest__poster {
+      width: 60px;
+    }
+
+    .exp-fest__logo {
       display: none;
     }
 
-    .exp-fest-row__info {
-      flex-direction: column;
-      gap: 0.15em;
-    }
-
-    .exp-fest-row__separator {
-      display: none;
+    .exp-fest__row {
+      padding: var(--exp-space-xs) var(--exp-space-sm);
     }
   }
 </style>
