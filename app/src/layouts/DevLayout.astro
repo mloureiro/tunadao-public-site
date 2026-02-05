@@ -1,17 +1,14 @@
 ---
 import '@styles/global.css';
 import ThemeToggle from '@components/ThemeToggle.astro';
-import TemplateSwitcher from '@components/TemplateSwitcher.astro';
-import { getTemplateFromRequest } from '@templates/core';
 
 interface Props {
   title: string;
-  currentPage: 'index' | 'components' | 'timeline' | 'layout' | 'templates';
+  currentPage: 'index' | 'components' | 'timeline' | 'layout';
 }
 
 const { title, currentPage } = Astro.props;
 const isProd = import.meta.env.PROD;
-const currentTemplateId = getTemplateFromRequest(Astro.request.headers.get('cookie'));
 
 const base = import.meta.env.BASE_URL;
 const navItems = [
@@ -19,7 +16,6 @@ const navItems = [
   { href: `${base}dev/components/`, label: 'Components', key: 'components' },
   { href: `${base}dev/components/timeline`, label: 'Timeline', key: 'timeline' },
   { href: `${base}dev/layout`, label: 'Layout', key: 'layout' },
-  { href: `${base}dev/templates`, label: 'Templates', key: 'templates' },
 ];
 ---
 
@@ -64,7 +60,6 @@ const navItems = [
           <h1>{title}</h1>
         </div>
         <div class="dev-header__actions">
-          <TemplateSwitcher currentTemplate={currentTemplateId} variant="compact" />
           <ThemeToggle />
         </div>
       </header>
