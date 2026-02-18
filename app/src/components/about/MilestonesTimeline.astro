@@ -1,0 +1,254 @@
+---
+/**
+ * MilestonesTimeline - Vertical timeline with gradient line and alternating cards
+ * Displays key milestones in the organization's history
+ */
+import SectionDivider from '@components/SectionDivider.astro';
+
+interface Props {
+  title: string;
+  dividerLabel: string;
+  milestones: { year: string; text: string }[];
+}
+
+const { title, dividerLabel, milestones } = Astro.props;
+---
+
+<section class="timeline">
+  <div class="container">
+    <SectionDivider label={dividerLabel} centered />
+    <h2 class="timeline__title">{title}</h2>
+
+    <div class="timeline__container">
+      <!-- Vertical gradient line -->
+      <div class="timeline__line" aria-hidden="true"></div>
+
+      <!-- Timeline items -->
+      <div class="timeline__items">
+        {milestones.map((milestone, index) => {
+          const isFirst = index === 0;
+          const isLast = index === milestones.length - 1;
+          const isEven = index % 2 === 0;
+
+          return (
+            <div class="timeline__item">
+              {/* Connector dot */}
+              <div
+                class:list={[
+                  'timeline__dot',
+                  { 'timeline__dot--first': isFirst },
+                  { 'timeline__dot--last': isLast },
+                  { 'timeline__dot--middle': !isFirst && !isLast }
+                ]}
+                aria-hidden="true"
+              ></div>
+
+              {/* Content card */}
+              <div class="timeline__card">
+                <div
+                  class:list={[
+                    'timeline__year',
+                    { 'timeline__year--first': isFirst },
+                    { 'timeline__year--last': isLast },
+                    { 'timeline__year--middle': !isFirst && !isLast }
+                  ]}
+                >
+                  {milestone.year}
+                </div>
+                <p class="timeline__text">{milestone.text}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    padding: var(--space-16) 0;
+    background-color: var(--color-surface);
+  }
+
+  .timeline__title {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    text-align: center;
+    margin-bottom: var(--space-12);
+  }
+
+  @media (min-width: 768px) {
+    .timeline__title {
+      font-size: var(--font-size-4xl);
+    }
+  }
+
+  .timeline__container {
+    position: relative;
+    max-width: 56rem;
+    margin: 0 auto;
+  }
+
+  .timeline__line {
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      var(--color-primary),
+      var(--color-secondary),
+      var(--color-accent-gold)
+    );
+  }
+
+  @media (min-width: 768px) {
+    .timeline__line {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .timeline__items {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  .timeline__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  @media (min-width: 768px) {
+    .timeline__item:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+  }
+
+  .timeline__dot {
+    position: absolute;
+    left: 1rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: var(--radius-full);
+    border: 4px solid;
+    z-index: 10;
+    transform: translateX(-50%);
+  }
+
+  @media (min-width: 768px) {
+    .timeline__dot {
+      left: 50%;
+    }
+  }
+
+  .timeline__dot--first {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary-light);
+  }
+
+  .timeline__dot--last {
+    background-color: var(--color-accent-gold);
+    border-color: var(--color-gold-light);
+  }
+
+  .timeline__dot--middle {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary-light);
+  }
+
+  .timeline__card {
+    margin-left: var(--space-12);
+    background-color: var(--color-background);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border-light);
+    transition: box-shadow var(--transition-base);
+  }
+
+  .timeline__card:hover {
+    box-shadow: var(--shadow-lg);
+  }
+
+  @media (min-width: 768px) {
+    .timeline__card {
+      margin-left: 0;
+      width: calc(50% - 2rem);
+    }
+
+    .timeline__item:nth-child(odd) .timeline__card {
+      margin-right: auto;
+      margin-left: 0;
+      padding-right: var(--space-6);
+    }
+
+    .timeline__item:nth-child(even) .timeline__card {
+      margin-left: auto;
+      margin-right: 0;
+      padding-left: var(--space-6);
+    }
+  }
+
+  .timeline__year {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .timeline__year {
+      font-size: var(--font-size-3xl);
+    }
+  }
+
+  .timeline__year--first {
+    color: var(--color-primary);
+  }
+
+  .timeline__year--last {
+    color: var(--color-accent-gold);
+  }
+
+  .timeline__year--middle {
+    color: var(--color-secondary);
+  }
+
+  .timeline__text {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+  }
+
+  @media (min-width: 768px) {
+    .timeline__text {
+      font-size: var(--font-size-lg);
+    }
+  }
+
+  /* Animation */
+  @media (prefers-reduced-motion: no-preference) {
+    .timeline__item {
+      animation: fadeInUp 0.6s ease-out;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
