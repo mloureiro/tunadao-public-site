@@ -2,6 +2,7 @@
 import Layout from '@layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import Button from '@components/Button.astro';
+import Icon from '@ui/icons/Icon.astro';
 import SectionDivider from '@components/SectionDivider.astro';
 import ScrollIndicator from '@components/ScrollIndicator.astro';
 import StatsBar from '@components/home/StatsBar.astro';
@@ -81,11 +82,6 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
     </div>
 
     <div class="hero__content container">
-      <!-- Founded badge -->
-      <div class="hero__badge animate-fade-in">
-        <span>{t('home.hero.foundedBadge')}</span>
-      </div>
-
       <h1 class="hero__title animate-fade-in">{t('home.title')}</h1>
       <p class="hero__subtitle animate-fade-in-delay-1">{t('home.subtitle')}</p>
       <p class="hero__text animate-fade-in-delay-2">{t('home.heroText')}</p>
@@ -150,21 +146,30 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
     </div>
     <Button slot="cta" href={l('/citadao')} variant="red">
       {t('home.sections.citadaoPreview.cta')}
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
     </Button>
     <!-- Poster or placeholder in image slot -->
     <Fragment slot="image">
       {
         latestEditionPosterUrl ? (
-          <img
-            src={latestEditionPosterUrl}
-            alt={`CITADAO ${latestEditionYear} - ${t('home.sections.citadaoPreview.posterAlt')}`}
-            loading="lazy"
-            class="citadao-poster"
-          />
+          <div class="citadao-poster-wrapper">
+            <img
+              src={latestEditionPosterUrl}
+              alt={`CITADAO ${latestEditionYear} - ${t('home.sections.citadaoPreview.posterAlt')}`}
+              loading="lazy"
+              class="citadao-poster"
+            />
+            <div class="citadao-poster-overlay"></div>
+          </div>
         ) : (
           <div class="citadao-placeholder">
-            <p>CITADAO</p>
-            <p>{t('home.sections.citadaoPreview.placeholderText')}</p>
+            <svg class="citadao-placeholder__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+            </svg>
+            <p class="citadao-placeholder__title">CITADAO</p>
+            <p class="citadao-placeholder__text">{t('home.sections.citadaoPreview.placeholderText')}</p>
           </div>
         )
       }
@@ -233,6 +238,7 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
     {
       socialLinks.spotify && (
         <Button slot="cta" href={socialLinks.spotify} variant="white" target="_blank">
+          <Icon name="spotify" size={20} />
           {t('home.sections.musicCta.cta')}
         </Button>
       )
@@ -289,25 +295,6 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
     padding: var(--space-8) 0;
   }
 
-  .hero__badge {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
-    margin-bottom: var(--space-6);
-    background-color: rgba(212, 161, 94, 0.2);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(212, 161, 94, 0.3);
-    border-radius: var(--radius-full);
-  }
-
-  .hero__badge span {
-    color: var(--color-accent-gold);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-    letter-spacing: var(--letter-spacing-wide);
-  }
-
   .hero__title {
     font-size: clamp(2.5rem, 8vw, 4.5rem);
     font-weight: var(--font-weight-black);
@@ -335,21 +322,11 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
   .edition-stats {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: 1rem;
     margin-top: var(--space-6);
-    padding: var(--space-4);
-    background-color: rgba(191, 0, 41, 0.1);
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(191, 0, 41, 0.2);
-  }
-
-  :global([data-theme='dark']) .edition-stats {
-    background-color: rgba(255, 77, 109, 0.15);
-    border-color: rgba(255, 77, 109, 0.25);
   }
 
   .edition-stat {
-    flex: 1;
     text-align: center;
   }
 
@@ -362,25 +339,16 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
     margin-bottom: var(--space-1);
   }
 
-  :global([data-theme='dark']) .edition-stat__value {
-    color: var(--color-secondary);
-  }
-
   .edition-stat__label {
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: var(--letter-spacing-wide);
   }
 
   .edition-stats__divider {
     width: 1px;
     height: 2.5rem;
-    background-color: rgba(191, 0, 41, 0.3);
-  }
-
-  :global([data-theme='dark']) .edition-stats__divider {
-    background-color: rgba(255, 77, 109, 0.3);
+    background-color: var(--color-text-secondary);
+    opacity: 0.3;
   }
 
   /* Achievement Stats (Palmares section) */
@@ -437,10 +405,35 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
   }
 
   /* Citadao Poster/Placeholder */
+  .citadao-poster-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-2xl);
+    transition: transform 0.5s ease;
+  }
+
+  .citadao-poster-wrapper:hover {
+    transform: scale(1.05);
+  }
+
   .citadao-poster {
     width: 100%;
     height: auto;
     display: block;
+  }
+
+  .citadao-poster-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(191, 0, 41, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .citadao-poster-wrapper:hover .citadao-poster-overlay {
+    opacity: 1;
   }
 
   .citadao-placeholder {
@@ -449,21 +442,29 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
-    color: var(--color-accent-gold);
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+    color: #ffffff;
     border-radius: var(--radius-2xl);
     padding: var(--space-8);
     text-align: center;
+    box-shadow: var(--shadow-2xl);
   }
 
-  .citadao-placeholder p:first-child {
-    font-size: var(--font-size-4xl);
+  .citadao-placeholder__icon {
+    width: 6rem;
+    height: 6rem;
+    margin-bottom: var(--space-4);
+    opacity: 0.8;
+  }
+
+  .citadao-placeholder__title {
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-black);
     margin-bottom: var(--space-2);
   }
 
-  .citadao-placeholder p:last-child {
-    font-size: var(--font-size-lg);
+  .citadao-placeholder__text {
+    font-size: var(--font-size-sm);
     opacity: 0.8;
   }
 </style>

@@ -64,16 +64,19 @@ const { title, subtitle, icon, backgroundImage, backgroundAlt, subtitleColor = '
 <style>
   .hero {
     position: relative;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     color: var(--color-text-inverted);
     padding: var(--design-hero-padding) 0;
     text-align: center;
     overflow: hidden;
   }
 
+  .hero:not(.hero--image) {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  }
+
   /* Image mode */
   .hero--image {
-    background: none;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;

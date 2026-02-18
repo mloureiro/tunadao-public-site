@@ -10,7 +10,7 @@ const { label, color = 'gold', centered = false, class: className = '' } = Astro
 ---
 
 <div class:list={['section-divider', { 'section-divider--centered': centered }, className]}>
-  {centered && <span class="section-divider__pill" data-color={color}></span>}
+  <span class="section-divider__pill" data-color={color}></span>
   <span class="section-divider__label" data-color={color}>{label}</span>
   {centered && <span class="section-divider__pill" data-color={color}></span>}
 </div>
