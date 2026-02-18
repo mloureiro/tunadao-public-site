@@ -40,6 +40,7 @@ export const footerSections: NavSection[] = [
       { labelKey: 'nav.about', href: '/sobre' },
       { labelKey: 'nav.citadao', href: '/citadao' },
       { labelKey: 'nav.palmares', href: '/palmares' },
+      { labelKey: 'nav.contact', href: '/contacto' },
     ],
   },
   {
@@ -48,7 +49,6 @@ export const footerSections: NavSection[] = [
       { labelKey: 'nav.blog', href: '/blog', hidden: true },
       { labelKey: 'nav.videos', href: '/videos', hidden: true },
       { labelKey: 'nav.music', href: '/musica', hidden: true },
-      { labelKey: 'nav.contact', href: '/contacto' },
     ],
   },
 ];
