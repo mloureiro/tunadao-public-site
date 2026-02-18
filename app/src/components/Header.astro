@@ -25,12 +25,16 @@ const currentPath = Astro.url.pathname;
   <div class="header__container container">
     <a href={getLocalizedPath('/', lang)} class="header__logo">
       <img
-        src={`${import.meta.env.BASE_URL}images/logo/tunadao-logo.png`}
+        src={`${import.meta.env.BASE_URL}images/logo/tunadao-logo.svg`}
         alt="Tunadão 1998"
         class="header__logo-img"
-        width="120"
-        height="40"
+        width="48"
+        height="48"
       />
+      <div class="header__logo-text">
+        <span class="header__logo-name">Tunadão 1998</span>
+        <span class="header__logo-subtitle">{t('home.subtitle')}</span>
+      </div>
     </a>
 
     <nav class="header__nav" aria-label="Navegação principal">
@@ -86,9 +90,15 @@ const currentPath = Astro.url.pathname;
     position: sticky;
     top: 0;
     z-index: var(--z-sticky);
-    background-color: var(--color-background);
+    background-color: rgba(248, 249, 250, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--color-border-light);
     transition: background-color var(--transition-base);
+  }
+
+  :global([data-theme='dark']) .header {
+    background-color: rgba(13, 17, 23, 0.8);
   }
 
   .header__container {
@@ -102,19 +112,49 @@ const currentPath = Astro.url.pathname;
   .header__logo {
     display: flex;
     align-items: center;
+    gap: var(--space-3);
     text-decoration: none;
   }
 
   .header__logo-img {
     height: 40px;
-    width: auto;
+    width: 40px;
     object-fit: contain;
   }
 
   @media (min-width: 768px) {
     .header__logo-img {
       height: 48px;
+      width: 48px;
     }
+  }
+
+  .header__logo-text {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .header__logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .header__logo-name {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    line-height: var(--line-height-tight);
+  }
+
+  :global([data-theme='dark']) .header__logo-name {
+    color: var(--color-accent-gold);
+  }
+
+  .header__logo-subtitle {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-tight);
   }
 
   /* Desktop Navigation */
@@ -138,12 +178,12 @@ const currentPath = Astro.url.pathname;
 
   .header__nav-link {
     display: block;
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-2) var(--space-4);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-muted);
+    color: var(--color-text-secondary);
     text-decoration: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     transition:
       color var(--transition-fast),
       background-color var(--transition-fast);
@@ -151,16 +191,12 @@ const currentPath = Astro.url.pathname;
 
   .header__nav-link:hover {
     color: var(--color-text);
-    background-color: var(--color-neutral-100);
+    background-color: var(--color-surface-hover);
   }
 
   .header__nav-link.active {
     color: var(--color-primary);
-    background-color: transparent;
-  }
-
-  :global([data-theme='dark']) .header__nav-link:hover {
-    background-color: var(--color-surface-elevated);
+    background-color: var(--color-surface-active);
   }
 
   /* Actions */
@@ -183,11 +219,7 @@ const currentPath = Astro.url.pathname;
   }
 
   .header__menu-btn:hover {
-    background-color: var(--color-neutral-100);
-  }
-
-  :global([data-theme='dark']) .header__menu-btn:hover {
-    background-color: var(--color-surface-elevated);
+    background-color: var(--color-surface-hover);
   }
 
   @media (min-width: 1024px) {
@@ -242,7 +274,9 @@ const currentPath = Astro.url.pathname;
     top: 100%;
     left: 0;
     right: 0;
-    background-color: var(--color-background);
+    background-color: rgba(248, 249, 250, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--color-border-light);
     transform: translateY(-100%);
     opacity: 0;
@@ -251,6 +285,10 @@ const currentPath = Astro.url.pathname;
       transform var(--transition-base),
       opacity var(--transition-base),
       visibility var(--transition-base);
+  }
+
+  :global([data-theme='dark']) .header__mobile-menu {
+    background-color: rgba(13, 17, 23, 0.95);
   }
 
   .header__mobile-menu[aria-hidden='false'] {
@@ -276,24 +314,20 @@ const currentPath = Astro.url.pathname;
     padding: var(--space-3) var(--space-4);
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text);
+    color: var(--color-text-secondary);
     text-decoration: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     transition: background-color var(--transition-fast);
   }
 
-  .header__mobile-link:hover,
-  .header__mobile-link.active {
-    background-color: var(--color-neutral-100);
+  .header__mobile-link:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text);
   }
 
   .header__mobile-link.active {
+    background-color: var(--color-surface-active);
     color: var(--color-primary);
-  }
-
-  :global([data-theme='dark']) .header__mobile-link:hover,
-  :global([data-theme='dark']) .header__mobile-link.active {
-    background-color: var(--color-surface-elevated);
   }
 </style>
 
