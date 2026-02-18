@@ -40,6 +40,7 @@ export interface CMSTuna {
   city?: string;
   website?: string;
   description?: string;
+  type?: string;
 }
 
 // Award Types
@@ -102,6 +103,13 @@ export interface CMSFestivalAward {
   festival: CMSFestival | number;
   awardType?: CMSAwardType | number;
   customName?: string;
+}
+
+export interface CMSFestivalParticipant {
+  id: number;
+  festival: CMSFestival | number;
+  tuna: CMSTuna | number;
+  type: 'contestant' | 'guest';
 }
 
 // Blog Posts
@@ -306,6 +314,8 @@ export interface FrontendPalmaresFestival {
   organizingTuna?: FrontendPalmaresOrganizingTuna;
   posterUrl?: string;
   awards: FrontendPalmaresAward[];
+  contestants?: FrontendTunaWithLogo[];
+  guests?: FrontendTunaWithLogo[];
 }
 
 export interface FrontendContactInfo {

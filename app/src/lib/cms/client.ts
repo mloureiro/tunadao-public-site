@@ -17,6 +17,7 @@ import type {
   CMSVenue,
   CMSFestival,
   CMSFestivalAward,
+  CMSFestivalParticipant,
   CMSAwardType,
   CMSBlogPost,
   CMSVideo,
@@ -316,6 +317,20 @@ export async function getFestivalAwards(): Promise<CMSFestivalAward[]> {
   });
 
   console.log(`[CMS] Fetched ${response.docs.length} festival awards`);
+  return response.docs;
+}
+
+// Festival Participants
+export async function getFestivalParticipants(): Promise<CMSFestivalParticipant[]> {
+  const response = await fetchFromCMS<CMSPaginatedResponse<CMSFestivalParticipant>>(
+    'festival-participants',
+    {
+      limit: 2000,
+      depth: 2,
+    }
+  );
+
+  console.log(`[CMS] Fetched ${response.docs.length} festival participants`);
   return response.docs;
 }
 

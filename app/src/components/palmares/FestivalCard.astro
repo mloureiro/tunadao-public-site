@@ -118,6 +118,36 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
       </div>
     )}
 
+    {/* Participants */}
+    {(festival.contestants && festival.contestants.length > 0 || festival.guests && festival.guests.length > 0) && (
+      <div class="festival-card__participants">
+        {festival.contestants && festival.contestants.length > 0 && (
+          <div class="festival-card__participant-group">
+            <span class="festival-card__participant-label">A Concurso</span>
+            <ul class="festival-card__participant-list">
+              {festival.contestants.map((tuna) => (
+                <li class="festival-card__participant-item" title={tuna.fullName}>
+                  {tuna.shortName}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {festival.guests && festival.guests.length > 0 && (
+          <div class="festival-card__participant-group">
+            <span class="festival-card__participant-label">Convidados</span>
+            <ul class="festival-card__participant-list">
+              {festival.guests.map((tuna) => (
+                <li class="festival-card__participant-item" title={tuna.fullName}>
+                  {tuna.shortName}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    )}
+
     {/* Awards */}
     <footer class="festival-card__awards">
       {hasNoAwards ? (
@@ -414,6 +444,46 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
 
   a.festival-card__organizer-name:hover {
     color: var(--color-primary);
+  }
+
+  /* Participants Section */
+  .festival-card__participants {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .festival-card__participant-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .festival-card__participant-label {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .festival-card__participant-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  .festival-card__participant-item {
+    font-size: var(--font-size-xs);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-light);
+    white-space: nowrap;
   }
 
   /* Awards Section */

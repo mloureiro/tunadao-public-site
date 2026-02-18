@@ -21,6 +21,7 @@ import type {
   CMSVenue,
   CMSFestival,
   CMSFestivalAward,
+  CMSFestivalParticipant,
   CMSAwardType,
   CMSBlogPost,
   CMSVideo,
@@ -77,6 +78,7 @@ interface CMSDump {
     'citadao-awards'?: { docs: CMSCitadaoAward[]; totalDocs: number };
     festivals?: { docs: CMSFestival[]; totalDocs: number };
     'festival-awards'?: { docs: CMSFestivalAward[]; totalDocs: number };
+    'festival-participants'?: { docs: CMSFestivalParticipant[]; totalDocs: number };
     'blog-posts'?: { docs: CMSBlogPost[]; totalDocs: number };
     videos?: { docs: CMSVideo[]; totalDocs: number };
     albums?: { docs: CMSAlbum[]; totalDocs: number };
@@ -242,6 +244,7 @@ export const fixtures = {
   venues: () => getCollection('venues', fallbackVenues),
   festivals: () => getCollection('festivals', fallbackFestivals),
   'festival-awards': () => getCollection('festival-awards', fallbackFestivalAwards),
+  'festival-participants': () => getCollection('festival-participants', []),
   'award-types': () => getCollection('award-types', fallbackAwardTypes),
   'blog-posts': () => getCollection('blog-posts', fallbackBlogPosts),
   videos: () => getCollection('videos', fallbackVideos),
