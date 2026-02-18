@@ -92,7 +92,7 @@ export const FESTIVAL_ORGANIZERS: Record<string, string> = {
   // Santarem
   centup: 'Scalabituna',
   // Lamego
-  fitul: 'EAL',
+  fitul: 'Estudantina Lamego',
 };
 
 /**
@@ -161,7 +161,7 @@ export const FESTIVALS: FestivalData[] = [
     name: 'VII FITUL Cidade de Lamego',
     date: '2022-11-04',
     location: 'Lamego',
-    organizingTuna: 'EAL',
+    organizingTuna: 'Estudantina Lamego',
     awards: [
       { slug: 'melhor-passacalles' },
       { slug: 'melhor-estandarte' },

@@ -244,7 +244,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
 
   // === T ===
   {
-    shortName: 'TABM',
+    shortName: 'TAB',
     fullName: 'Tuna Academica de Biomedicas do Porto',
     city: 'Porto',
   },
@@ -309,7 +309,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   },
   {
     shortName: 'Tintuna',
-    fullName: 'Tuna Academica da Casa Moniz',
+    fullName: 'Tuna Academica da Egas Moniz',
     city: 'Madeira',
   },
   {
