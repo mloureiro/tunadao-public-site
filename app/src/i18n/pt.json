@@ -109,6 +109,9 @@
     "title": "Sobre Nós",
     "subtitle": "Mais de 25 anos de história",
     "description": "Conhece a história da Tunadão 1998, a tuna académica do Instituto Politécnico de Viseu. Mais de 25 anos de tradição e música.",
+    "hero": {
+      "alt": "Tunadão 1998 — vinheta"
+    },
     "history": "A Nossa História",
     "historyText": {
       "p1": "A Tunadão nasceu em 1998, fruto da vontade de um grupo de estudantes do Instituto Politécnico de Viseu em criar uma tuna académica que representasse a instituição e a cidade de Viseu. O nome \"Tunadão\" surge da junção de \"Tuna\" com \"Dão\", a região vinícola onde Viseu se insere, criando uma identidade única e representativa das suas raízes.",
@@ -159,6 +162,29 @@
       "caloirosDesc": "Novos membros em fase de integração na tuna.",
       "aprendizes": "Aprendizes",
       "aprendizesDesc": "Candidatos a tunos em processo de aprendizagem musical."
+    },
+    "sections": {
+      "history": {
+        "dividerLabel": "Tunadão 1998",
+        "image1Alt": "Foto de grupo da Tunadão 1998",
+        "image2Alt": "Placa comemorativa dos 25 anos da Tunadão"
+      },
+      "milestones": {
+        "dividerLabel": "25 Anos Tunadão"
+      },
+      "mission": {
+        "dividerLabel": "Tunadão 1998"
+      },
+      "hierarchy": {
+        "dividerLabel": "Estrutura"
+      },
+      "cta": {
+        "dividerLabel": "Descobrir Mais",
+        "title": "Queres conhecer mais?",
+        "description": "Descobre o nosso percurso nos festivais e os prémios conquistados ao longo dos anos.",
+        "palmares": "Ver Palmarés",
+        "citadao": "Conhecer o CITADÃO"
+      }
     },
     "cta": {
       "palmares": "Ver Palmarés",

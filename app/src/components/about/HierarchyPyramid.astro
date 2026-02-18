@@ -1,0 +1,221 @@
+---
+/**
+ * HierarchyPyramid - Hierarchical pyramid with increasing widths from top to bottom
+ * Each level has a distinct color and tier badge
+ */
+import { useTranslations, type Language } from '@i18n/index';
+import SectionDivider from '@components/SectionDivider.astro';
+
+interface Props {
+  title: string;
+  intro: string;
+  dividerLabel: string;
+  lang: Language;
+}
+
+const { title, intro, dividerLabel, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const levels = [
+  {
+    titleKey: 'about.hierarchy.tunoMestre',
+    descKey: 'about.hierarchy.tunoMestreDesc',
+    tier: 1,
+    bg: 'var(--color-accent-gold)',
+    textColor: '#1a0e4a',
+    maxWidth: '24rem',
+  },
+  {
+    titleKey: 'about.hierarchy.tunosIlustres',
+    descKey: 'about.hierarchy.tunosIlustresDesc',
+    tier: 2,
+    bg: 'var(--color-primary)',
+    textColor: '#ffffff',
+    maxWidth: '28rem',
+  },
+  {
+    titleKey: 'about.hierarchy.tunosDoutores',
+    descKey: 'about.hierarchy.tunosDoutoresDesc',
+    tier: 3,
+    bg: 'var(--color-primary-dark)',
+    textColor: '#f0eeff',
+    maxWidth: '32rem',
+  },
+  {
+    titleKey: 'about.hierarchy.tunos',
+    descKey: 'about.hierarchy.tunosDesc',
+    tier: 4,
+    bg: 'var(--color-secondary-dark)',
+    textColor: '#ffffff',
+    maxWidth: '36rem',
+  },
+  {
+    titleKey: 'about.hierarchy.caloiros',
+    descKey: 'about.hierarchy.caloirosDesc',
+    tier: 5,
+    bg: 'var(--color-secondary)',
+    textColor: '#ffffff',
+    maxWidth: '42rem',
+  },
+  {
+    titleKey: 'about.hierarchy.aprendizes',
+    descKey: 'about.hierarchy.aprendizesDesc',
+    tier: 6,
+    bg: 'var(--color-neutral-600)',
+    textColor: '#ffffff',
+    maxWidth: '48rem',
+  },
+] as const;
+---
+
+<section class="hierarchy">
+  <div class="container">
+    <SectionDivider label={dividerLabel} centered />
+    <h2 class="hierarchy__title">{title}</h2>
+    <p class="hierarchy__intro">{intro}</p>
+
+    <div class="hierarchy__pyramid" role="list" aria-label={title}>
+      {levels.map((level) => (
+        <div
+          role="listitem"
+          class="hierarchy__level"
+          style={`max-width: ${level.maxWidth};`}
+        >
+          <div
+            class="hierarchy__card"
+            style={`background: ${level.bg};`}
+          >
+            <!-- Tier badge -->
+            <div
+              class="hierarchy__tier"
+              style={`color: ${level.textColor};`}
+              aria-hidden="true"
+            >
+              {level.tier}
+            </div>
+
+            <h3
+              class="hierarchy__card-title"
+              style={`color: ${level.textColor};`}
+            >
+              {t(level.titleKey)}
+            </h3>
+            <p
+              class="hierarchy__card-desc"
+              style={`color: ${level.textColor};`}
+            >
+              {t(level.descKey)}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hierarchy {
+    padding: var(--space-16) 0;
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
+  }
+
+  .hierarchy__title {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    text-align: center;
+    margin-bottom: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .hierarchy__title {
+      font-size: var(--font-size-4xl);
+    }
+  }
+
+  .hierarchy__intro {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text-secondary);
+    text-align: center;
+    max-width: 42rem;
+    margin: 0 auto var(--space-12);
+  }
+
+  @media (min-width: 768px) {
+    .hierarchy__intro {
+      font-size: var(--font-size-lg);
+    }
+  }
+
+  .hierarchy__pyramid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .hierarchy__level {
+    width: 100%;
+    transition: all var(--transition-slow);
+  }
+
+  .hierarchy__level:hover {
+    transform: translateY(-2px);
+  }
+
+  .hierarchy__card {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    padding: var(--space-5) var(--space-6);
+    box-shadow: var(--shadow-lg);
+    transition: box-shadow var(--transition-slow);
+  }
+
+  .hierarchy__card:hover {
+    box-shadow: var(--shadow-xl);
+  }
+
+  .hierarchy__tier {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    background: rgba(255, 255, 255, 0.15);
+    opacity: 0.5;
+  }
+
+  .hierarchy__card-title {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-1);
+  }
+
+  @media (min-width: 768px) {
+    .hierarchy__card-title {
+      font-size: var(--font-size-xl);
+    }
+  }
+
+  .hierarchy__card-desc {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+    opacity: 0.8;
+  }
+
+  @media (min-width: 768px) {
+    .hierarchy__card-desc {
+      font-size: var(--font-size-base);
+    }
+  }
+</style>

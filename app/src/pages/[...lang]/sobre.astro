@@ -1,8 +1,14 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import Button from '@components/Button.astro';
 import HeroSection from '@components/HeroSection.astro';
-import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
+import HistorySection from '@components/about/HistorySection.astro';
+import MilestonesTimeline from '@components/about/MilestonesTimeline.astro';
+import MissionPillars from '@components/about/MissionPillars.astro';
+import HierarchyPyramid from '@components/about/HierarchyPyramid.astro';
+import CallToActionCards from '@components/about/CallToActionCards.astro';
+import { useTranslations, type Language, defaultLang } from '@i18n/index';
+
+import heroImage from '@assets/photos/grupo-vinheta.jpg';
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
@@ -11,465 +17,69 @@ export function getStaticPaths() {
 const { lang } = Astro.params;
 const currentLang: Language = (lang as Language) || defaultLang;
 const t = useTranslations(currentLang);
-const l = (path: string) => getLocalizedPath(path, currentLang);
-
-const hierarchy = [
-  {
-    title: t('about.hierarchy.tunoMestre'),
-    description: t('about.hierarchy.tunoMestreDesc'),
-    icon: '👑',
-  },
-  {
-    title: t('about.hierarchy.tunosIlustres'),
-    description: t('about.hierarchy.tunosIlustresDesc'),
-    icon: '⭐',
-  },
-  {
-    title: t('about.hierarchy.tunosDoutores'),
-    description: t('about.hierarchy.tunosDoutoresDesc'),
-    icon: '🎓',
-  },
-  {
-    title: t('about.hierarchy.tunos'),
-    description: t('about.hierarchy.tunosDesc'),
-    icon: '🎭',
-  },
-  {
-    title: t('about.hierarchy.caloiros'),
-    description: t('about.hierarchy.caloirosDesc'),
-    icon: '🌱',
-  },
-  {
-    title: t('about.hierarchy.aprendizes'),
-    description: t('about.hierarchy.aprendizesDesc'),
-    icon: '📚',
-  },
-];
 
 const milestones = [
-  { year: '1998', event: t('about.milestones.1998') },
-  { year: '1999', event: t('about.milestones.1999') },
-  { year: '2003', event: t('about.milestones.2003') },
-  { year: '2004', event: t('about.milestones.2004') },
-  { year: '2008', event: t('about.milestones.2008') },
-  { year: '2023', event: t('about.milestones.2023') },
-];
-
-const missionItems = [
-  {
-    icon: '🎵',
-    title: t('about.missionItems.tradition.title'),
-    description: t('about.missionItems.tradition.description'),
-  },
-  {
-    icon: '🎓',
-    title: t('about.missionItems.train.title'),
-    description: t('about.missionItems.train.description'),
-  },
-  {
-    icon: '🌍',
-    title: t('about.missionItems.represent.title'),
-    description: t('about.missionItems.represent.description'),
-  },
-  {
-    icon: '🤝',
-    title: t('about.missionItems.community.title'),
-    description: t('about.missionItems.community.description'),
-  },
+  { year: '1998', text: t('about.milestones.1998') },
+  { year: '1999', text: t('about.milestones.1999') },
+  { year: '2003', text: t('about.milestones.2003') },
+  { year: '2004', text: t('about.milestones.2004') },
+  { year: '2008', text: t('about.milestones.2008') },
+  { year: '2023', text: t('about.milestones.2023') },
 ];
 ---
 
 <Layout title={`${t('about.title')} | Tunadão 1998`} description={t('about.description')}>
-  <HeroSection title={t('about.title')} subtitle={t('about.subtitle')} />
+  <!-- 1. Hero with background image -->
+  <HeroSection
+    title={t('about.title')}
+    subtitle={t('about.subtitle')}
+    backgroundImage={heroImage}
+    backgroundAlt={t('about.hero.alt')}
+    subtitleColor="gold"
+    height="60vh"
+  />
 
-  <!-- History Section -->
-  <section class="history">
-    <div class="container">
-      <div class="history__grid">
-        <div class="history__logo">
-          <img
-            src={`${import.meta.env.BASE_URL}images/logo.svg`}
-            alt="Tunadão 1998 Logo"
-            class="history__logo-img"
-          />
-        </div>
-        <div class="history__content">
-          <h2 class="section-title">{t('about.history')}</h2>
-          <div class="history__text">
-            <p>{t('about.historyText.p1')}</p>
-            <p>{t('about.historyText.p2')}</p>
-            <p>{t('about.historyText.p3')}</p>
-            <p>{t('about.historyText.p4')}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- 2. History Section -->
+  <HistorySection
+    title={t('about.history')}
+    dividerLabel={t('about.sections.history.dividerLabel')}
+    p1={t('about.historyText.p1')}
+    p2={t('about.historyText.p2')}
+    p3={t('about.historyText.p3')}
+    p4={t('about.historyText.p4')}
+    image1Alt={t('about.sections.history.image1Alt')}
+    image2Alt={t('about.sections.history.image2Alt')}
+  />
 
-  <!-- Timeline Section -->
-  <section class="timeline">
-    <div class="container">
-      <h2 class="section-title">{t('about.milestones.title')}</h2>
-      <div class="timeline__items">
-        {
-          milestones.map((item) => (
-            <div class="timeline__item">
-              <div class="timeline__year">{item.year}</div>
-              <div class="timeline__dot" />
-              <div class="timeline__event">{item.event}</div>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+  <!-- 3. Milestones Timeline -->
+  <MilestonesTimeline
+    title={t('about.milestones.title')}
+    dividerLabel={t('about.sections.milestones.dividerLabel')}
+    milestones={milestones}
+  />
 
-  <!-- Mission Section -->
-  <section class="mission">
-    <div class="container">
-      <div class="mission__content">
-        <h2 class="section-title">{t('about.mission')}</h2>
-        <div class="mission__grid">
-          {
-            missionItems.map((item) => (
-              <div class="mission__item">
-                <div class="mission__icon">{item.icon}</div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- 4. Mission Pillars -->
+  <MissionPillars
+    title={t('about.mission')}
+    dividerLabel={t('about.sections.mission.dividerLabel')}
+    lang={currentLang}
+  />
 
-  <!-- Hierarchy Section -->
-  <section class="hierarchy-section">
-    <div class="container">
-      <h2 class="section-title">{t('about.hierarchy.title')}</h2>
-      <p class="hierarchy-section__intro">
-        {t('about.hierarchy.intro')}
-      </p>
-      <div class="hierarchy__grid">
-        {
-          hierarchy.map((level) => (
-            <div class="hierarchy__item">
-              <span class="hierarchy__icon">{level.icon}</span>
-              <h3 class="hierarchy__title">{level.title}</h3>
-              <p class="hierarchy__description">{level.description}</p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+  <!-- 5. Hierarchy Pyramid -->
+  <HierarchyPyramid
+    title={t('about.hierarchy.title')}
+    intro={t('about.hierarchy.intro')}
+    dividerLabel={t('about.sections.hierarchy.dividerLabel')}
+    lang={currentLang}
+  />
 
-  <!-- CTA Section -->
-  <section class="cta">
-    <div class="container">
-      <div class="cta__content">
-        <h2>{t('about.cta.more')}</h2>
-        <p>{t('about.cta.moreDesc')}</p>
-        <div class="cta__buttons">
-          <Button href={l('/palmares')} variant="primary" size="lg">
-            {t('about.cta.palmares')}
-          </Button>
-          <Button href={l('/citadao')} variant="secondary" size="lg">
-            {t('about.cta.citadao')}
-          </Button>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- 6. Call to Action Cards -->
+  <CallToActionCards
+    lang={currentLang}
+    title={t('about.sections.cta.title')}
+    description={t('about.sections.cta.description')}
+    dividerLabel={t('about.sections.cta.dividerLabel')}
+    palmaresText={t('about.sections.cta.palmares')}
+    citadaoText={t('about.sections.cta.citadao')}
+  />
 </Layout>
-
-<style>
-  /* Section Title */
-  .section-title {
-    font-size: var(--text-3xl);
-    font-weight: 700;
-    margin-bottom: var(--space-6);
-    color: var(--color-text);
-    text-align: center;
-  }
-
-  /* History Section */
-  .history {
-    padding: var(--space-12) 0;
-    background-color: var(--color-background);
-  }
-
-  .history__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-    align-items: start;
-  }
-
-  @media (min-width: 768px) {
-    .history__grid {
-      grid-template-columns: 280px 1fr;
-      gap: var(--space-10);
-    }
-  }
-
-  .history__logo {
-    display: flex;
-    justify-content: center;
-  }
-
-  .history__logo-img {
-    width: 100%;
-    max-width: 220px;
-    height: auto;
-  }
-
-  @media (min-width: 768px) {
-    .history__logo-img {
-      max-width: 280px;
-      position: sticky;
-      top: var(--space-8);
-    }
-  }
-
-  .history__content {
-    max-width: 800px;
-  }
-
-  .history__content .section-title {
-    text-align: left;
-  }
-
-  .history__text p {
-    font-size: var(--text-lg);
-    line-height: 1.8;
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-4);
-  }
-
-  .history__text p:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Timeline Section */
-  .timeline {
-    padding: var(--space-12) 0;
-    background-color: var(--color-surface);
-  }
-
-  .timeline__items {
-    max-width: 700px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .timeline__item {
-    display: grid;
-    grid-template-columns: 80px 20px 1fr;
-    gap: var(--space-3);
-    align-items: center;
-  }
-
-  .timeline__year {
-    font-size: var(--text-lg);
-    font-weight: 700;
-    color: var(--color-primary);
-    text-align: right;
-  }
-
-  .timeline__dot {
-    width: 14px;
-    height: 14px;
-    background-color: var(--color-primary);
-    border-radius: var(--radius-full);
-    border: 3px solid var(--color-surface);
-    box-shadow: 0 0 0 2px var(--color-primary);
-    justify-self: center;
-    flex-shrink: 0;
-  }
-
-  .timeline__event {
-    padding: var(--space-3) var(--space-4);
-    background-color: var(--color-background);
-    border-radius: var(--radius-md);
-    color: var(--color-text);
-    border-left: 3px solid var(--color-primary);
-  }
-
-  @media (max-width: 640px) {
-    .timeline__item {
-      grid-template-columns: 60px 16px 1fr;
-      gap: var(--space-2);
-    }
-
-    .timeline__year {
-      font-size: var(--text-base);
-    }
-
-    .timeline__event {
-      font-size: var(--text-sm);
-      padding: var(--space-2) var(--space-3);
-    }
-  }
-
-  /* Mission Section */
-  .mission {
-    padding: var(--space-12) 0;
-    background-color: var(--color-background);
-  }
-
-  .mission__grid {
-    display: grid;
-    gap: var(--space-6);
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  @media (min-width: 768px) {
-    .mission__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .mission__grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .mission__item {
-    text-align: center;
-    padding: var(--space-6);
-    background-color: var(--color-surface);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-    transition:
-      transform var(--transition-normal),
-      box-shadow var(--transition-normal);
-  }
-
-  .mission__item:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .mission__icon {
-    font-size: 2.5rem;
-    margin-bottom: var(--space-3);
-  }
-
-  .mission__item h3 {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    margin-bottom: var(--space-2);
-    color: var(--color-text);
-  }
-
-  .mission__item p {
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    line-height: 1.6;
-  }
-
-  /* Hierarchy Section */
-  .hierarchy-section {
-    padding: var(--space-12) 0;
-    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
-  }
-
-  .hierarchy-section__intro {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto var(--space-8);
-    color: var(--color-text-muted);
-    font-size: var(--text-lg);
-  }
-
-  .hierarchy__grid {
-    display: grid;
-    gap: var(--space-4);
-    grid-template-columns: repeat(1, 1fr);
-    max-width: 1000px;
-    margin: 0 auto;
-  }
-
-  @media (min-width: 768px) {
-    .hierarchy__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .hierarchy__grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .hierarchy__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: var(--space-5);
-    background-color: var(--color-surface);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-    transition: transform var(--transition-normal);
-  }
-
-  .hierarchy__item:hover {
-    transform: scale(1.02);
-  }
-
-  .hierarchy__icon {
-    font-size: 2rem;
-    margin-bottom: var(--space-2);
-  }
-
-  .hierarchy__title {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    color: var(--color-text);
-    margin-bottom: var(--space-2);
-  }
-
-  .hierarchy__description {
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    line-height: 1.5;
-  }
-
-  /* CTA Section */
-  .cta {
-    padding: var(--space-12) 0;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: var(--color-text-inverted);
-  }
-
-  .cta__content {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .cta__content h2 {
-    font-size: var(--text-3xl);
-    font-weight: 700;
-    margin-bottom: var(--space-3);
-  }
-
-  .cta__content p {
-    font-size: var(--text-lg);
-    opacity: 0.9;
-    margin-bottom: var(--space-6);
-  }
-
-  .cta__buttons {
-    display: flex;
-    gap: var(--space-3);
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-</style>

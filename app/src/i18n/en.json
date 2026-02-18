@@ -109,6 +109,9 @@
     "title": "About Us",
     "subtitle": "More than 25 years of history",
     "description": "Discover the history of Tunadão 1998, the academic tuna of the Polytechnic Institute of Viseu. More than 25 years of tradition and music.",
+    "hero": {
+      "alt": "Tunadão 1998 — vignette"
+    },
     "history": "Our History",
     "historyText": {
       "p1": "Tunadão was born in 1998, from the desire of a group of students at the Polytechnic Institute of Viseu to create an academic tuna that would represent the institution and the city of Viseu. The name \"Tunadão\" comes from the combination of \"Tuna\" with \"Dão\", the wine region where Viseu is located, creating a unique identity representative of its roots.",
@@ -159,6 +162,29 @@
       "caloirosDesc": "New members in the integration phase in the tuna.",
       "aprendizes": "Apprentices",
       "aprendizesDesc": "Candidates for tunos in the process of musical learning."
+    },
+    "sections": {
+      "history": {
+        "dividerLabel": "Tunadão 1998",
+        "image1Alt": "Tunadão 1998 group photo",
+        "image2Alt": "Tunadão 25th anniversary commemorative plaque"
+      },
+      "milestones": {
+        "dividerLabel": "25 Years of Tunadão"
+      },
+      "mission": {
+        "dividerLabel": "Tunadão 1998"
+      },
+      "hierarchy": {
+        "dividerLabel": "Structure"
+      },
+      "cta": {
+        "dividerLabel": "Discover More",
+        "title": "Want to know more?",
+        "description": "Discover our journey through festivals and the awards won over the years.",
+        "palmares": "View Awards",
+        "citadao": "Discover CITADÃO"
+      }
     },
     "cta": {
       "palmares": "View Awards",
