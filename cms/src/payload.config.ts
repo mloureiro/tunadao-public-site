@@ -17,6 +17,7 @@ import { CitadaoParticipants } from './collections/CitadaoParticipants';
 import { CitadaoAwards } from './collections/CitadaoAwards';
 import { Festivals } from './collections/Festivals';
 import { FestivalAwards } from './collections/FestivalAwards';
+import { FestivalParticipants } from './collections/FestivalParticipants';
 import { BlogPosts } from './collections/BlogPosts';
 import { Videos } from './collections/Videos';
 import { Albums } from './collections/Albums';
@@ -73,6 +74,7 @@ export default buildConfig({
     CitadaoAwards,
     Festivals,
     FestivalAwards,
+    FestivalParticipants,
     BlogPosts,
     Videos,
     Albums,
