@@ -95,7 +95,7 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
 
   <!-- About Preview Section -->
   <SectionPreview id="sobre-preview" accentColor="purple" imagePosition="right" showGoldFrame>
-    <SectionDivider slot="divider" label={t('home.sections.aboutPreview.badge')} color="purple" />
+    <SectionDivider slot="divider" label={t('home.sections.aboutPreview.badge')} color="gold" />
     <h2 slot="title">{t('home.sections.aboutPreview.title')}</h2>
     <div slot="content" class="prose">
       <p>{t('home.sections.aboutPreview.text1')}</p>
@@ -118,7 +118,7 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
     <SectionDivider
       slot="divider"
       label={t('home.sections.citadaoPreview.badge')}
-      color="red"
+      color="gold"
     />
     <h2 slot="title">{t('home.sections.citadaoPreview.title')}</h2>
     <div slot="content">
@@ -154,15 +154,11 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
     <Fragment slot="image">
       {
         latestEditionPosterUrl ? (
-          <div class="citadao-poster-wrapper">
-            <img
-              src={latestEditionPosterUrl}
-              alt={`CITADAO ${latestEditionYear} - ${t('home.sections.citadaoPreview.posterAlt')}`}
-              loading="lazy"
-              class="citadao-poster"
-            />
-            <div class="citadao-poster-overlay"></div>
-          </div>
+          <img
+            src={latestEditionPosterUrl}
+            alt={`CITADAO ${latestEditionYear} - ${t('home.sections.citadaoPreview.posterAlt')}`}
+            loading="lazy"
+          />
         ) : (
           <div class="citadao-placeholder">
             <svg class="citadao-placeholder__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -257,7 +253,7 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
   /* Hero Section */
   .hero {
     position: relative;
-    min-height: 100vh;
+    min-height: calc(100vh - var(--header-height));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -404,38 +400,7 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
     letter-spacing: var(--letter-spacing-wide);
   }
 
-  /* Citadao Poster/Placeholder */
-  .citadao-poster-wrapper {
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-2xl);
-    transition: transform 0.5s ease;
-  }
-
-  .citadao-poster-wrapper:hover {
-    transform: scale(1.05);
-  }
-
-  .citadao-poster {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .citadao-poster-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(191, 0, 41, 0.2), transparent);
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-  }
-
-  .citadao-poster-wrapper:hover .citadao-poster-overlay {
-    opacity: 1;
-  }
-
+  /* Citadao Placeholder */
   .citadao-placeholder {
     aspect-ratio: 3 / 4;
     display: flex;
