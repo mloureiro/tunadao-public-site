@@ -1,13 +1,14 @@
 ---
 interface Props {
+  position?: 'left' | 'right';
   class?: string;
 }
 
-const { class: className = '' } = Astro.props;
+const { position = 'left', class: className = '' } = Astro.props;
 ---
 
 <div class:list={['image-frame', className]}>
-  <div class="image-frame__border" aria-hidden="true"></div>
+  <div class:list={['image-frame__border', `image-frame__border--${position}`]} aria-hidden="true"></div>
   <div class="image-frame__content">
     <slot />
   </div>
@@ -21,13 +22,21 @@ const { class: className = '' } = Astro.props;
   .image-frame__border {
     position: absolute;
     top: -1rem;
-    left: -1rem;
     width: 100%;
     height: 100%;
     border-radius: var(--radius-2xl);
     border: 2px solid var(--color-accent-gold);
     opacity: 0.4;
     pointer-events: none;
+  }
+
+  .image-frame__border--left {
+    left: -1rem;
+  }
+
+  .image-frame__border--right {
+    right: -1rem;
+    left: auto;
   }
 
   .image-frame__content {
