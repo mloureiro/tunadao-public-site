@@ -193,24 +193,6 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
     box-shadow: var(--shadow-lg), 0 0 0 1px var(--color-gold);
   }
 
-  /* Noite theme enhancements */
-  :global([data-design='noite']) .festival-card {
-    box-shadow: var(--shadow-md);
-  }
-
-  :global([data-design='noite']) .festival-card:hover {
-    box-shadow: var(--shadow-xl), var(--glow-primary);
-    transform: translateY(-6px);
-  }
-
-  :global([data-design='noite']) .festival-card--featured {
-    box-shadow: var(--shadow-md), 0 0 20px rgba(255, 215, 0, 0.15);
-  }
-
-  :global([data-design='noite']) .festival-card--featured:hover {
-    box-shadow: var(--shadow-xl), 0 0 30px rgba(255, 215, 0, 0.25);
-  }
-
   /* Poster Section */
   .festival-card__poster {
     position: relative;

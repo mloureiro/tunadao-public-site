@@ -1,7 +1,7 @@
 ---
 /**
  * HeroSection - Page hero with theme-aware styling
- * Adapts to both color mode (light/dark) and design theme (classic/noite)
+ * Adapts to color mode (light/dark)
  */
 interface Props {
   title: string;
@@ -67,28 +67,6 @@ const { title, subtitle, icon } = Astro.props;
     opacity: 0.9;
     max-width: 600px;
     margin: 0 auto;
-  }
-
-  /* Noite theme enhancements */
-  :global([data-design='noite']) .hero {
-    box-shadow: var(--glow-primary);
-  }
-
-  :global([data-design='noite']) .hero__backdrop {
-    background-image: none;
-    background: radial-gradient(
-      ellipse at top,
-      rgba(124, 106, 255, 0.15) 0%,
-      transparent 60%
-    );
-  }
-
-  :global([data-design='noite']) .hero__icon {
-    filter: drop-shadow(0 0 20px rgba(124, 106, 255, 0.5));
-  }
-
-  :global([data-design='noite']) .hero__title {
-    text-shadow: 0 0 30px rgba(124, 106, 255, 0.4);
   }
 
   /* Responsive */
