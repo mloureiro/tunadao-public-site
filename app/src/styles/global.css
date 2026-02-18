@@ -194,3 +194,68 @@ select {
     font-size: var(--font-size-6xl);
   }
 }
+
+/* Prose utility — auto spacing between children */
+.prose > * + * {
+  margin-top: var(--prose-gap);
+}
+
+.prose > h1 + *,
+.prose > h2 + *,
+.prose > h3 + *,
+.prose > h4 + * {
+  margin-top: var(--heading-gap);
+}
+
+/* Animation Keyframes */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-25%);
+  }
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fade-in-up 0.8s ease-out both;
+}
+
+.animate-fade-in-delay-1 {
+  animation: fade-in-up 0.8s ease-out 0.2s both;
+}
+
+.animate-fade-in-delay-2 {
+  animation: fade-in-up 0.8s ease-out 0.4s both;
+}
+
+.animate-fade-in-delay-3 {
+  animation: fade-in-up 0.8s ease-out 0.6s both;
+}
+
+.animate-bounce {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-delay-1,
+  .animate-fade-in-delay-2,
+  .animate-fade-in-delay-3,
+  .animate-bounce {
+    animation: none;
+  }
+}

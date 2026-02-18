@@ -50,11 +50,59 @@
       "about": "Conhecer a história",
       "citadao": "Próximo Citadão"
     },
+    "hero": {
+      "foundedBadge": "Fundada em 1998",
+      "heroAlt": "Tunadão no palco dos 25 anos"
+    },
+    "stats": {
+      "founded": "Fundação",
+      "yearsHistory": "Anos de História",
+      "citadaoEditions": "Edições Citadão",
+      "festivals": "Festivais",
+      "awards": "Prémios",
+      "ariaLabel": "Números da Tunadão"
+    },
     "sections": {
       "about": "Sobre Nós",
       "citadao": "Festival Citadão",
       "palmares": "Palmarés",
-      "blog": "Últimas Notícias"
+      "blog": "Últimas Notícias",
+      "aboutPreview": {
+        "badge": "Sobre Nós",
+        "title": "Quem Somos",
+        "text1": "A Tunadão nasceu em 1998, fruto da vontade de um grupo de estudantes do Instituto Politécnico de Viseu em criar uma tuna académica que representasse a instituição e a cidade. Desde então, tem sido uma referência na vida académica viseense.",
+        "text2": "Com mais de 25 anos de história, a Tunadão continua a formar novos tunos, a preservar tradições académicas e a levar a música portuguesa e a cultura tunante a palcos de norte a sul do país.",
+        "cta": "Conhecer a história",
+        "imageAlt": "Foto de grupo da Tunadão 1998"
+      },
+      "citadaoPreview": {
+        "badge": "Festival",
+        "title": "CITADÃO",
+        "description": "O Certame Internacional de Tunas Académicas do Dão é o nosso festival anual, que reúne as melhores tunas do país desde 2004.",
+        "cta": "Descobrir o Citadão",
+        "editionsLabel": "Edições",
+        "latestEditionLabel": "Última Edição",
+        "posterAlt": "Cartaz do CITADÃO",
+        "placeholderText": "Festival de Tunas"
+      },
+      "palmaresPreview": {
+        "badge": "Conquistas",
+        "title": "Palmarés",
+        "description": "Mais de duas décadas de participações em festivais e prémios conquistados de norte a sul do país e além-fronteiras.",
+        "cta": "Ver palmarés completo",
+        "awardsLabel": "Prémios",
+        "festivalsLabel": "Festivais",
+        "bestTunaLabel": "Melhor Tuna",
+        "imageAlt": "Placa comemorativa dos 25 anos"
+      },
+      "musicCta": {
+        "badge": "Música",
+        "title": "A Nossa Música",
+        "text": "Ouve a nossa discografia no Spotify. Dois álbuns com o melhor da música tradicional portuguesa e composições originais da Tunadão.",
+        "cta": "Ouvir no Spotify",
+        "albumsLabel": "Álbuns",
+        "imageAlt": "Pandeireta em close-up"
+      }
     }
   },
   "about": {

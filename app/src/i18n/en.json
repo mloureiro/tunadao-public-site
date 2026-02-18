@@ -50,11 +50,59 @@
       "about": "Discover our history",
       "citadao": "Next Citadão"
     },
+    "hero": {
+      "foundedBadge": "Founded in 1998",
+      "heroAlt": "Tunadão on stage at 25th anniversary"
+    },
+    "stats": {
+      "founded": "Founded",
+      "yearsHistory": "Years of History",
+      "citadaoEditions": "Citadão Editions",
+      "festivals": "Festivals",
+      "awards": "Awards",
+      "ariaLabel": "Tunadão in Numbers"
+    },
     "sections": {
       "about": "About Us",
       "citadao": "Citadão Festival",
       "palmares": "Awards",
-      "blog": "Latest News"
+      "blog": "Latest News",
+      "aboutPreview": {
+        "badge": "About Us",
+        "title": "Who We Are",
+        "text1": "Tunadão was born in 1998, from the desire of a group of students at the Polytechnic Institute of Viseu to create an academic tuna that would represent the institution and the city. Since then, it has been a reference in Viseu's academic life.",
+        "text2": "With more than 25 years of history, Tunadão continues to train new members, preserve academic traditions, and bring Portuguese music and tuna culture to stages from north to south of the country.",
+        "cta": "Discover our history",
+        "imageAlt": "Tunadão 1998 group photo"
+      },
+      "citadaoPreview": {
+        "badge": "Festival",
+        "title": "CITADÃO",
+        "description": "The International Competition of Academic Tunas of Dão is our annual festival, bringing together the best tunas in the country since 2004.",
+        "cta": "Discover Citadão",
+        "editionsLabel": "Editions",
+        "latestEditionLabel": "Latest Edition",
+        "posterAlt": "CITADÃO poster",
+        "placeholderText": "Tuna Festival"
+      },
+      "palmaresPreview": {
+        "badge": "Achievements",
+        "title": "Awards",
+        "description": "More than two decades of festival participations and awards won from north to south of the country and beyond borders.",
+        "cta": "View full awards",
+        "awardsLabel": "Awards",
+        "festivalsLabel": "Festivals",
+        "bestTunaLabel": "Best Tuna",
+        "imageAlt": "25th anniversary commemorative plaque"
+      },
+      "musicCta": {
+        "badge": "Music",
+        "title": "Our Music",
+        "text": "Listen to our discography on Spotify. Two albums with the best of traditional Portuguese music and original compositions by Tunadão.",
+        "cta": "Listen on Spotify",
+        "albumsLabel": "Albums",
+        "imageAlt": "Pandeireta close-up"
+      }
     }
   },
   "about": {
