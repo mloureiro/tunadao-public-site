@@ -158,6 +158,7 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
             src={latestEditionPosterUrl}
             alt={`CITADAO ${latestEditionYear} - ${t('home.sections.citadaoPreview.posterAlt')}`}
             loading="lazy"
+            style="aspect-ratio: 3/2; object-fit: cover; width: 100%;"
           />
         ) : (
           <div class="citadao-placeholder">
@@ -402,7 +403,7 @@ const latestEditionPosterUrl = latestEdition?.posterUrl || null;
 
   /* Citadao Placeholder */
   .citadao-placeholder {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 3 / 2;
     display: flex;
     flex-direction: column;
     align-items: center;
