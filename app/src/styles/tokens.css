@@ -21,14 +21,16 @@
   --color-neutral-800: #343a40;
   --color-neutral-900: #212529;
 
-  --color-background: #ffffff;
-  --color-background-alt: #f8f9fa;
+  --color-background: #f8f9fa;
+  --color-background-alt: #e9ecef;
   --color-surface: #ffffff;
-  --color-surface-hover: #f3f4f6;
+  --color-surface-hover: rgba(41, 22, 111, 0.04);
+  --color-surface-active: rgba(41, 22, 111, 0.08);
   --color-surface-elevated: #ffffff;
 
-  --color-text: #212529;
-  --color-text-muted: #6c757d;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b7280;
+  --color-text-secondary: #495057;
   --color-text-inverted: #ffffff;
 
   --color-border: #dee2e6;
@@ -48,6 +50,7 @@
   --color-youtube: #ff0000;
   --color-youtube-dark: #cc0000;
   --color-spotify: #1db954;
+  --color-accent-gold: #d4a15e;
 
   /* Award/Medal Colors */
   --color-gold: #ffd700;
@@ -64,7 +67,7 @@
   --font-family-base:
     'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
     Arial, sans-serif;
-  --font-family-heading: 'Inter', var(--font-family-base);
+  --font-family-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-family-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
 
   --font-size-xs: 0.75rem; /* 12px */
@@ -82,6 +85,7 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
 
   --line-height-tight: 1.25;
   --line-height-base: 1.5;
@@ -136,24 +140,25 @@
 
   /* Layout */
   --container-max-width: 1200px;
-  --header-height: 4rem;
+  --header-height: 5rem;
 }
 
-/* Dark Mode */
+/* Dark Mode (from template-one) */
 [data-theme='dark'] {
-  --color-background: #121218;
-  --color-background-alt: #1a1a22;
-  --color-surface: #1e1e28;
-  --color-surface-hover: #2a2a38;
-  --color-surface-elevated: #282835;
+  --color-background: #0d1117;
+  --color-background-alt: #161b22;
+  --color-surface: #161b22;
+  --color-surface-hover: rgba(177, 186, 196, 0.08);
+  --color-surface-active: rgba(177, 186, 196, 0.12);
+  --color-surface-elevated: #21262d;
 
-  --color-text: #f5f5f7;
-  --color-text-muted: #a8a8b3;
-  /* Keep text-inverted white - used on colored backgrounds (buttons, hero) that stay dark */
+  --color-text: #e6edf3;
+  --color-text-muted: #768390;
+  --color-text-secondary: #adbac7;
   --color-text-inverted: #ffffff;
 
-  --color-border: #3a3a4a;
-  --color-border-light: #2d2d3d;
+  --color-border: #30363d;
+  --color-border-light: #21262d;
 
   /* Lighter primary colors for dark mode visibility */
   --color-primary: #6b5adf;
@@ -179,89 +184,13 @@
   --breakpoint-2xl: 1536px;
 */
 
-/* ============================================
-   DESIGN THEMES
-   - 'classic': Current traditional look
-   - 'noite': Modern, darker aesthetic with structural changes
-   ============================================ */
-
-/* Classic Theme (default) - uses base :root values */
-[data-design='classic'] {
-  /* Structural tokens - traditional feel */
-  --design-hero-padding: var(--space-12);
-  --design-section-gap: var(--space-10);
-  --design-card-radius: var(--radius-lg);
-  --design-card-padding: var(--space-4);
-  --design-heading-weight: 700;
-  --design-heading-tracking: var(--letter-spacing-normal);
-  --design-border-style: solid;
-  --design-border-width: 1px;
-
-  /* Layout tokens */
-  --design-grid-gap: var(--space-5);
-  --design-container-padding: var(--space-4);
-
-  /* Typography scale modifiers */
-  --design-title-scale: 1;
-  --design-body-scale: 1;
-}
-
-/* Noite Theme - Modern, bold, atmospheric */
-[data-design='noite'] {
-  /* Force dark mode colors */
-  --color-background: #0a0a0f;
-  --color-background-alt: #12121a;
-  --color-surface: #16161f;
-  --color-surface-hover: #1e1e2a;
-  --color-surface-elevated: #1a1a25;
-
-  --color-text: #f0f0f5;
-  --color-text-muted: #8888a0;
-
-  --color-border: #2a2a3a;
-  --color-border-light: #222230;
-
-  /* Vibrant primary for dark background */
-  --color-primary: #7c6aff;
-  --color-primary-light: #9d8fff;
-  --color-primary-dark: #5a48cc;
-
-  /* Structural tokens - modern, spacious feel */
-  --design-hero-padding: var(--space-16);
-  --design-section-gap: var(--space-12);
-  --design-card-radius: var(--radius-2xl);
-  --design-card-padding: var(--space-6);
-  --design-heading-weight: 800;
-  --design-heading-tracking: var(--letter-spacing-tight);
-  --design-border-style: solid;
-  --design-border-width: 0;
-
-  /* Layout tokens - more generous */
-  --design-grid-gap: var(--space-6);
-  --design-container-padding: var(--space-6);
-
-  /* Typography scale modifiers - larger headings */
-  --design-title-scale: 1.15;
-  --design-body-scale: 1.05;
-
-  /* Enhanced shadows for depth */
-  --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.4);
-  --shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.5);
-  --shadow-xl: 0 24px 48px -8px rgb(0 0 0 / 0.6);
-
-  /* Glow effects for modern feel */
-  --glow-primary: 0 0 20px rgba(124, 106, 255, 0.3);
-  --glow-secondary: 0 0 20px rgba(255, 77, 109, 0.3);
-}
-
 /* Default design theme values for components */
 :root {
   --design-hero-padding: var(--space-12);
   --design-section-gap: var(--space-10);
   --design-card-radius: var(--radius-lg);
   --design-card-padding: var(--space-4);
-  --design-heading-weight: 700;
+  --design-heading-weight: 800;
   --design-heading-tracking: var(--letter-spacing-normal);
   --design-border-style: solid;
   --design-border-width: 1px;
