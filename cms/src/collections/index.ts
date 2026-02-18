@@ -8,6 +8,7 @@ export { CitadaoParticipants } from './CitadaoParticipants';
 export { CitadaoAwards } from './CitadaoAwards';
 export { Festivals } from './Festivals';
 export { FestivalAwards } from './FestivalAwards';
+export { FestivalParticipants } from './FestivalParticipants';
 export { BlogPosts } from './BlogPosts';
 export { Videos } from './Videos';
 export { Albums } from './Albums';
