@@ -14,6 +14,7 @@ import type {
   CMSAlbum,
   CMSFestival,
   CMSFestivalAward,
+  CMSFestivalParticipant,
   CMSMedia,
   FrontendCitadaoEdition,
   FrontendTunaWithLogo,
@@ -380,10 +381,11 @@ export async function getAlbums(): Promise<FrontendAlbum[]> {
 // =============================================================================
 
 export async function getPalmaresYears(): Promise<FrontendPalmaresYear[]> {
-  const [cmsFestivals, cmsFestivalAwards, cmsAwardTypes] = await Promise.all([
+  const [cmsFestivals, cmsFestivalAwards, cmsAwardTypes, cmsFestivalParticipants] = await Promise.all([
     client.getFestivals(),
     client.getFestivalAwards(),
     client.getAwardTypes(),
+    client.getFestivalParticipants(),
   ]);
 
   // Create a map of award type IDs to { slug, name }
@@ -400,6 +402,18 @@ export async function getPalmaresYears(): Promise<FrontendPalmaresYear[]> {
       festivalAwardsMap.set(festivalId, []);
     }
     festivalAwardsMap.get(festivalId)!.push(award);
+  }
+
+  // Create a map of festival IDs to their participants
+  const festivalParticipantsMap = new Map<number, CMSFestivalParticipant[]>();
+  for (const participant of cmsFestivalParticipants) {
+    const festivalId = typeof participant.festival === 'number'
+      ? participant.festival
+      : participant.festival.id;
+    if (!festivalParticipantsMap.has(festivalId)) {
+      festivalParticipantsMap.set(festivalId, []);
+    }
+    festivalParticipantsMap.get(festivalId)!.push(participant);
   }
 
   // Group festivals by year
@@ -442,11 +456,22 @@ export async function getPalmaresYears(): Promise<FrontendPalmaresYear[]> {
         // Get poster URL if available
         const posterUrl = getMediaUrl(festival.poster) || undefined;
 
+        // Get participants for this festival
+        const participants = festivalParticipantsMap.get(festival.id) || [];
+        const contestants = participants
+          .filter(p => p.type === 'contestant')
+          .map(p => transformTunaWithLogo(p.tuna));
+        const guests = participants
+          .filter(p => p.type === 'guest')
+          .map(p => transformTunaWithLogo(p.tuna));
+
         return {
           name: festival.name,
           location: festival.location || '',
           organizingTuna,
           posterUrl,
+          contestants: contestants.length > 0 ? contestants : undefined,
+          guests: guests.length > 0 ? guests : undefined,
           awards: awards.map((award) => {
             // Get award type info
             if (award.awardType) {
