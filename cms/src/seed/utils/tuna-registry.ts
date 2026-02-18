@@ -85,6 +85,7 @@ export class TunaRegistry {
             fullName: tuna.fullName,
             city: tuna.city || '',
             website: tuna.website || '',
+            type: tuna.type || 'tuna',
           },
         });
 
@@ -123,6 +124,7 @@ export class TunaRegistry {
         fullName: masterTuna.fullName,
         city: masterTuna.city || '',
         website: masterTuna.website || '',
+        type: masterTuna.type || 'tuna',
       },
     });
 
