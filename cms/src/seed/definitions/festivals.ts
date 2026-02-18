@@ -20,6 +20,10 @@ export interface FestivalData {
   /** Cloudinary public ID for the festival poster */
   posterPublicId?: string;
   awards: FestivalAwardData[];
+  /** Tuna shortNames competing ("a concurso"). undefined = no data available. */
+  tunas?: string[];
+  /** Tuna shortNames as guests ("extra concurso"). undefined = no data available. */
+  guests?: string[];
 }
 
 /**
@@ -144,6 +148,8 @@ export const FESTIVALS: FestivalData[] = [
     organizingTuna: 'Afonsina',
     posterPublicId: 'tunadao/festivais/xviii-cidade-berco-2024',
     awards: [],
+    tunas: ['TAL', 'Luz&Tuna', 'Desertuna', 'GATUNA', 'SINA', 'TunObebes', 'TunaoMinho'],
+    guests: ['Afonsina'],
   },
   // 2023
   {
@@ -193,6 +199,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-tuna' },
       { slug: 'tuna-mais-bebedora' },
     ],
+    tunas: ['anTUNiA', "Copituna d'Oppidana", 'Azeituna', 'TunaNavarra'],
+    guests: ['ButchersBrassBand', 'TFAAUAV', 'TunaVeteranaAveiro'],
   },
   {
     name: 'XXIX FITU Bracara Augusta',
@@ -205,6 +213,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-pandeireta' },
       { slug: 'melhor-tuna' },
     ],
+    tunas: ['TMP', 'TunaTS', 'EUL', 'TUIST', 'TunaDerechoAlicante'],
+    guests: ['Azeituna'],
   },
   {
     name: 'XIII FITUCB',
@@ -216,6 +226,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-estandarte' },
       { slug: 'segunda-melhor-tuna' },
     ],
+    tunas: ['anTUNiA', 'TEUP', 'TUIST'],
+    guests: ['ArtintunaCopitusa', 'DArtatuna', 'TUSALBI', 'TUSALD', 'TFA'],
   },
   // 2018
   {
@@ -243,6 +255,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-tuna' },
       { slug: 'melhor-serenata' },
     ],
+    tunas: ['EACB', 'Luz&Tuna', 'Oportuna'],
+    guests: ['TUM'],
   },
   // 2017
   {
@@ -252,6 +266,8 @@ export const FESTIVALS: FestivalData[] = [
     organizingTuna: "Copituna d'Oppidana",
     posterPublicId: 'tunadao/festivais/xvi-oppidana-2017',
     awards: [{ slug: 'tuna-mais-tuna' }],
+    tunas: ['TUA', 'TMP', 'EACB'],
+    guests: ['AMeiaNoite'],
   },
   {
     name: 'XII Barca Celi',
@@ -263,6 +279,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-original' },
       { slug: 'melhor-tuna' },
     ],
+    tunas: ['Azeituna', 'TunaTS', 'Scalabituna'],
+    guests: ['TFIPCA'],
   },
   {
     name: 'XXVII FITU Bracara Augusta',
@@ -274,6 +292,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-pandeireta' },
       { slug: 'terceira-melhor-tuna' },
     ],
+    tunas: ['TMP', 'TUA', 'TUCP', 'TMUC', 'anTUNiA', 'TunaDerechoValladolid'],
+    guests: ['Azeituna', 'Jogralhos'],
   },
   {
     name: 'XVII Lethes',
@@ -282,6 +302,8 @@ export const FESTIVALS: FestivalData[] = [
     organizingTuna: 'Hinoportuna',
     posterPublicId: 'tunadao/festivais/xvii-lethes-2017',
     awards: [],
+    tunas: ['EUC', 'TUM', 'anTUNiA'],
+    guests: ['TUNICE', 'OUP'],
   },
   {
     name: 'IX Cantar de Estudante',
@@ -307,7 +329,13 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'tuna-do-publico' },
       { slug: 'melhor-solista' },
     ],
+    tunas: ['TAIPCA', 'Tuna Templaria', 'TunaTS'],
+    guests: ['Trovantina'],
   },
+  // NOTE: Poster shows tuna emblems on traje (uncertain identification).
+  // Visible emblems: TMP, Tunadao1998, TunaMagisterioCaceres, TunaPonferrada,
+  // TunaDerechoUNAM, Desertuna, TunaEngBeja.
+  // Not adding participant arrays due to low confidence.
   {
     name: 'XXVI FITU Bracara Augusta',
     date: '2016-04-10',
@@ -334,6 +362,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-serenata' },
       { slug: 'tuna-do-publico' },
     ],
+    tunas: ['TAUE', 'TAL', 'Versus Tuna'],
+    guests: ['AteneuLeiria'],
   },
   {
     name: 'III Herminius',
@@ -346,6 +376,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-serenata' },
       { slug: 'tuna-do-publico' },
     ],
+    tunas: ['EACB', 'Luz&Tuna', 'TMP'],
+    guests: [],
   },
   {
     name: 'IX FITUCB',
@@ -359,6 +391,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'segunda-melhor-tuna' },
       { slug: 'melhor-estandarte', customNote: 'Premio Rui Truta Gil' },
     ],
+    tunas: ['FAN-Farra', 'TAIPCA', "Copituna d'Oppidana"],
+    guests: ['ArtintunaCopitusa', 'GrupoFadosEACB', 'TUSALBI', 'EACB', 'SonsDeBeiroa'],
   },
   {
     name: 'VII Cantar de Estudante',
@@ -379,6 +413,8 @@ export const FESTIVALS: FestivalData[] = [
     organizingTuna: 'Bruna',
     posterPublicId: 'tunadao/festivais/xi-fituff-2014',
     awards: [{ slug: 'premio-participacao' }],
+    tunas: ['TUA', 'TMP', 'Hinoportuna'],
+    guests: ['Bruna'],
   },
   {
     name: 'XIX Alcatraz',
@@ -387,6 +423,8 @@ export const FESTIVALS: FestivalData[] = [
     organizingTuna: 'Gatunos',
     posterPublicId: 'tunadao/festivais/xix-alcatraz-2014',
     awards: [{ slug: 'melhor-tuna' }],
+    tunas: ['TAB', 'TAIPCA', 'TunaMedicinaBadajoz', 'TunaContabilidadePorto'],
+    guests: ['Afrodituna', 'EduardoRebelo'],
   },
   {
     name: 'IX Barca Celi',
@@ -402,6 +440,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-solista' },
       { slug: 'tuna-mais-tuna' },
     ],
+    tunas: ['Azeituna', "Copituna d'Oppidana", 'Gatunos', 'Hinoportuna'],
+    guests: ['TFIPCA'],
   },
   {
     name: 'XXI Celta',
@@ -410,6 +450,8 @@ export const FESTIVALS: FestivalData[] = [
     organizingTuna: 'Azeituna',
     posterPublicId: 'tunadao/festivais/xxi-celta-2014',
     awards: [{ slug: 'melhor-instrumental' }],
+    tunas: ['TUIST', 'EUL', 'TUCP', 'Scalabituna', 'Desertuna', 'TEUP'],
+    guests: ['TUM', 'Azeituna'],
   },
   // 2013
   {
@@ -419,6 +461,8 @@ export const FESTIVALS: FestivalData[] = [
     organizingTuna: 'TEUP',
     posterPublicId: 'tunadao/festivais/portuscalle-13-2013',
     awards: [{ slug: 'tuna-mais-tuna' }],
+    tunas: ['TUCP', 'Magna Tuna Cartola', 'TMP'],
+    guests: ['TUNAFE', 'TUP'],
   },
   {
     name: 'XXIII FITU Bracara Augusta',
@@ -431,6 +475,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'tuna-mais-tuna' },
       { slug: 'melhor-pandeireta' },
     ],
+    tunas: ['EUC', 'TUCP', 'TunaMedicinaBadajoz', 'TMP', 'TUIST'],
+    guests: ['Afonsina', 'Azeituna'],
   },
   {
     name: 'IX Ciclone',
@@ -443,6 +489,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-original' },
       { slug: 'melhor-pandeireta' },
     ],
+    tunas: ['Versus Tuna', 'TunaTS', 'TAFUL', 'Bagatuna'],
+    guests: ['TUSA'],
   },
   // 2012
   {
@@ -455,6 +503,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'segunda-melhor-tuna' },
       { slug: 'melhor-estandarte' },
     ],
+    tunas: ['Afonsina', 'TunaLusiadaFamalicao', 'TunaAgricolasSevilla', 'TMP'],
+    guests: ['TunaFemininaISEP'],
   },
   {
     name: 'Padrecos 2012',
@@ -477,6 +527,8 @@ export const FESTIVALS: FestivalData[] = [
     awards: [
       { slug: 'tuno-mais-tuninho', customNote: 'Luis Filipe (BOOBOO)' },
     ],
+    tunas: ['TunaTS', 'TUM', 'Tunideos'],
+    guests: ['Fado Livre'],
   },
   {
     name: 'XII Lethes',
@@ -488,6 +540,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-pandeireta' },
       { slug: 'tuna-mais-tuna' },
     ],
+    tunas: ['TEUP', 'TMUC', 'Azeituna', 'TUIST'],
+    guests: ['TunaVeteranosViana'],
   },
   {
     name: 'I Noites de Ronda',
@@ -525,6 +579,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-serenata' },
       { slug: 'melhor-pandeireta' },
     ],
+    tunas: ['TAISEP', 'TUM', 'TunaMagisterioCaceres'],
+    guests: [],
   },
   {
     name: 'XIII Fartuna',
@@ -539,6 +595,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'tuna-mais-marafada' },
       { slug: 'tuna-mais-tuna' },
     ],
+    tunas: ['Tuna-MUs', 'TAFUL', 'Scalabituna'],
+    guests: [],
   },
   {
     name: 'IX Estudantino',
@@ -555,6 +613,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'tuna-mais-real' },
       { slug: 'tuna-mais-bebedora' },
     ],
+    tunas: ['TunaMedicinaMurcia', 'TunaCamoniana', 'EACB', 'Tintuna', 'TASCA'],
+    guests: ['TunaFemininaISEL'],
   },
   // 2010
   {
@@ -569,6 +629,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'melhor-pandeireta' },
       { slug: 'melhor-estandarte' },
     ],
+    tunas: ['TunaTS', 'TMP', 'EUC', 'Estudantina ISEL'],
+    guests: ['TunaComElas', 'EnfInTuna', 'TUSA', 'BoraLaTocar'],
   },
   {
     name: 'IX Templario',
@@ -670,6 +732,8 @@ export const FESTIVALS: FestivalData[] = [
       { slug: 'tuna-mais-tuna' },
       { slug: 'melhor-pandeireta' },
     ],
+    tunas: ['TEUP', "Copituna d'Oppidana", 'TAFUL'],
+    guests: ['TunObebes'],
   },
   {
     name: 'XVI Celta',
@@ -747,11 +811,14 @@ export const FESTIVALS: FestivalData[] = [
     date: '2008-06-15',
     location: 'Castelo Branco',
     organizingTuna: 'EACB',
+    posterPublicId: 'tunadao/festivais/ii-fitucb-2008',
     awards: [
       { slug: 'tuna-mais-tuna' },
       { slug: 'melhor-tuna' },
       { slug: 'melhor-instrumental' },
     ],
+    tunas: ["Copituna d'Oppidana", 'Tuna Templaria', 'Arrebitatuna'],
+    guests: [],
   },
   {
     name: 'VIII Festival Internacional de Tunas do Atlantico',
@@ -873,6 +940,8 @@ export const FESTIVALS: FestivalData[] = [
     organizingTuna: 'Desertuna',
     posterPublicId: 'tunadao/festivais/iii-festubi-2005',
     awards: [{ slug: 'melhor-instrumental' }],
+    tunas: ['TASCA', 'TMUC', 'Magna Tuna Cartola', 'ESTunaCB'],
+    guests: ['Desertuna'],
   },
   {
     name: 'VI Vultos',
