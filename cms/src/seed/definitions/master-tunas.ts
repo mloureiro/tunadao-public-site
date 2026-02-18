@@ -10,6 +10,7 @@ export interface MasterTuna {
   website?: string;
   /** Cloudinary public ID for logo (without extension) */
   logoPublicId?: string;
+  type?: 'tuna' | 'tuna-feminina' | 'tuna-veterana' | 'tuna-senior' | 'international' | 'group' | 'soloist';
 }
 
 /**
@@ -43,6 +44,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
     fullName: 'Adfectus (Ricardo Rocha - One Man Band)',
     city: 'Viseu',
     logoPublicId: 'tunadao/tunas/adfectus',
+    type: 'soloist',
   },
   {
     shortName: 'Azeituna',
@@ -70,6 +72,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
     shortName: 'Charrascos da Citania',
     fullName: 'Charrascos da Citania',
     city: 'Viseu',
+    type: 'group',
   },
   {
     shortName: "Copituna d'Oppidana",
@@ -81,6 +84,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
   {
     shortName: 'Cordas ao Cubo',
     fullName: 'Cordas ao Cubo',
+    type: 'group',
   },
 
   // === D ===
@@ -131,6 +135,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
     shortName: 'Fado Livre',
     fullName: 'Grupo de Fados',
     city: 'Viseu',
+    type: 'group',
   },
   {
     shortName: 'FAN-Farra',
@@ -169,6 +174,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
     city: 'Viseu',
     website: 'https://www.portugaltunas.com/directorio/infantuna/',
     logoPublicId: 'tunadao/tunas/infantuna-cidade-viseu',
+    type: 'group',
   },
 
   // === L ===
@@ -306,6 +312,7 @@ export const MASTER_TUNAS: MasterTuna[] = [
     shortName: 'TFISCAP',
     fullName: 'Tuna Feminina do ISCAP',
     city: 'Porto',
+    type: 'tuna-feminina',
   },
   {
     shortName: 'Tintuna',
@@ -376,21 +383,25 @@ export const MASTER_TUNAS: MasterTuna[] = [
     shortName: 'TCML',
     fullName: 'Tuna del Colegio Mayor Loyola - Granada',
     city: 'Granada',
+    type: 'international',
   },
   {
     shortName: 'TMG',
     fullName: 'Tuna de Medicina de Granada',
     city: 'Granada',
+    type: 'international',
   },
   {
     shortName: 'TUPLA',
     fullName: 'Tuna de la Universidade Peruana Los Andes',
     city: 'Peru',
+    type: 'international',
   },
   {
     shortName: 'Tuna Salamanca',
     fullName: 'Tuna Universitaria de Salamanca',
     city: 'Salamanca',
+    type: 'international',
   },
   {
     shortName: 'Tuna Templaria',

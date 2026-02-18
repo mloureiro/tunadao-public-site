@@ -6,7 +6,7 @@ export const Tunas: CollectionConfig = {
     useAsTitle: 'fullName',
     group: 'Content',
     description: 'Tunas académicas e grupos similares',
-    defaultColumns: ['shortName', 'fullName', 'city'],
+    defaultColumns: ['shortName', 'fullName', 'city', 'type'],
   },
   access: {
     read: () => true,
@@ -45,6 +45,23 @@ export const Tunas: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Cidade de origem',
+      },
+    },
+    {
+      name: 'type',
+      type: 'select',
+      defaultValue: 'tuna',
+      options: [
+        { label: 'Tuna', value: 'tuna' },
+        { label: 'Tuna Feminina', value: 'tuna-feminina' },
+        { label: 'Tuna Veterana', value: 'tuna-veterana' },
+        { label: 'Tuna Senior', value: 'tuna-senior' },
+        { label: 'Internacional', value: 'international' },
+        { label: 'Grupo', value: 'group' },
+        { label: 'Solista', value: 'soloist' },
+      ],
+      admin: {
+        description: 'Tipo de tuna/grupo',
       },
     },
     {
