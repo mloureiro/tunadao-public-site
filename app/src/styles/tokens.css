@@ -86,6 +86,7 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --font-weight-extrabold: 800;
+  --font-weight-black: 900;
 
   --line-height-tight: 1.25;
   --line-height-base: 1.5;
@@ -109,6 +110,10 @@
   --space-16: 4rem; /* 64px */
   --space-20: 5rem; /* 80px */
   --space-24: 6rem; /* 96px */
+
+  /* Prose spacing */
+  --prose-gap: var(--space-4);
+  --heading-gap: var(--space-6);
 
   /* Border Radius */
   --radius-none: 0;

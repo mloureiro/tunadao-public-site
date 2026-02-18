@@ -1,0 +1,65 @@
+---
+interface Props {
+  label: string;
+  color?: 'gold' | 'purple' | 'red';
+  centered?: boolean;
+  class?: string;
+}
+
+const { label, color = 'gold', centered = false, class: className = '' } = Astro.props;
+---
+
+<div class:list={['section-divider', { 'section-divider--centered': centered }, className]}>
+  {centered && <span class="section-divider__pill" data-color={color}></span>}
+  <span class="section-divider__label" data-color={color}>{label}</span>
+  {centered && <span class="section-divider__pill" data-color={color}></span>}
+</div>
+
+<style>
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .section-divider--centered {
+    justify-content: center;
+  }
+
+  .section-divider__pill {
+    width: 3rem;
+    height: 0.25rem;
+    border-radius: var(--radius-full);
+  }
+
+  .section-divider__pill[data-color='gold'] {
+    background-color: var(--color-accent-gold);
+  }
+
+  .section-divider__pill[data-color='purple'] {
+    background-color: var(--color-primary);
+  }
+
+  .section-divider__pill[data-color='red'] {
+    background-color: var(--color-secondary);
+  }
+
+  .section-divider__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .section-divider__label[data-color='gold'] {
+    color: var(--color-accent-gold);
+  }
+
+  .section-divider__label[data-color='purple'] {
+    color: var(--color-primary);
+  }
+
+  .section-divider__label[data-color='red'] {
+    color: var(--color-secondary);
+  }
+</style>

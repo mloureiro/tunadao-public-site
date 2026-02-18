@@ -1,0 +1,202 @@
+---
+interface Props {
+  id: string;
+  accentColor: 'purple' | 'red' | 'gold' | 'white';
+  background?: 'default' | 'gradient' | 'dark';
+  imagePosition?: 'left' | 'right';
+  showGoldFrame?: boolean;
+  class?: string;
+}
+
+const {
+  id,
+  accentColor,
+  background = 'default',
+  imagePosition = 'left',
+  showGoldFrame = false,
+  class: className = '',
+} = Astro.props;
+---
+
+<section class:list={['section-preview', `section-preview--${background}`, className]} id={id}>
+  <div class="section-preview__container container">
+    <div class:list={['section-preview__grid', `section-preview--image-${imagePosition}`]}>
+      <!-- Content Column -->
+      <div class="section-preview__content">
+        {Astro.slots.has('divider') && <slot name="divider" />}
+        {Astro.slots.has('title') && <div class="section-preview__title"><slot name="title" /></div>}
+        {Astro.slots.has('content') && <div class="section-preview__text"><slot name="content" /></div>}
+        {Astro.slots.has('cta') && <div class="section-preview__cta"><slot name="cta" /></div>}
+      </div>
+
+      <!-- Image Column -->
+      {
+        Astro.slots.has('image') && (
+          <div class="section-preview__image-wrapper">
+            {showGoldFrame ? (
+              <div class="section-preview__image-frame">
+                <div class="section-preview__image-border" aria-hidden="true" />
+                <div class="section-preview__image">
+                  <slot name="image" />
+                  <div class="section-preview__image-overlay" />
+                </div>
+              </div>
+            ) : (
+              <div class="section-preview__image">
+                <slot name="image" />
+                <div class="section-preview__image-overlay" />
+              </div>
+            )}
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  {Astro.slots.has('extras') && <slot name="extras" />}
+</section>
+
+<style>
+  .section-preview {
+    padding: var(--space-16) 0;
+    position: relative;
+  }
+
+  .section-preview--default {
+    background-color: var(--color-surface);
+  }
+
+  .section-preview--gradient {
+    background: linear-gradient(
+      to bottom right,
+      rgba(191, 0, 41, 0.1),
+      rgba(41, 22, 111, 0.1)
+    );
+  }
+
+  :global([data-theme='dark']) .section-preview--gradient {
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 77, 109, 0.15),
+      rgba(107, 90, 223, 0.15)
+    );
+  }
+
+  .section-preview--dark {
+    background: linear-gradient(
+      to bottom right,
+      var(--color-primary),
+      rgba(41, 22, 111, 0.8)
+    );
+    color: #ffffff;
+  }
+
+  .section-preview__container {
+    position: relative;
+  }
+
+  .section-preview__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .section-preview__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .section-preview--image-left .section-preview__image-wrapper {
+      order: -1;
+    }
+  }
+
+  .section-preview__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .section-preview__title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-black);
+    line-height: var(--line-height-tight);
+  }
+
+  @media (min-width: 768px) {
+    .section-preview__title {
+      font-size: var(--font-size-4xl);
+    }
+  }
+
+  .section-preview--dark .section-preview__title {
+    color: #ffffff;
+  }
+
+  .section-preview__text {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  .section-preview--dark .section-preview__text {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .section-preview__cta {
+    margin-top: var(--space-2);
+  }
+
+  .section-preview__image-wrapper {
+    position: relative;
+  }
+
+  .section-preview__image-frame {
+    position: relative;
+  }
+
+  .section-preview__image-border {
+    position: absolute;
+    top: -1rem;
+    left: -1rem;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-2xl);
+    border: 2px solid var(--color-accent-gold);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .section-preview__image {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .section-preview__image :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .section-preview__image:hover :global(img) {
+    transform: scale(1.05);
+  }
+
+  .section-preview__image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(41, 22, 111, 0.3), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-slow);
+    pointer-events: none;
+  }
+
+  .section-preview__image:hover .section-preview__image-overlay {
+    opacity: 1;
+  }
+</style>

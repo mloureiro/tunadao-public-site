@@ -1,6 +1,6 @@
 ---
 interface Props {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'gold' | 'white' | 'red';
   size?: 'sm' | 'md' | 'lg';
   href?: string;
   class?: string;
@@ -140,5 +140,41 @@ const baseProps = href
 
   :global([data-theme='dark']) .btn--ghost:hover {
     background-color: var(--color-surface-elevated);
+  }
+
+  .btn--gold {
+    background-color: var(--color-accent-gold);
+    color: var(--color-primary-dark);
+    border: 2px solid var(--color-accent-gold);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .btn--gold:hover {
+    background-color: var(--color-gold-dark);
+    border-color: var(--color-gold-dark);
+  }
+
+  .btn--white {
+    background-color: #ffffff;
+    color: var(--color-primary-dark);
+    border: 2px solid #ffffff;
+    font-weight: var(--font-weight-bold);
+  }
+
+  .btn--white:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.9);
+  }
+
+  .btn--red {
+    background-color: var(--color-secondary);
+    color: #ffffff;
+    border: 2px solid var(--color-secondary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .btn--red:hover {
+    background-color: var(--color-secondary-light);
+    border-color: var(--color-secondary-light);
   }
 </style>
