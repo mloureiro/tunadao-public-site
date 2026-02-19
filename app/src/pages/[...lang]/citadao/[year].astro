@@ -1,10 +1,11 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import Button from '@components/Button.astro';
-import TunaCard from '@components/citadao/TunaCard.astro';
+import Lightbox from '@components/Lightbox.astro';
+import ResponsiveImage from '@components/ResponsiveImage.astro';
+import ParticipantList from '@components/citadao/ParticipantList.astro';
+import AwardsList from '@components/citadao/AwardsList.astro';
 import { useTranslations, getLocalizedPath, type Language, defaultLang } from '@i18n/index';
-import { getCitadaoEditions, getCitadaoEditionByYear, splitTunasByAwards } from '@lib/cms';
-import { Icon } from '@ui/icons';
+import { getCitadaoEditions, getCitadaoEditionByYear, splitTunasByAwards, extractPublicId } from '@lib/cms';
 
 export async function getStaticPaths() {
   const languages: (string | undefined)[] = [undefined, 'en'];
@@ -38,254 +39,394 @@ const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
 
 // Split tunas into those with and without prizes
 const { withPrizes: tunasWithPrizes, withoutPrizes: tunasWithoutPrizes } = splitTunasByAwards(edition);
+
+// All contestants without awards
+const contestants = tunasWithoutPrizes.map(({ tuna }) => tuna);
+
+// Poster
+const posterPublicId = edition.posterUrl ? extractPublicId(edition.posterUrl) : null;
 ---
 
 <Layout
   title={`${edition.edition}${t('citadao.edition')} CITADÃO ${edition.year} | Tunadão 1998`}
   description={`CITADÃO ${edition.year} - ${edition.edition}${t('citadao.edition')} ${t('citadao.editionDescription')}`}
 >
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero__breadcrumb">
-        <a href={l('/citadao')}>← {t('citadao.allEditions')}</a>
+  <!-- Hero Section with Poster -->
+  <section class="hero" aria-labelledby="edition-title">
+    <div class="hero-container">
+      {edition.posterUrl && (
+        <div class="hero-poster">
+          <button
+            type="button"
+            class="poster-button"
+            data-poster-url={edition.posterUrl}
+            data-poster-alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
+          >
+            {posterPublicId ? (
+              <ResponsiveImage
+                publicId={posterPublicId}
+                alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
+                class="poster-image"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
+                aspectRatio="2/3"
+              />
+            ) : (
+              <img
+                src={edition.posterUrl}
+                alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
+                class="poster-image"
+                loading="lazy"
+              />
+            )}
+          </button>
+        </div>
+      )}
+      <div class="hero-content">
+        <div class="hero-badge" aria-hidden="true">
+          {edition.edition}{t('citadao.edition')}
+        </div>
+        <h1 id="edition-title" class="hero-title">
+          CITADÃO {edition.year}
+        </h1>
+        <div class="hero-details">
+          <div class="detail-item">
+            <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>{edition.date}</span>
+          </div>
+          {edition.venue && (
+            <div class="detail-item">
+              <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>{edition.venue}</span>
+            </div>
+          )}
+        </div>
+        {edition.notes && <p class="hero-notes">{edition.notes}</p>}
       </div>
-      <div class="hero__badge">{edition.edition}{t('citadao.edition')}</div>
-      <h1 class="hero__title">CITADÃO {edition.year}</h1>
-      {edition.notes && <p class="hero__notes">{edition.notes}</p>}
     </div>
   </section>
 
-  <!-- Event Info -->
-  <section class="info">
-    <div class="container">
-      <div class="info__grid">
-        <div class="info__item">
-          <div class="info__icon">
-            <Icon name="calendar" size={24} />
-          </div>
-          <div class="info__content">
-            <span class="info__label">{t('citadao.date')}</span>
-            <span class="info__value">{edition.date}</span>
-          </div>
-        </div>
-        <div class="info__item">
-          <div class="info__icon">
-            <Icon name="map-pin" size={24} />
-          </div>
-          <div class="info__content">
-            <span class="info__label">{t('citadao.venue')}</span>
-            <span class="info__value">{edition.venue}</span>
-          </div>
-        </div>
-        <div class="info__item">
-          <div class="info__icon">
-            <Icon name="music" size={24} />
-          </div>
-          <div class="info__content">
-            <span class="info__label">{t('citadao.tunas')}</span>
-            <span class="info__value">{edition.tunas.length} {t('citadao.tunasCount')}</span>
-          </div>
-        </div>
+  <!-- Participants Section -->
+  {(contestants.length > 0 || edition.guests.length > 0) && (
+    <section class="content-section" aria-labelledby="participants-title">
+      <div class="content-container">
+        <h2 id="participants-title" class="section-title">
+          {t('citadao.participatingTunas')}
+        </h2>
+        <ParticipantList
+          contestants={contestants}
+          guests={edition.guests}
+          labels={{
+            contestants: t('citadao.tunas'),
+            guests: t('citadao.guests'),
+            count: t('citadao.tunasCount'),
+          }}
+        />
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
-  <!-- Tunas with Awards Section -->
+  <!-- Awards Section -->
   {tunasWithPrizes.length > 0 && (
-    <section class="results">
-      <div class="container">
-        <h2 class="section-title">{t('citadao.awards')}</h2>
-        <div class="results__list">
-          {tunasWithPrizes.map(({ tuna, awards }) => (
-            <TunaCard
-              tuna={tuna}
-              variant="result"
-              awards={awards}
-              awardLabel={(key) => t(`awards.${key}`)}
-            />
-          ))}
-        </div>
+    <section class="content-section awards-bg" aria-label={t('citadao.awards')}>
+      <div class="content-container">
+        <AwardsList
+          tunasWithPrizes={tunasWithPrizes}
+          awardLabel={(key) => t(`awards.${key}`)}
+          sectionTitle={t('citadao.awards')}
+        />
       </div>
     </section>
   )}
 
-  <!-- Tunas without Awards Section -->
-  {tunasWithoutPrizes.length > 0 && (
-    <section class="participants">
-      <div class="container">
-        <h2 class="section-title">{t('citadao.participants')}</h2>
-        <div class="participants__grid">
-          {tunasWithoutPrizes.map(({ tuna }) => (
-            <TunaCard tuna={tuna} variant="participant" />
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- Guests Section -->
-  {edition.guests.length > 0 && (
-    <section class="guests">
-      <div class="container">
-        <h2 class="section-title">{t('citadao.guests')}</h2>
-        <div class="guests__list">
-          {edition.guests.map((guest) => (
-            <TunaCard tuna={guest} variant="guest" />
-          ))}
-        </div>
+  <!-- No data fallback -->
+  {contestants.length === 0 && edition.guests.length === 0 && tunasWithPrizes.length === 0 && (
+    <section class="content-section" aria-label={t('common.noResults')}>
+      <div class="content-container">
+        <p class="no-data-text">{t('common.noResults')}</p>
       </div>
     </section>
   )}
 
   <!-- Navigation -->
-  <section class="navigation">
-    <div class="container">
-      <div class="navigation__buttons">
-        {
-          prevYear && (
-            <Button href={l(`/citadao/${prevYear}`)} variant="outline">
-              ← CITADÃO {prevYear}
-            </Button>
-          )
-        }
-        <Button href={l('/citadao')} variant="secondary">
-          {t('citadao.allEditions')}
-        </Button>
-        {
-          nextYear && (
-            <Button href={l(`/citadao/${nextYear}`)} variant="outline">
-              CITADÃO {nextYear} →
-            </Button>
-          )
-        }
+  <section class="navigation-section" aria-label={t('nav.citadao')}>
+    <div class="navigation-container">
+      <a href={l('/citadao')} class="nav-link nav-back">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5M12 19l-7-7 7-7"></path>
+        </svg>
+        <span>{t('citadao.allEditions')}</span>
+      </a>
+      <div class="nav-pagination">
+        {prevYear && (
+          <a href={l(`/citadao/${prevYear}`)} class="nav-link nav-prev" rel="prev">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+            <span>CITADÃO {prevYear}</span>
+          </a>
+        )}
+        {nextYear && (
+          <a href={l(`/citadao/${nextYear}`)} class="nav-link nav-next" rel="next">
+            <span>CITADÃO {nextYear}</span>
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 18l6-6-6-6"></path>
+            </svg>
+          </a>
+        )}
       </div>
     </div>
   </section>
+
+  <Lightbox closeLabel={t('common.close')} />
 </Layout>
 
 <style>
   /* Hero Section */
   .hero {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    padding: 3rem 1.5rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     color: var(--color-text-inverted);
-    padding: var(--space-12) 0;
-    text-align: center;
   }
 
-  .hero__breadcrumb { margin-bottom: var(--space-4); }
-  .hero__breadcrumb a {
-    color: var(--color-text-inverted); opacity: 0.8;
-    text-decoration: none; font-size: var(--text-sm);
-    transition: opacity var(--transition-fast);
-  }
-  .hero__breadcrumb a:hover { opacity: 1; }
-
-  .hero__badge {
-    display: inline-block; background: rgba(255, 255, 255, 0.2);
-    padding: var(--space-1) var(--space-3); border-radius: var(--radius-full);
-    font-size: var(--text-sm); font-weight: 500; margin-bottom: var(--space-3);
-  }
-
-  .hero__title { font-size: var(--text-4xl); font-weight: 700; margin-bottom: var(--space-2); }
-
-  .hero__notes {
-    font-size: var(--text-lg); opacity: 0.9; background: var(--color-secondary);
-    display: inline-block; padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-md); margin-top: var(--space-4);
-  }
-
-  /* Section Title */
-  .section-title {
-    font-size: var(--text-2xl);
-    font-weight: 700;
-    margin-bottom: var(--space-6);
-    color: var(--color-text);
-  }
-
-  /* Info Section */
-  .info {
-    padding: var(--space-8) 0;
-    background-color: var(--color-surface);
-  }
-
-  .info__grid {
+  .hero-container {
+    max-width: 1280px;
+    margin: 0 auto;
     display: grid;
-    gap: var(--space-4);
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    align-items: start;
   }
 
-  @media (min-width: 768px) {
-    .info__grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  .hero-poster {
+    max-width: 400px;
+    margin: 0 auto;
   }
 
-  .info__item {
-    display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4);
-    background-color: var(--color-background); border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
+  .poster-button {
+    display: block;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: zoom-in;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
   }
 
-  .info__icon {
-    display: flex; align-items: center; justify-content: center;
-    width: 48px; height: 48px; flex-shrink: 0;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    border-radius: var(--radius-md); color: var(--color-text-inverted);
+  .poster-button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   }
 
-  .info__content { display: flex; flex-direction: column; }
-  .info__label { font-size: var(--text-sm); color: var(--color-text-muted); }
-  .info__value { font-size: var(--text-lg); font-weight: 600; color: var(--color-text); }
-
-  /* Results Section (Tunas with Awards) */
-  .results {
-    padding: var(--space-12) 0;
-    background-color: var(--color-background);
+  .poster-image {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 
-  .results__list {
+  .hero-content {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
   }
 
-  /* Participants & Guests Sections */
-  .participants,
-  .guests {
-    padding: var(--space-12) 0;
+  .hero-badge {
+    display: inline-block;
+    align-self: flex-start;
+    padding: var(--space-2) var(--space-4);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  .participants { background-color: var(--color-surface); }
-  .guests { background-color: var(--color-background); }
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
 
-  .participants__grid,
-  .guests__list {
-    display: grid;
+  .hero-details {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-3);
-    grid-template-columns: repeat(1, 1fr);
+    margin-top: var(--space-4);
   }
 
-  @media (min-width: 640px) {
-    .participants__grid,
-    .guests__list { grid-template-columns: repeat(2, 1fr); }
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--font-size-lg);
   }
 
-  @media (min-width: 1024px) {
-    .participants__grid,
-    .guests__list { grid-template-columns: repeat(3, 1fr); }
+  .detail-icon {
+    flex-shrink: 0;
   }
 
-  /* Navigation Section */
-  .navigation {
-    padding: var(--space-8) 0;
+  .hero-notes {
+    font-size: var(--font-size-lg);
+    opacity: 0.9;
+    background: var(--color-secondary);
+    display: inline-block;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-4);
+    align-self: flex-start;
+  }
+
+  /* Content Sections */
+  .content-section {
+    padding: var(--space-16) var(--space-6);
     background-color: var(--color-surface);
   }
 
-  .navigation__buttons {
+  .awards-bg {
+    background-color: var(--color-background);
+  }
+
+  .content-container {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 var(--space-8) 0;
+  }
+
+  [data-theme='dark'] .section-title {
+    color: var(--color-accent-gold);
+  }
+
+  .no-data-text {
+    text-align: center;
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    padding: var(--space-12) 0;
+  }
+
+  /* Navigation Section */
+  .navigation-section {
+    padding: var(--space-8) var(--space-6);
+    background-color: var(--color-background);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .navigation-container {
+    max-width: 1280px;
+    margin: 0 auto;
     display: flex;
-    justify-content: center;
-    gap: var(--space-3);
-    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color var(--transition-fast), transform var(--transition-fast), color var(--transition-fast);
+  }
+
+  [data-theme='dark'] .nav-link {
+    color: var(--color-accent-gold);
+  }
+
+  .nav-link:hover {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: var(--color-text-inverted);
+    transform: translateY(-2px);
+  }
+
+  .nav-icon {
+    flex-shrink: 0;
+  }
+
+  .nav-pagination {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero {
+      padding: 2rem 1rem;
+    }
+
+    .hero-container {
+      gap: var(--space-6);
+    }
+
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .detail-item {
+      font-size: var(--font-size-base);
+    }
+
+    .content-section {
+      padding: var(--space-10) var(--space-4);
+    }
+
+    .section-title {
+      font-size: var(--font-size-xl);
+    }
+
+    .navigation-section {
+      padding: var(--space-6) var(--space-4);
+    }
+
+    .navigation-container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .nav-pagination {
+      justify-content: space-between;
+    }
+
+    .nav-link {
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--font-size-sm);
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .hero-container {
+      grid-template-columns: 300px 1fr;
+    }
+
+    .hero-poster {
+      max-width: 100%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-container {
+      grid-template-columns: 400px 1fr;
+    }
   }
 </style>
