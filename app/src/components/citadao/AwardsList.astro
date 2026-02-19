@@ -1,0 +1,164 @@
+---
+/**
+ * AwardsList - Display awards with winning tunas
+ */
+import TunaCardSimple from './TunaCardSimple.astro';
+import type { FrontendTunaWithLogo } from '@lib/cms/types';
+
+interface DisplayAward {
+  key: string;
+  name: string;
+  tuna: FrontendTunaWithLogo;
+}
+
+interface Props {
+  tunasWithPrizes: { tuna: FrontendTunaWithLogo; awards: string[] }[];
+  awardLabel: (key: string) => string;
+  sectionTitle: string;
+}
+
+const { tunasWithPrizes, awardLabel, sectionTitle } = Astro.props;
+
+// Flatten: one card per award (not per tuna)
+const displayAwards: DisplayAward[] = tunasWithPrizes.flatMap(({ tuna, awards }) =>
+  awards.map(key => ({
+    key,
+    name: awardLabel(key),
+    tuna,
+  }))
+);
+---
+
+{displayAwards.length > 0 && (
+  <section class="awards-section" aria-labelledby="awards-heading">
+    <h2 id="awards-heading" class="awards-title">{sectionTitle}</h2>
+    <div class="awards-list">
+      {displayAwards.map(award => (
+        <div class="award-item">
+          <div class="award-header">
+            <svg
+              class="award-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="8" r="7"></circle>
+              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+            </svg>
+            <h3 class="award-name">{award.name}</h3>
+          </div>
+          <div class="award-winner">
+            <TunaCardSimple tuna={award.tuna} showCity={true} />
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .awards-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .awards-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
+  }
+
+  [data-theme='dark'] .awards-title {
+    color: var(--color-accent-gold);
+  }
+
+  .awards-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .award-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    background-color: var(--color-background);
+    border-radius: var(--radius-xl);
+    border: 2px solid transparent;
+    transition: border-color var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .award-item:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+
+  [data-theme='dark'] .award-item:hover {
+    border-color: var(--color-accent-gold);
+  }
+
+  .award-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .award-icon {
+    flex-shrink: 0;
+    color: var(--color-accent-gold);
+  }
+
+  .award-name {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 0;
+  }
+
+  [data-theme='dark'] .award-name {
+    color: var(--color-accent-gold);
+  }
+
+  .award-winner {
+    margin-top: var(--space-2);
+  }
+
+  @media (max-width: 768px) {
+    .awards-section {
+      gap: var(--space-6);
+    }
+
+    .awards-title {
+      font-size: var(--font-size-xl);
+    }
+
+    .awards-list {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+
+    .award-item {
+      padding: var(--space-4);
+    }
+
+    .award-name {
+      font-size: var(--font-size-base);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .awards-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
