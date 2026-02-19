@@ -6,7 +6,6 @@ import TunaCardSimple from './TunaCardSimple.astro';
 import type { FrontendTunaWithLogo } from '@lib/cms/types';
 
 interface DisplayAward {
-  key: string;
   name: string;
   tuna: FrontendTunaWithLogo;
 }
@@ -22,7 +21,6 @@ const { tunasWithPrizes, awardLabel, sectionTitle } = Astro.props;
 // Flatten: one card per award (not per tuna)
 const displayAwards: DisplayAward[] = tunasWithPrizes.flatMap(({ tuna, awards }) =>
   awards.map(key => ({
-    key,
     name: awardLabel(key),
     tuna,
   }))
