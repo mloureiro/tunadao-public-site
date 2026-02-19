@@ -28,7 +28,6 @@ const { title, dividerLabel, milestones } = Astro.props;
         {milestones.map((milestone, index) => {
           const isFirst = index === 0;
           const isLast = index === milestones.length - 1;
-          const isEven = index % 2 === 0;
 
           return (
             <div class="timeline__item">
