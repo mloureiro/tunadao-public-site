@@ -11,16 +11,18 @@ interface Props {
   idPrefix?: string;
   /** Label for screen readers */
   ariaLabel?: string;
+  /** CSS selector for the section that scopes timeline visibility */
+  sectionSelector?: string;
 }
 
-const { years, idPrefix = 'year', ariaLabel = 'Jump to year' } = Astro.props;
+const { years, idPrefix = 'year', ariaLabel = 'Jump to year', sectionSelector } = Astro.props;
 
 // Sort years descending (most recent first)
 const sortedYears = [...years].sort((a, b) => b - a);
 ---
 
 <!-- Desktop: Vertical sidebar timeline -->
-<nav class="vertical-timeline" aria-label={ariaLabel} data-id-prefix={idPrefix}>
+<nav class="vertical-timeline" aria-label={ariaLabel} data-id-prefix={idPrefix} data-section-selector={sectionSelector}>
   <div class="vertical-timeline__track">
     <div class="vertical-timeline__line" aria-hidden="true"></div>
     <ul class="vertical-timeline__list" role="list">
@@ -76,13 +78,13 @@ const sortedYears = [...years].sort((a, b) => b - a);
 <script>
   (function() {
     function initVerticalTimeline() {
-      const nav = document.querySelector('.vertical-timeline');
+      const navEl = document.querySelector('.vertical-timeline');
+      if (!navEl) return;
+      const nav = navEl as HTMLElement;
       const indicator = document.querySelector('.year-indicator');
       const indicatorText = indicator?.querySelector('.year-indicator__text');
       const indicatorButton = indicator?.querySelector('.year-indicator__button');
       const dropdown = indicator?.querySelector('.year-indicator__dropdown');
-
-      if (!nav) return;
 
       const idPrefix = nav.getAttribute('data-id-prefix') || 'year';
 
@@ -100,6 +102,10 @@ const sortedYears = [...years].sort((a, b) => b - a);
       });
 
       if (yearSections.length === 0) return;
+
+      // Section scoping
+      const sectionSelector = nav.getAttribute('data-section-selector');
+      const scopeSection = sectionSelector ? document.querySelector(sectionSelector) : null;
 
       // Track current year
       let currentYear: string | null = null;
@@ -148,16 +154,51 @@ const sortedYears = [...years].sort((a, b) => b - a);
 
       yearSections.forEach(section => observer.observe(section));
 
-      // Show/hide indicator based on scroll position
-      const showObserver = new IntersectionObserver((entries) => {
-        const isNavVisible = entries[0].isIntersecting;
-        indicator?.classList.toggle('year-indicator--visible', !isNavVisible);
-        nav.classList.toggle('vertical-timeline--active', !isNavVisible);
-      }, { threshold: 0.5 });
+      // Show/hide based on scoped section visibility
+      if (scopeSection) {
+        const sectionObserver = new IntersectionObserver((entries) => {
+          const isVisible = entries[0].isIntersecting;
+          indicator?.classList.toggle('year-indicator--visible', isVisible);
+          nav.classList.toggle('vertical-timeline--active', isVisible);
+        }, { threshold: 0 });
 
-      // Observe the first year section to determine when to show indicator
-      if (yearSections[0]) {
-        showObserver.observe(yearSections[0]);
+        sectionObserver.observe(scopeSection);
+
+        // Clamp timeline position within section bounds
+        function updateTimelinePosition() {
+          if (!nav.classList.contains('vertical-timeline--active')) return;
+
+          const sectionRect = scopeSection!.getBoundingClientRect();
+          const timelineHeight = nav.offsetHeight || 200;
+          const viewportCenter = window.innerHeight / 2;
+
+          // Ideal: centered in viewport
+          const idealTop = viewportCenter - timelineHeight / 2;
+
+          // Clamp to section bounds
+          const clampedTop = Math.max(
+            sectionRect.top,
+            Math.min(idealTop, sectionRect.bottom - timelineHeight)
+          );
+
+          nav.style.top = clampedTop + 'px';
+          nav.style.transform = 'none';
+        }
+
+        window.addEventListener('scroll', updateTimelinePosition, { passive: true });
+        window.addEventListener('resize', updateTimelinePosition, { passive: true });
+        updateTimelinePosition();
+      } else {
+        // Fallback: original behavior (show when first section scrolls past)
+        const showObserver = new IntersectionObserver((entries) => {
+          const isNavVisible = entries[0].isIntersecting;
+          indicator?.classList.toggle('year-indicator--visible', !isNavVisible);
+          nav.classList.toggle('vertical-timeline--active', !isNavVisible);
+        }, { threshold: 0.5 });
+
+        if (yearSections[0]) {
+          showObserver.observe(yearSections[0]);
+        }
       }
 
       // Smooth scroll for timeline links
@@ -285,6 +326,7 @@ const sortedYears = [...years].sort((a, b) => b - a);
     top: 0;
     bottom: 0;
     width: 2px;
+    z-index: 0;
     background: linear-gradient(
       to bottom,
       var(--color-primary),
@@ -322,6 +364,8 @@ const sortedYears = [...years].sort((a, b) => b - a);
   }
 
   .vertical-timeline__dot {
+    position: relative;
+    z-index: 1;
     width: 14px;
     height: 14px;
     border-radius: 50%;
