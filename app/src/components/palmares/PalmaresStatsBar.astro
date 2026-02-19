@@ -1,0 +1,100 @@
+---
+/**
+ * PalmaresStatsBar - Statistics header for the Palmares page
+ * Displays key stats with gradient-colored values on a white background
+ */
+
+interface StatItem {
+  value: string | number;
+  label: string;
+}
+
+interface Props {
+  stats: StatItem[];
+  ariaLabel?: string;
+}
+
+const { stats, ariaLabel = 'Estatisticas' } = Astro.props;
+---
+
+<section class="palmares-stats" aria-label={ariaLabel}>
+  <div class="container">
+    <div class="palmares-stats__grid">
+      {stats.map((stat) => (
+        <div class="palmares-stats__item">
+          <span class="palmares-stats__value">{stat.value}</span>
+          <span class="palmares-stats__label">{stat.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .palmares-stats {
+    background-color: var(--color-surface);
+    padding: var(--space-12) 0;
+  }
+
+  .palmares-stats__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .palmares-stats__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-8);
+    }
+  }
+
+  .palmares-stats__item {
+    text-align: center;
+  }
+
+  .palmares-stats__value {
+    display: block;
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-black);
+    line-height: 1;
+    margin-bottom: var(--space-2);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @supports not (background-clip: text) {
+    .palmares-stats__value {
+      color: var(--color-primary);
+      background: none;
+      -webkit-text-fill-color: initial;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .palmares-stats__value {
+      font-size: var(--font-size-5xl);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .palmares-stats__value {
+      font-size: var(--font-size-6xl);
+    }
+  }
+
+  .palmares-stats__label {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-medium);
+  }
+
+  @media (min-width: 768px) {
+    .palmares-stats__label {
+      font-size: var(--font-size-base);
+    }
+  }
+</style>
