@@ -18,4 +18,8 @@ export type IconName =
   | 'map-pin'
   | 'calendar'
   | 'image'
-  | 'zoom-in';
+  | 'zoom-in'
+  | 'arrow-right'
+  | 'chevron-left'
+  | 'chevron-right'
+  | 'arrow-left';
