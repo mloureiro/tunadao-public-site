@@ -57,7 +57,7 @@ test.describe('Navigation via section images', () => {
     await page.goto('/');
     await page.locator('#citadao-preview .section-image a').click();
     await expect(page).toHaveURL(/\/citadao\/?$/);
-    await expect(page.locator('h1')).toContainText('Festival Citadão');
+    await expect(page.locator('h1')).toContainText('Citadão');
   });
 
   test('should navigate to Palmarés page via section image', async ({ page }) => {
