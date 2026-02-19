@@ -162,13 +162,13 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
 </article>
 
 <style>
-  /* Festival Card - Theme-aware styling */
+  /* Festival Card - Horizontal layout */
   .festival-card {
     background-color: var(--color-surface);
     border-radius: var(--design-card-radius);
     overflow: hidden;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Mobile: stacked */
     box-shadow: var(--shadow-sm);
     border: var(--design-border-width) var(--design-border-style) var(--color-border-light);
     transition:
@@ -177,8 +177,14 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
       border-color var(--transition-base);
   }
 
+  @media (min-width: 768px) {
+    .festival-card {
+      flex-direction: row; /* Desktop: horizontal */
+    }
+  }
+
   .festival-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
     border-color: var(--color-border);
   }
@@ -199,6 +205,15 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
     aspect-ratio: 3 / 4;
     background-color: var(--color-background-alt);
     overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 768px) {
+    .festival-card__poster {
+      width: 33.333%;
+      aspect-ratio: auto; /* Let height be determined by content */
+      min-height: 200px;
+    }
   }
 
   .festival-card__poster-button {
@@ -247,6 +262,7 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
   }
 
   /* Placeholder - Modern design with initial and music notes */
+  /* Placeholder - Modern design with initial and music notes */
   .festival-card__poster-placeholder {
     width: 100%;
     height: 100%;
@@ -261,6 +277,13 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
       var(--color-primary-dark) 100%
     );
     overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .festival-card__poster-button,
+    .festival-card__poster-placeholder {
+      height: 100%;
+    }
   }
 
   .festival-card__poster-pattern {
@@ -323,6 +346,12 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
     flex-direction: column;
     gap: var(--space-3);
     flex: 1;
+  }
+
+  @media (min-width: 768px) {
+    .festival-card__content {
+      padding: var(--space-6);
+    }
   }
 
   .festival-card__header {
