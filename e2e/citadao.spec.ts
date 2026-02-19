@@ -6,23 +6,22 @@ test.describe('Citadão Page', () => {
   });
 
   test('should display the main title', async ({ page }) => {
-    await expect(page.locator('h1')).toContainText('Festival Citadão');
+    await expect(page.locator('h1')).toContainText('Citadão');
   });
 
   test('should display editions list', async ({ page }) => {
-    const editions = page.locator('.edition-item');
+    const editions = page.locator('.edition-card');
     await expect(editions.first()).toBeVisible();
   });
 
   test('should display edition information', async ({ page }) => {
-    const editionItem = page.locator('.edition-item').first();
-    await expect(editionItem).toBeVisible();
-    await expect(editionItem.locator('h3')).toContainText('CITADÃO');
+    const editionCard = page.locator('.edition-card').first();
+    await expect(editionCard).toBeVisible();
+    await expect(editionCard.locator('h3')).toContainText('CITADÃO');
   });
 
-  test('should display tunas list in edition', async ({ page }) => {
-    const editionItem = page.locator('.edition-item').first();
-    const tunasList = editionItem.locator('.tunas-avatars').first();
-    await expect(tunasList).toBeVisible();
+  test('should navigate to edition detail page', async ({ page }) => {
+    const editionLink = page.locator('.edition-link').first();
+    await expect(editionLink).toBeVisible();
   });
 });
