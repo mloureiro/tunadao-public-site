@@ -12,7 +12,7 @@ interface DisplayAward {
 
 interface Props {
   tunasWithPrizes: { tuna: FrontendTunaWithLogo; awards: string[] }[];
-  awardLabel: (key: string) => string;
+  awardLabel: (_k: string) => string;
   sectionTitle: string;
 }
 
@@ -20,46 +20,50 @@ const { tunasWithPrizes, awardLabel, sectionTitle } = Astro.props;
 
 // Flatten: one card per award (not per tuna)
 const displayAwards: DisplayAward[] = tunasWithPrizes.flatMap(({ tuna, awards }) =>
-  awards.map(key => ({
+  awards.map((key) => ({
     name: awardLabel(key),
     tuna,
   }))
 );
 ---
 
-{displayAwards.length > 0 && (
-  <section class="awards-section" aria-labelledby="awards-heading">
-    <h2 id="awards-heading" class="awards-title">{sectionTitle}</h2>
-    <div class="awards-list">
-      {displayAwards.map(award => (
-        <div class="award-item">
-          <div class="award-header">
-            <svg
-              class="award-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="8" r="7"></circle>
-              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-            </svg>
-            <h3 class="award-name">{award.name}</h3>
+{
+  displayAwards.length > 0 && (
+    <section class="awards-section" aria-labelledby="awards-heading">
+      <h2 id="awards-heading" class="awards-title">
+        {sectionTitle}
+      </h2>
+      <div class="awards-list">
+        {displayAwards.map((award) => (
+          <div class="award-item">
+            <div class="award-header">
+              <svg
+                class="award-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="8" r="7" />
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+              </svg>
+              <h3 class="award-name">{award.name}</h3>
+            </div>
+            <div class="award-winner">
+              <TunaCardSimple tuna={award.tuna} showCity={true} />
+            </div>
           </div>
-          <div class="award-winner">
-            <TunaCardSimple tuna={award.tuna} showCity={true} />
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-)}
+        ))}
+      </div>
+    </section>
+  )
+}
 
 <style>
   .awards-section {
@@ -93,7 +97,9 @@ const displayAwards: DisplayAward[] = tunasWithPrizes.flatMap(({ tuna, awards })
     background-color: var(--color-background);
     border-radius: var(--radius-xl);
     border: 2px solid transparent;
-    transition: border-color var(--transition-fast), transform var(--transition-fast);
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
   }
 
   .award-item:hover {
