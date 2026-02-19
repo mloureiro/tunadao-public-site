@@ -4,11 +4,7 @@ import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getCitadaoEditions } from '@lib/cms';
 import Lightbox from '@components/Lightbox.astro';
 import EditionCard from '@components/citadao/EditionCard.astro';
-import YearNavigation from '@components/YearNavigation.astro';
 import VerticalTimeline from '@components/VerticalTimeline.astro';
-
-// Feature flag for new timeline (default: true)
-const useVerticalTimeline = import.meta.env.PUBLIC_USE_VERTICAL_TIMELINE !== 'false';
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
@@ -27,9 +23,9 @@ const allYears = editions.map((edition) => edition.year);
 
 <Layout title={`${t('citadao.title')} | Tunadão 1998`} description={t('citadao.description')}>
   <!-- Hero Section -->
-  <section class="hero">
+  <section class="hero" aria-labelledby="citadao-title">
     <div class="container">
-      <h1 class="hero__title">{t('citadao.title')}</h1>
+      <h1 id="citadao-title" class="hero__title">{t('citadao.title')}</h1>
       <p class="hero__subtitle">{t('citadao.subtitle')}</p>
     </div>
   </section>
@@ -47,28 +43,22 @@ const allYears = editions.map((edition) => edition.year);
   </section>
 
   <!-- Year Navigation -->
-  {useVerticalTimeline ? (
-    <VerticalTimeline years={allYears} ariaLabel={t('citadao.jumpToYear') || 'Jump to edition'} />
-  ) : (
-    <YearNavigation years={allYears} ariaLabel={t('citadao.jumpToYear') || 'Jump to edition'} />
-  )}
+  <VerticalTimeline years={allYears} ariaLabel={t('citadao.jumpToYear') || 'Jump to edition'} />
 
   <!-- All Editions -->
   <section class="editions">
     <div class="container">
-      <h2 class="section-title">{t('citadao.allEditions')}</h2>
       <div class="editions__list">
         {
           editions.map((edition) => (
             <div class="edition-wrapper" id={`year-${edition.year}`}>
               <EditionCard
                 edition={edition}
+                lang={currentLang}
                 labels={{
                   edition: t('citadao.edition'),
-                  participatingTunas: t('citadao.participatingTunas'),
-                  guests: t('citadao.guests'),
-                  awards: t('citadao.awards'),
-                  awardLabel: (key: string) => t(`awards.${key}`),
+                  viewDetails: t('citadao.viewDetails'),
+                  venue: t('citadao.venue'),
                 }}
               />
             </div>
@@ -85,43 +75,43 @@ const allYears = editions.map((edition) => edition.year);
 <style>
   /* Hero Section */
   .hero {
-    position: relative;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     color: var(--color-text-inverted);
-    padding: var(--space-12) 0;
+    padding: 4rem 1.5rem;
     text-align: center;
-    overflow: hidden;
   }
 
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    pointer-events: none;
-  }
-
-  .hero::after {
-    content: '🎭';
-    position: absolute;
-    bottom: var(--space-4);
-    right: var(--space-6);
-    font-size: 2rem;
-    opacity: 0.2;
-    pointer-events: none;
+  .hero .container {
+    max-width: 768px;
+    margin: 0 auto;
   }
 
   .hero__title {
-    position: relative;
-    font-size: var(--text-4xl);
-    font-weight: 700;
-    margin-bottom: var(--space-2);
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
   }
 
   .hero__subtitle {
-    position: relative;
-    font-size: var(--text-xl);
-    opacity: 0.9;
+    font-size: 1.25rem;
+    font-weight: 500;
+    opacity: 0.95;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 3rem 1rem;
+    }
+
+    .hero__title {
+      font-size: 2rem;
+    }
+
+    .hero__subtitle {
+      font-size: 1rem;
+    }
   }
 
   /* About CITADÃO */
@@ -131,7 +121,7 @@ const allYears = editions.map((edition) => edition.year);
   }
 
   .about-citadao__content {
-    max-width: 800px;
+    max-width: 896px;
     margin: 0 auto;
     text-align: center;
   }
@@ -140,11 +130,15 @@ const allYears = editions.map((edition) => edition.year);
     font-size: var(--text-3xl);
     font-weight: 700;
     margin-bottom: var(--space-6);
-    color: var(--color-text);
+    color: var(--color-primary);
+  }
+
+  [data-theme='dark'] .about-citadao__content h2 {
+    color: var(--color-accent-gold);
   }
 
   .about-citadao__content p {
-    font-size: var(--text-lg);
+    font-size: 1.125rem;
     line-height: 1.8;
     color: var(--color-text-muted);
     margin-bottom: var(--space-4);
@@ -154,27 +148,20 @@ const allYears = editions.map((edition) => edition.year);
     margin-bottom: 0;
   }
 
-  /* Section Title */
-  .section-title {
-    font-size: var(--text-3xl);
-    font-weight: 700;
-    margin-bottom: var(--space-8);
-    color: var(--color-text);
-    text-align: center;
-  }
-
   /* Editions List */
   .editions {
     padding: var(--space-12) 0;
+    background-color: #f8f9fa;
+  }
+
+  [data-theme='dark'] .editions {
     background-color: var(--color-background);
   }
 
   .editions__list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--space-6);
-    max-width: 1000px;
-    margin: 0 auto;
   }
 
   /* Edition Wrapper (for year anchors) */
