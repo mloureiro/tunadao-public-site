@@ -105,13 +105,15 @@ const achievementStats = [
       </Button>
     </SectionText>
     <SectionImage>
-      <Image
-        src={groupPhoto}
-        alt={t('home.sections.aboutPreview.imageAlt')}
-        widths={[400, 600, 800]}
-        sizes="(max-width: 1024px) 100vw, 50vw"
-        style="aspect-ratio: 3/2; object-fit: cover;"
-      />
+      <a href={l('/sobre')}>
+        <Image
+          src={groupPhoto}
+          alt={t('home.sections.aboutPreview.imageAlt')}
+          widths={[400, 600, 800]}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          style="aspect-ratio: 3/2; object-fit: cover;"
+        />
+      </a>
     </SectionImage>
   </Section>
 
@@ -132,24 +134,26 @@ const achievementStats = [
       </Button>
     </SectionText>
     <SectionImage>
-      {
-        latestEditionPosterUrl ? (
-          <img
-            src={latestEditionPosterUrl}
-            alt={`CITADAO ${latestEditionYear} - ${t('home.sections.citadaoPreview.posterAlt')}`}
-            loading="lazy"
-            style="aspect-ratio: 3/2; object-fit: cover; width: 100%;"
-          />
-        ) : (
-          <div class="citadao-placeholder">
-            <Icon name="music" size={96} class="citadao-placeholder__icon" />
-            <p class="citadao-placeholder__title">CITADAO</p>
-            <p class="citadao-placeholder__text">
-              {t('home.sections.citadaoPreview.placeholderText')}
-            </p>
-          </div>
-        )
-      }
+      <a href={l('/citadao')}>
+        {
+          latestEditionPosterUrl ? (
+            <img
+              src={latestEditionPosterUrl}
+              alt={`CITADAO ${latestEditionYear} - ${t('home.sections.citadaoPreview.posterAlt')}`}
+              loading="lazy"
+              style="aspect-ratio: 3/2; object-fit: cover; width: 100%;"
+            />
+          ) : (
+            <div class="citadao-placeholder">
+              <Icon name="music" size={96} class="citadao-placeholder__icon" />
+              <p class="citadao-placeholder__title">CITADAO</p>
+              <p class="citadao-placeholder__text">
+                {t('home.sections.citadaoPreview.placeholderText')}
+              </p>
+            </div>
+          )
+        }
+      </a>
     </SectionImage>
   </Section>
 
@@ -170,12 +174,14 @@ const achievementStats = [
       </Button>
     </SectionText>
     <SectionImage>
-      <Image
-        src={placaPhoto}
-        alt={t('home.sections.palmaresPreview.imageAlt')}
-        widths={[400, 600, 800]}
-        sizes="(max-width: 1024px) 100vw, 50vw"
-      />
+      <a href={l('/palmares')}>
+        <Image
+          src={placaPhoto}
+          alt={t('home.sections.palmaresPreview.imageAlt')}
+          widths={[400, 600, 800]}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+        />
+      </a>
     </SectionImage>
   </Section>
 
@@ -207,12 +213,14 @@ const achievementStats = [
       }
     </SectionText>
     <SectionImage>
-      <Image
-        src={pandeiretaPhoto}
-        alt={t('home.sections.musicCta.imageAlt')}
-        widths={[400, 600, 800]}
-        sizes="(max-width: 1024px) 100vw, 50vw"
-      />
+      <a href={l('/musica')}>
+        <Image
+          src={pandeiretaPhoto}
+          alt={t('home.sections.musicCta.imageAlt')}
+          widths={[400, 600, 800]}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+        />
+      </a>
     </SectionImage>
   </Section>
 </Layout>

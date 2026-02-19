@@ -26,32 +26,21 @@ const { title, dividerLabel, milestones } = Astro.props;
       <!-- Timeline items -->
       <div class="timeline__items">
         {milestones.map((milestone, index) => {
-          const isFirst = index === 0;
-          const isLast = index === milestones.length - 1;
+          const t = milestones.length > 1 ? index / (milestones.length - 1) : 0;
+          const r = Math.round(41 + t * (212 - 41));
+          const g = Math.round(22 + t * (161 - 22));
+          const b = Math.round(111 + t * (94 - 111));
+          const dotColor = `rgb(${r}, ${g}, ${b})`;
 
           return (
             <div class="timeline__item">
-              {/* Connector dot */}
               <div
-                class:list={[
-                  'timeline__dot',
-                  { 'timeline__dot--first': isFirst },
-                  { 'timeline__dot--last': isLast },
-                  { 'timeline__dot--middle': !isFirst && !isLast }
-                ]}
+                class="timeline__dot"
+                style={`--dot-color: ${dotColor};`}
                 aria-hidden="true"
               ></div>
-
-              {/* Content card */}
               <div class="timeline__card">
-                <div
-                  class:list={[
-                    'timeline__year',
-                    { 'timeline__year--first': isFirst },
-                    { 'timeline__year--last': isLast },
-                    { 'timeline__year--middle': !isFirst && !isLast }
-                  ]}
-                >
+                <div class="timeline__year" style={`color: ${dotColor};`}>
                   {milestone.year}
                 </div>
                 <p class="timeline__text">{milestone.text}</p>
@@ -100,7 +89,6 @@ const { title, dividerLabel, milestones } = Astro.props;
     background: linear-gradient(
       to bottom,
       var(--color-primary),
-      var(--color-secondary),
       var(--color-accent-gold)
     );
   }
@@ -138,7 +126,8 @@ const { title, dividerLabel, milestones } = Astro.props;
     width: 1rem;
     height: 1rem;
     border-radius: var(--radius-full);
-    border: 4px solid;
+    border: 4px solid color-mix(in srgb, var(--dot-color) 70%, white);
+    background-color: var(--dot-color);
     z-index: 10;
     transform: translateX(-50%);
   }
@@ -147,21 +136,6 @@ const { title, dividerLabel, milestones } = Astro.props;
     .timeline__dot {
       left: 50%;
     }
-  }
-
-  .timeline__dot--first {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary-light);
-  }
-
-  .timeline__dot--last {
-    background-color: var(--color-accent-gold);
-    border-color: var(--color-gold-light);
-  }
-
-  .timeline__dot--middle {
-    background-color: var(--color-secondary);
-    border-color: var(--color-secondary-light);
   }
 
   .timeline__card {
@@ -207,18 +181,6 @@ const { title, dividerLabel, milestones } = Astro.props;
     .timeline__year {
       font-size: var(--font-size-3xl);
     }
-  }
-
-  .timeline__year--first {
-    color: var(--color-primary);
-  }
-
-  .timeline__year--last {
-    color: var(--color-accent-gold);
-  }
-
-  .timeline__year--middle {
-    color: var(--color-secondary);
   }
 
   .timeline__text {

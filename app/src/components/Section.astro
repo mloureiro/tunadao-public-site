@@ -35,9 +35,13 @@ const {
   data-gold-frame={showGoldFrame || undefined}
 >
   <div class="section__container container">
-    {divider && <SectionDivider label={divider} color={dividerColor} />}
-    {title && <h2 class="section__title">{title}</h2>}
     <div class="section__body">
+      {(divider || title) && (
+        <div class="section__heading">
+          {divider && <SectionDivider label={divider} color={dividerColor} />}
+          {title && <h2 class="section__title">{title}</h2>}
+        </div>
+      )}
       <slot />
     </div>
   </div>
@@ -90,16 +94,39 @@ const {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-12);
-    align-items: center;
+    align-items: start;
   }
 
   @media (min-width: 1024px) {
     .section--two-column .section__body {
       grid-template-columns: repeat(2, 1fr);
+      column-gap: var(--space-12);
+      row-gap: 0;
+    }
+
+    .section--two-column .section__heading {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .section--two-column :global(.section-text) {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .section--two-column :global(.section-image) {
+      grid-column: 2;
+      grid-row: 1 / -1;
+      align-self: center;
+    }
+
+    .section--two-column[data-image-pos='left'] .section__heading,
+    .section--two-column[data-image-pos='left'] :global(.section-text) {
+      grid-column: 2;
     }
 
     .section--two-column[data-image-pos='left'] :global(.section-image) {
-      order: -1;
+      grid-column: 1;
     }
   }
 
@@ -115,7 +142,7 @@ const {
     font-weight: var(--font-weight-black);
     line-height: var(--line-height-tight);
     margin-top: var(--space-6);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
   }
 
   @media (min-width: 768px) {
