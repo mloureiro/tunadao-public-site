@@ -1,5 +1,8 @@
 ---
 import Layout from '@layouts/Layout.astro';
+import HeroSection from '@components/HeroSection.astro';
+import Section from '@components/Section.astro';
+import SectionText from '@components/SectionText.astro';
 import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getCitadaoEditions } from '@lib/cms';
 import Lightbox from '@components/Lightbox.astro';
@@ -22,159 +25,49 @@ const allYears = editions.map((edition) => edition.year);
 ---
 
 <Layout title={`${t('citadao.title')} | Tunadão 1998`} description={t('citadao.description')}>
-  <!-- Hero Section -->
-  <section class="hero" aria-labelledby="citadao-title">
-    <div class="container">
-      <h1 id="citadao-title" class="hero__title">{t('citadao.title')}</h1>
-      <p class="hero__subtitle">{t('citadao.subtitle')}</p>
-    </div>
-  </section>
+  <HeroSection title={t('citadao.title')} subtitle={t('citadao.subtitle')} />
 
-
-  <!-- About CITADÃO Section -->
-  <section class="about-citadao">
-    <div class="container">
-      <div class="about-citadao__content">
-        <h2>{t('citadao.about.title')}</h2>
-        <p set:html={t('citadao.about.p1')} />
-        <p set:html={t('citadao.about.p2').replace('{count}', String(editions.length))} />
-      </div>
-    </div>
-  </section>
+  <Section layout="single-column" title={t('citadao.about.title')}>
+    <SectionText>
+      <p set:html={t('citadao.about.p1')} />
+      <p set:html={t('citadao.about.p2').replace('{count}', String(editions.length))} />
+    </SectionText>
+  </Section>
 
   <!-- Year Navigation -->
   <VerticalTimeline years={allYears} ariaLabel={t('citadao.jumpToYear') || 'Jump to edition'} sectionSelector="#editions-section" />
 
-  <!-- All Editions -->
-  <section class="editions" id="editions-section">
-    <div class="container">
-      <h2 class="editions__title">{t('citadao.editionsTitle')}</h2>
-      <div class="editions__list">
-        {
-          editions.map((edition) => (
-            <div class="edition-wrapper" id={`year-${edition.year}`}>
-              <EditionCard
-                edition={edition}
-                lang={currentLang}
-                labels={{
-                  edition: t('citadao.edition'),
-                  viewDetails: t('citadao.viewDetails'),
-                  venue: t('citadao.venue'),
-                }}
-              />
-            </div>
-          ))
-        }
-      </div>
+  <Section layout="single-column" background="alt" title={t('citadao.editionsTitle')} id="editions-section">
+    <div class="editions__list">
+      {
+        editions.map((edition) => (
+          <div class="edition-wrapper" id={`year-${edition.year}`}>
+            <EditionCard
+              edition={edition}
+              lang={currentLang}
+              labels={{
+                edition: t('citadao.edition'),
+                viewDetails: t('citadao.viewDetails'),
+                venue: t('citadao.venue'),
+              }}
+            />
+          </div>
+        ))
+      }
     </div>
-  </section>
+  </Section>
 
   <Lightbox closeLabel={t('common.close')} />
 </Layout>
 
 
 <style>
-  /* Hero Section */
-  .hero {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    color: var(--color-text-inverted);
-    padding: 4rem 1.5rem;
-    text-align: center;
-  }
-
-  .hero .container {
-    max-width: 768px;
-    margin: 0 auto;
-  }
-
-  .hero__title {
-    font-size: 3rem;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    margin-bottom: 1rem;
-  }
-
-  .hero__subtitle {
-    font-size: 1.25rem;
-    font-weight: 500;
-    opacity: 0.95;
-    line-height: 1.6;
-  }
-
-  @media (max-width: 768px) {
-    .hero {
-      padding: 3rem 1rem;
-    }
-
-    .hero__title {
-      font-size: 2rem;
-    }
-
-    .hero__subtitle {
-      font-size: 1rem;
-    }
-  }
-
-  /* About CITADÃO */
-  .about-citadao {
-    padding: var(--space-12) 0;
-    background-color: var(--color-surface);
-  }
-
-  .about-citadao__content {
-    max-width: 896px;
-    margin: 0 auto;
-    text-align: left;
-  }
-
-  .about-citadao__content h2 {
-    font-size: var(--font-size-4xl);
-    font-weight: 700;
-    margin-bottom: var(--space-6);
-    color: var(--color-primary);
-    text-align: center;
-  }
-
-  [data-theme='dark'] .about-citadao__content h2 {
-    color: var(--color-accent-gold);
-  }
-
-  .about-citadao__content p {
-    font-size: 1.125rem;
-    line-height: 1.8;
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-4);
-  }
-
-  .about-citadao__content p:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Editions List */
-  .editions {
-    padding: var(--space-12) 0;
-    background-color: #f8f9fa;
-  }
-
-  [data-theme='dark'] .editions {
-    background-color: var(--color-background);
-  }
-
-  .editions__title {
-    font-size: var(--font-size-3xl);
-    font-weight: 700;
-    color: var(--color-primary);
-    margin: 0 0 var(--space-8) 0;
-  }
-
-  [data-theme='dark'] .editions__title {
-    color: var(--color-accent-gold);
-  }
-
+  /* Editions List Grid */
   .editions__list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--space-6);
+    width: 100%;
   }
 
   /* Edition Wrapper (for year anchors) */
