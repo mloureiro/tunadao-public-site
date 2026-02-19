@@ -34,7 +34,7 @@ const detailPath = getLocalizedPath(`/citadao/${edition.year}`, lang);
         <img
           src={edition.posterUrl}
           alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
-          class="poster-image"
+          class="poster-image-fallback"
           loading="lazy"
         />
       ) : (
@@ -84,6 +84,7 @@ const detailPath = getLocalizedPath(`/citadao/${edition.year}`, lang);
     border-radius: var(--radius-xl);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
   }
 
   .edition-card:hover {
@@ -92,7 +93,9 @@ const detailPath = getLocalizedPath(`/citadao/${edition.year}`, lang);
   }
 
   .edition-link {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     text-decoration: none;
     color: inherit;
   }
@@ -105,14 +108,28 @@ const detailPath = getLocalizedPath(`/citadao/${edition.year}`, lang);
     background-color: var(--color-background);
   }
 
-  .poster-image {
+  .edition-poster :global(.poster-image) {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
   }
 
-  .edition-card:hover .poster-image {
+  .poster-image-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .edition-card:hover .edition-poster :global(.poster-image),
+  .edition-card:hover .poster-image-fallback {
     transform: scale(1.05);
   }
 
@@ -134,6 +151,9 @@ const detailPath = getLocalizedPath(`/citadao/${edition.year}`, lang);
   }
 
   .edition-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     padding: var(--space-5);
   }
 
@@ -172,6 +192,7 @@ const detailPath = getLocalizedPath(`/citadao/${edition.year}`, lang);
   }
 
   .edition-cta {
+    margin-top: auto;
     display: flex;
     align-items: center;
     gap: var(--space-2);

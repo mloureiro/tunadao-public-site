@@ -43,11 +43,12 @@ const allYears = editions.map((edition) => edition.year);
   </section>
 
   <!-- Year Navigation -->
-  <VerticalTimeline years={allYears} ariaLabel={t('citadao.jumpToYear') || 'Jump to edition'} />
+  <VerticalTimeline years={allYears} ariaLabel={t('citadao.jumpToYear') || 'Jump to edition'} sectionSelector="#editions-section" />
 
   <!-- All Editions -->
-  <section class="editions">
+  <section class="editions" id="editions-section">
     <div class="container">
+      <h2 class="editions__title">{t('citadao.editionsTitle')}</h2>
       <div class="editions__list">
         {
           editions.map((edition) => (
@@ -123,14 +124,15 @@ const allYears = editions.map((edition) => edition.year);
   .about-citadao__content {
     max-width: 896px;
     margin: 0 auto;
-    text-align: center;
+    text-align: left;
   }
 
   .about-citadao__content h2 {
-    font-size: var(--text-3xl);
+    font-size: var(--font-size-4xl);
     font-weight: 700;
     margin-bottom: var(--space-6);
     color: var(--color-primary);
+    text-align: center;
   }
 
   [data-theme='dark'] .about-citadao__content h2 {
@@ -156,6 +158,17 @@ const allYears = editions.map((edition) => edition.year);
 
   [data-theme='dark'] .editions {
     background-color: var(--color-background);
+  }
+
+  .editions__title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 var(--space-8) 0;
+  }
+
+  [data-theme='dark'] .editions__title {
+    color: var(--color-accent-gold);
   }
 
   .editions__list {
