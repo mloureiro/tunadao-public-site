@@ -31,36 +31,38 @@ test.describe('Homepage', () => {
     await expect(skipLink).toBeAttached();
   });
 
-  test('should have highlight cards linking to main sections', async ({ page }) => {
-    const highlightCards = page.locator('.highlight-card');
-    await expect(highlightCards).toHaveCount(3);
+  test('should have stats bar', async ({ page }) => {
+    const statsBar = page.locator('.stats-bar').first();
+    await expect(statsBar).toBeVisible();
+    await expect(statsBar.locator('.stats-bar__item')).toHaveCount(5);
   });
 
-  test('should have stats section', async ({ page }) => {
-    const statsSection = page.locator('.stats');
-    await expect(statsSection).toBeVisible();
-    await expect(page.locator('.stats__item')).toHaveCount(4);
+  test('should have section links to main pages', async ({ page }) => {
+    await expect(page.locator('#sobre-preview')).toBeAttached();
+    await expect(page.locator('#citadao-preview')).toBeAttached();
+    await expect(page.locator('#palmares-preview')).toBeAttached();
+    await expect(page.locator('#music-cta')).toBeAttached();
   });
 });
 
-test.describe('Navigation via highlight cards', () => {
-  test('should navigate to Sobre page via highlight card', async ({ page }) => {
+test.describe('Navigation via section images', () => {
+  test('should navigate to Sobre page via section image', async ({ page }) => {
     await page.goto('/');
-    await page.locator('.highlight-card').filter({ hasText: /sobre/i }).click();
+    await page.locator('#sobre-preview .section-image a').click();
     await expect(page).toHaveURL(/\/sobre\/?$/);
     await expect(page.locator('h1')).toContainText('Sobre Nós');
   });
 
-  test('should navigate to Citadão page via highlight card', async ({ page }) => {
+  test('should navigate to Citadão page via section image', async ({ page }) => {
     await page.goto('/');
-    await page.locator('.highlight-card').filter({ hasText: /citadão/i }).click();
+    await page.locator('#citadao-preview .section-image a').click();
     await expect(page).toHaveURL(/\/citadao\/?$/);
     await expect(page.locator('h1')).toContainText('Festival Citadão');
   });
 
-  test('should navigate to Palmarés page via highlight card', async ({ page }) => {
+  test('should navigate to Palmarés page via section image', async ({ page }) => {
     await page.goto('/');
-    await page.locator('.highlight-card').filter({ hasText: /palmarés/i }).click();
+    await page.locator('#palmares-preview .section-image a').click();
     await expect(page).toHaveURL(/\/palmares\/?$/);
     await expect(page.locator('h1')).toContainText('Palmarés');
   });
