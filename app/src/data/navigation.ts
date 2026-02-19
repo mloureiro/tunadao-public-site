@@ -25,7 +25,7 @@ export const navItems: NavItem[] = [
   { labelKey: 'nav.palmares', href: '/palmares' },
   { labelKey: 'nav.blog', href: '/blog', hidden: true },
   { labelKey: 'nav.videos', href: '/videos', hidden: true },
-  { labelKey: 'nav.music', href: '/musica', hidden: true },
+  { labelKey: 'nav.music', href: '/musica' },
   { labelKey: 'nav.contact', href: '/contacto' },
 ];
 
@@ -48,7 +48,7 @@ export const footerSections: NavSection[] = [
     items: [
       { labelKey: 'nav.blog', href: '/blog', hidden: true },
       { labelKey: 'nav.videos', href: '/videos', hidden: true },
-      { labelKey: 'nav.music', href: '/musica', hidden: true },
+      { labelKey: 'nav.music', href: '/musica' },
     ],
   },
 ];

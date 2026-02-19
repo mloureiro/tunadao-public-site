@@ -180,6 +180,7 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
   @media (min-width: 768px) {
     .festival-card {
       flex-direction: row; /* Desktop: horizontal */
+      min-height: 280px;
     }
   }
 
@@ -211,8 +212,7 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
   @media (min-width: 768px) {
     .festival-card__poster {
       width: 33.333%;
-      aspect-ratio: auto; /* Let height be determined by content */
-      min-height: 200px;
+      /* Keep aspect-ratio: 3/4 from base styles */
     }
   }
 

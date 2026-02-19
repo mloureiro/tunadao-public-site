@@ -68,7 +68,7 @@ const stats = [
 
   <!-- Year Navigation -->
   {useVerticalTimeline ? (
-    <VerticalTimeline years={allYears} ariaLabel={t('palmares.jumpToYear') || 'Jump to year'} />
+    <VerticalTimeline years={allYears} ariaLabel={t('palmares.jumpToYear') || 'Jump to year'} sectionSelector=".palmares-timeline" />
   ) : (
     <YearNavigation years={allYears} ariaLabel={t('palmares.jumpToYear') || 'Jump to year'} />
   )}
@@ -121,5 +121,20 @@ const stats = [
     flex-direction: column;
     gap: var(--space-6);
     margin-top: var(--space-6);
+  }
+
+  /* Year dividers — 2-3x bigger than default */
+  :global(.section-divider) {
+    margin: var(--space-12) 0;
+  }
+
+  :global(.section-divider__pill) {
+    width: 6rem;
+    height: 0.375rem;
+  }
+
+  :global(.section-divider__label) {
+    font-size: var(--font-size-lg);
+    padding: 0 var(--space-4);
   }
 </style>
