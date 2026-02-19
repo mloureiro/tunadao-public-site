@@ -1,0 +1,127 @@
+---
+import Icon from '@ui/icons/Icon.astro';
+
+interface Props {
+  closeLabel?: string;
+}
+
+const { closeLabel = 'Close' } = Astro.props;
+---
+
+<div class="video-modal" id="videoModal">
+  <div class="video-modal__overlay"></div>
+  <div class="video-modal__content">
+    <button class="video-modal__close" aria-label={closeLabel}>
+      <Icon name="close" size={24} />
+    </button>
+    <div class="video-modal__iframe-container">
+      <iframe
+        id="videoIframe"
+        src=""
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<style>
+  .video-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-modal.active {
+    display: flex;
+  }
+
+  .video-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+
+  .video-modal__content {
+    position: relative;
+    width: 90%;
+    max-width: 1000px;
+    z-index: 1;
+  }
+
+  .video-modal__close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    padding: var(--space-2);
+    border: none;
+    background: transparent;
+    color: var(--color-text-inverted);
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+  }
+
+  .video-modal__close:hover {
+    transform: scale(1.1);
+  }
+
+  .video-modal__iframe-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+  }
+
+  .video-modal__iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-lg);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('videoModal');
+    const iframe = document.getElementById('videoIframe') as HTMLIFrameElement;
+    const playBtns = document.querySelectorAll('.video-card__play');
+    const closeBtn = modal?.querySelector('.video-modal__close');
+    const overlay = modal?.querySelector('.video-modal__overlay');
+
+    function openModal(youtubeId: string) {
+      if (modal && iframe) {
+        iframe.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeModal() {
+      if (modal && iframe) {
+        iframe.src = '';
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    playBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const youtubeId = btn.getAttribute('data-youtube-id');
+        if (youtubeId) openModal(youtubeId);
+      });
+    });
+
+    closeBtn?.addEventListener('click', closeModal);
+    overlay?.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  });
+</script>

@@ -1,0 +1,224 @@
+---
+import Button from '@components/Button.astro';
+
+interface Props {
+  labels: {
+    name: string;
+    namePlaceholder: string;
+    email: string;
+    emailPlaceholder: string;
+    subject: string;
+    subjectPlaceholder: string;
+    subjectOptions: Record<string, string>;
+    message: string;
+    messagePlaceholder: string;
+    submit: string;
+    sending: string;
+    success: string;
+    error: string;
+  };
+}
+
+const { labels } = Astro.props;
+---
+
+<div class="contact__form-container">
+  <form class="contact-form" id="contactForm">
+    <!-- Honeypot field for spam protection -->
+    <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off" />
+
+    <div class="form-group">
+      <label for="name">{labels.name} *</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        required
+        aria-required="true"
+        placeholder={labels.namePlaceholder}
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">{labels.email} *</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        aria-required="true"
+        placeholder={labels.emailPlaceholder}
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="subject">{labels.subject} *</label>
+      <select id="subject" name="subject" required aria-required="true">
+        <option value="">{labels.subjectPlaceholder}</option>
+        {Object.entries(labels.subjectOptions).map(([key, value]) => (
+          <option value={key}>{value}</option>
+        ))}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="message">{labels.message} *</label>
+      <textarea
+        id="message"
+        name="message"
+        rows="5"
+        required
+        aria-required="true"
+        placeholder={labels.messagePlaceholder}></textarea>
+    </div>
+
+    <div class="form-actions">
+      <Button type="submit" variant="primary" size="lg">
+        {labels.submit}
+      </Button>
+    </div>
+
+    <div
+      class="form-status"
+      id="formStatus"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      data-sending={labels.sending}
+      data-success={labels.success}
+      data-error={labels.error}
+      data-submit={labels.submit}
+    >
+    </div>
+  </form>
+</div>
+
+<style>
+  .contact__form-container {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+  }
+
+  .form-group {
+    margin-bottom: var(--space-4);
+  }
+
+  .form-group label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: var(--space-3);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(41, 22, 111, 0.1);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .form-actions {
+    margin-top: var(--space-6);
+  }
+
+  .form-status {
+    margin-top: var(--space-4);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    text-align: center;
+    display: none;
+  }
+
+  .form-status.success {
+    display: block;
+    background-color: var(--color-success-light);
+    color: var(--color-success-dark);
+    border: 1px solid var(--color-success);
+  }
+
+  .form-status.error {
+    display: block;
+    background-color: var(--color-error-light);
+    color: var(--color-error-dark);
+    border: 1px solid var(--color-error);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contactForm') as HTMLFormElement;
+    const formStatus = document.getElementById('formStatus');
+
+    if (form && formStatus) {
+      const sendingText = formStatus.dataset.sending || 'Sending...';
+      const successText = formStatus.dataset.success || 'Message sent successfully!';
+      const errorText = formStatus.dataset.error || 'Error sending message.';
+      const submitText = formStatus.dataset.submit || 'Send message';
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        // Check honeypot
+        if (formData.get('website')) {
+          return;
+        }
+
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton) {
+          submitButton.textContent = sendingText;
+          (submitButton as HTMLButtonElement).disabled = true;
+        }
+
+        try {
+          // In production, this would send to the CMS API
+          // For now, simulate a successful submission
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
+          formStatus.textContent = successText;
+          formStatus.className = 'form-status success';
+          form.reset();
+        } catch {
+          formStatus.textContent = errorText;
+          formStatus.className = 'form-status error';
+        } finally {
+          if (submitButton) {
+            submitButton.textContent = submitText;
+            (submitButton as HTMLButtonElement).disabled = false;
+          }
+        }
+      });
+    }
+  });
+</script>

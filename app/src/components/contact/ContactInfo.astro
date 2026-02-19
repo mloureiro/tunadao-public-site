@@ -1,0 +1,136 @@
+---
+import Icon from '@ui/icons/Icon.astro';
+import SocialLinks from '@components/SocialLinks.astro';
+
+interface Props {
+  contactInfo: {
+    email: string;
+    phone: string;
+    address: string;
+  };
+  labels: {
+    title: string;
+    email: string;
+    phone: string;
+    address: string;
+    social: string;
+  };
+}
+
+const { contactInfo, labels } = Astro.props;
+---
+
+<div class="info-card">
+  <h2>{labels.title}</h2>
+
+  <div class="info-item">
+    <div class="info-item__icon">
+      <Icon name="mail" size={24} />
+    </div>
+    <div class="info-item__content">
+      <span class="info-item__label">{labels.email}</span>
+      <a href={`mailto:${contactInfo.email}`} class="info-item__value">
+        {contactInfo.email}
+      </a>
+    </div>
+  </div>
+
+  <div class="info-item">
+    <div class="info-item__icon">
+      <Icon name="phone" size={24} />
+    </div>
+    <div class="info-item__content">
+      <span class="info-item__label">{labels.phone}</span>
+      <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} class="info-item__value">
+        {contactInfo.phone}
+      </a>
+    </div>
+  </div>
+
+  <div class="info-item">
+    <div class="info-item__icon">
+      <Icon name="map-pin" size={24} />
+    </div>
+    <div class="info-item__content">
+      <span class="info-item__label">{labels.address}</span>
+      <span class="info-item__value">{contactInfo.address}</span>
+    </div>
+  </div>
+
+  <div class="info-social">
+    <h3>{labels.social}</h3>
+    <SocialLinks variant="light" />
+  </div>
+</div>
+
+<style>
+  .info-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+  }
+
+  .info-card h2 {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+  }
+
+  .info-item {
+    display: flex;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .info-item:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .info-item__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    border-radius: var(--radius-md);
+    color: var(--color-text-inverted);
+    flex-shrink: 0;
+  }
+
+  .info-item__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .info-item__label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .info-item__value {
+    font-size: var(--text-base);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  a.info-item__value:hover {
+    color: var(--color-primary);
+  }
+
+  .info-social {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .info-social h3 {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+  }
+</style>
