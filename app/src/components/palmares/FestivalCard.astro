@@ -8,7 +8,7 @@ import { Icon } from '@ui/icons';
 import Award from '@components/Award.astro';
 import ResponsiveImage from '@components/ResponsiveImage.astro';
 import type { FrontendPalmaresFestival } from '@lib/cms/types';
-import { sortAwards, isTopPrize, extractPublicId } from '@lib/cms';
+import { sortAwards, extractPublicId } from '@lib/cms';
 
 interface Props {
   festival: FrontendPalmaresFestival;
@@ -19,13 +19,12 @@ interface Props {
 const { festival, organizerLabel = 'Organização', participationLabel = 'Participação' } = Astro.props;
 
 const sortedAwards = sortAwards(festival.awards);
-const hasTopPrize = sortedAwards.length > 0 && isTopPrize(sortedAwards[0].slug);
 const hasNoAwards = sortedAwards.length === 0;
 const festivalInitial = festival.name.charAt(0).toUpperCase();
 const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) : null;
 ---
 
-<article class:list={['festival-card', { 'festival-card--featured': hasTopPrize }]}>
+<article class="festival-card">
   {/* Poster Section */}
   <div class="festival-card__poster">
     {festival.posterUrl ? (
@@ -180,7 +179,7 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
   @media (min-width: 768px) {
     .festival-card {
       flex-direction: row; /* Desktop: horizontal */
-      min-height: 280px;
+      min-height: 200px;
     }
   }
 
@@ -190,15 +189,6 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
     border-color: var(--color-border);
   }
 
-  .festival-card--featured {
-    border-color: var(--color-gold);
-    box-shadow: var(--shadow-sm), 0 0 0 1px color-mix(in srgb, var(--color-gold) 30%, transparent);
-  }
-
-  .festival-card--featured:hover {
-    border-color: var(--color-gold);
-    box-shadow: var(--shadow-lg), 0 0 0 1px var(--color-gold);
-  }
 
   /* Poster Section */
   .festival-card__poster {
@@ -212,7 +202,8 @@ const posterPublicId = festival.posterUrl ? extractPublicId(festival.posterUrl) 
   @media (min-width: 768px) {
     .festival-card__poster {
       width: 33.333%;
-      /* Keep aspect-ratio: 3/4 from base styles */
+      aspect-ratio: auto;
+      align-self: stretch;
     }
   }
 
