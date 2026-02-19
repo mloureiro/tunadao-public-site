@@ -1,0 +1,51 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['section-image', className]}>
+  <div class="section-image__inner">
+    <slot />
+    <div class="section-image__overlay"></div>
+  </div>
+</div>
+
+<style>
+  .section-image {
+    position: relative;
+  }
+
+  .section-image__inner {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .section-image__inner :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .section-image__inner:hover :global(img) {
+    transform: scale(1.05);
+  }
+
+  .section-image__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(41, 22, 111, 0.3), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-slow);
+    pointer-events: none;
+  }
+
+  .section-image__inner:hover .section-image__overlay {
+    opacity: 1;
+  }
+</style>

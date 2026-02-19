@@ -1,11 +1,157 @@
 ---
+import SectionDivider from './SectionDivider.astro';
+
 interface Props {
+  id?: string;
+  layout?: 'two-column' | 'single-column';
+  background?: 'default' | 'alt' | 'gradient' | 'dark';
+  imagePosition?: 'left' | 'right';
+  showGoldFrame?: boolean;
+  accentColor?: 'purple' | 'red' | 'gold' | 'white';
+  divider?: string;
+  dividerColor?: 'gold' | 'purple' | 'red';
   title?: string;
   class?: string;
 }
-const { title, class: className } = Astro.props;
+
+const {
+  id,
+  layout = 'two-column',
+  background = 'default',
+  imagePosition = 'right',
+  showGoldFrame = false,
+  accentColor: _accentColor,
+  divider,
+  dividerColor = 'gold',
+  title,
+  class: className = '',
+} = Astro.props;
 ---
-<section class:list={['section', className]}>
-  {title && <h2 class="section__title">{title}</h2>}
-  <slot />
+
+<section
+  class:list={['section', `section--${background}`, `section--${layout}`, className]}
+  id={id}
+  data-image-pos={imagePosition}
+  data-gold-frame={showGoldFrame || undefined}
+>
+  <div class="section__container container">
+    {divider && <SectionDivider label={divider} color={dividerColor} />}
+    {title && <h2 class="section__title">{title}</h2>}
+    <div class="section__body">
+      <slot />
+    </div>
+  </div>
 </section>
+
+<style>
+  .section {
+    padding: var(--space-16) 0;
+    position: relative;
+  }
+
+  .section--default {
+    background-color: var(--color-surface);
+  }
+
+  .section--alt {
+    background-color: var(--color-background);
+  }
+
+  .section--gradient {
+    background: linear-gradient(
+      to bottom right,
+      rgba(191, 0, 41, 0.1),
+      rgba(41, 22, 111, 0.1)
+    );
+  }
+
+  :global([data-theme='dark']) .section--gradient {
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 77, 109, 0.15),
+      rgba(107, 90, 223, 0.15)
+    );
+  }
+
+  .section--dark {
+    background: linear-gradient(
+      to bottom right,
+      var(--color-primary),
+      rgba(41, 22, 111, 0.8)
+    );
+    color: #ffffff;
+  }
+
+  .section__container {
+    position: relative;
+  }
+
+  .section__body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .section--two-column .section__body {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .section--two-column[data-image-pos='left'] :global(.section-image) {
+      order: -1;
+    }
+  }
+
+  .section--single-column .section__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .section__title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-black);
+    line-height: var(--line-height-tight);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .section__title {
+      font-size: var(--font-size-4xl);
+    }
+  }
+
+  .section--dark .section__title {
+    color: #ffffff;
+  }
+
+  .section--dark :global(.section-text) {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  @media (min-width: 1024px) {
+    .section[data-gold-frame] :global(.section-image)::before {
+      content: '';
+      position: absolute;
+      top: -1rem;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius-2xl);
+      border: 2px solid var(--color-accent-gold);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .section[data-image-pos='right'][data-gold-frame] :global(.section-image)::before {
+      right: -1rem;
+    }
+
+    .section[data-image-pos='left'][data-gold-frame] :global(.section-image)::before {
+      left: -1rem;
+    }
+  }
+</style>
