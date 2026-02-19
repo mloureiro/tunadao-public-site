@@ -8,6 +8,7 @@ import YearNavigation from '@components/YearNavigation.astro';
 import VerticalTimeline from '@components/VerticalTimeline.astro';
 import HeroSection from '@components/HeroSection.astro';
 import PalmaresStatsBar from '@components/palmares/PalmaresStatsBar.astro';
+import SectionDivider from '@components/SectionDivider.astro';
 
 // Feature flag for new timeline (default: true)
 const useVerticalTimeline = import.meta.env.PUBLIC_USE_VERTICAL_TIMELINE !== 'false';
@@ -78,16 +79,13 @@ const stats = [
       {
         palmaresData.map((yearData) => (
           <div class="year-section" id={`year-${yearData.year}`}>
-            <div class="year-header">
-              <h2 class="year-title">{yearData.year}</h2>
-              <span class="year-count">
-                {yearData.festivals.reduce((total, f) => total + f.awards.length, 0)}{' '}
-                {t('palmares.awardsCount')}
-              </span>
-            </div>
-            <div class="festivals-grid">
+            <SectionDivider label={String(yearData.year)} color="gold" centered />
+            <div class="festivals-list">
               {yearData.festivals.map((festival) => (
-                <FestivalCard festival={festival} />
+                <FestivalCard
+                  festival={festival}
+                  organizerLabel={t('palmares.festival')}
+                />
               ))}
             </div>
           </div>
@@ -109,7 +107,7 @@ const stats = [
 
   /* Year Sections */
   .year-section {
-    margin-bottom: var(--space-10);
+    margin-bottom: var(--space-12);
     scroll-margin-top: 80px; /* Offset for sticky nav */
   }
 
@@ -117,46 +115,11 @@ const stats = [
     margin-bottom: 0;
   }
 
-  .year-header {
+  /* Festival List - Single column, stacked vertically */
+  .festivals-list {
     display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    margin-bottom: var(--space-6);
-    padding-bottom: var(--space-3);
-    border-bottom: 3px solid var(--color-primary);
-  }
-
-  .year-title {
-    font-size: var(--text-4xl);
-    font-weight: 700;
-    color: var(--color-primary);
-    margin: 0;
-  }
-
-  .year-count {
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    background-color: var(--color-surface);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-full);
-    border: 1px solid var(--color-border);
-  }
-
-  .festivals-grid {
-    display: grid;
-    gap: var(--space-5);
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  @media (min-width: 640px) {
-    .festivals-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .festivals-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    flex-direction: column;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
   }
 </style>
