@@ -1,0 +1,224 @@
+---
+interface Props {
+  stats: { value: string | number; label: string }[];
+  variant?: 'dark' | 'light' | 'inline';
+  showDividers?: boolean;
+  columns?: number;
+  ariaLabel?: string;
+  class?: string;
+}
+
+const {
+  stats,
+  variant = 'dark',
+  showDividers = false,
+  columns,
+  ariaLabel,
+  class: className = '',
+} = Astro.props;
+
+const isInline = variant === 'inline';
+---
+
+{
+  isInline ? (
+    <div
+      class:list={['stats-bar', `stats-bar--${variant}`, className]}
+      style={columns ? `--stats-columns: ${columns}` : undefined}
+    >
+      {stats.map((stat, index) => (
+        <>
+          {showDividers && index > 0 && <div class="stats-bar__divider" />}
+          <div class="stats-bar__item">
+            <span class="stats-bar__value">{stat.value}</span>
+            <span class="stats-bar__label">{stat.label}</span>
+          </div>
+        </>
+      ))}
+    </div>
+  ) : (
+    <section
+      class:list={['stats-bar', `stats-bar--${variant}`, className]}
+      aria-label={ariaLabel}
+      data-variant={variant}
+    >
+      <div class:list={[variant === 'light' && 'container']}>
+        <div
+          class="stats-bar__grid"
+          style={columns ? `--stats-columns: ${columns}` : undefined}
+        >
+          {stats.map((stat, index) => (
+            <>
+              {showDividers && index > 0 && <div class="stats-bar__divider" />}
+              <div class="stats-bar__item">
+                <span class="stats-bar__value">{stat.value}</span>
+                <span class="stats-bar__label">{stat.label}</span>
+              </div>
+            </>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  /* Dark variant */
+  .stats-bar--dark {
+    padding: var(--space-16) 0;
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+    color: #ffffff;
+  }
+
+  .stats-bar--dark .stats-bar__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-8);
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .stats-bar--dark .stats-bar__grid {
+      grid-template-columns: repeat(var(--stats-columns, 5), 1fr);
+      gap: var(--space-6);
+      padding: 0 var(--space-6);
+    }
+  }
+
+  .stats-bar--dark .stats-bar__item {
+    text-align: center;
+    transition: transform var(--transition-slow);
+  }
+
+  .stats-bar--dark .stats-bar__item:hover {
+    transform: scale(1.05);
+  }
+
+  .stats-bar--dark .stats-bar__value {
+    display: block;
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-black);
+    color: var(--color-accent-gold);
+    margin-bottom: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .stats-bar--dark .stats-bar__value {
+      font-size: var(--font-size-5xl);
+    }
+  }
+
+  .stats-bar--dark .stats-bar__label {
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  /* Light variant */
+  .stats-bar--light {
+    background-color: var(--color-surface);
+    padding: var(--space-12) 0;
+  }
+
+  .stats-bar--light .stats-bar__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .stats-bar--light .stats-bar__grid {
+      grid-template-columns: repeat(var(--stats-columns, 4), 1fr);
+      gap: var(--space-8);
+    }
+  }
+
+  .stats-bar--light .stats-bar__item {
+    text-align: center;
+  }
+
+  .stats-bar--light .stats-bar__value {
+    display: block;
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-black);
+    line-height: 1;
+    margin-bottom: var(--space-2);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @supports not (background-clip: text) {
+    .stats-bar--light .stats-bar__value {
+      color: var(--color-primary);
+      background: none;
+      -webkit-text-fill-color: initial;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .stats-bar--light .stats-bar__value {
+      font-size: var(--font-size-5xl);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .stats-bar--light .stats-bar__value {
+      font-size: var(--font-size-6xl);
+    }
+  }
+
+  .stats-bar--light .stats-bar__label {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-medium);
+  }
+
+  @media (min-width: 768px) {
+    .stats-bar--light .stats-bar__label {
+      font-size: var(--font-size-base);
+    }
+  }
+
+  /* Inline variant */
+  .stats-bar--inline {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .stats-bar--inline .stats-bar__item {
+    text-align: center;
+  }
+
+  .stats-bar--inline .stats-bar__value {
+    display: block;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-black);
+    color: var(--color-accent-gold);
+    line-height: 1;
+    margin-bottom: var(--space-1);
+  }
+
+  .stats-bar--inline .stats-bar__label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stats-bar--inline .stats-bar__divider {
+    width: 1px;
+    height: 2.5rem;
+    background-color: var(--color-text-secondary);
+    opacity: 0.3;
+  }
+</style>

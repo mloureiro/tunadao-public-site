@@ -1,0 +1,120 @@
+---
+interface Props {
+  categories: { key: string; label: string }[];
+  itemSelector: string;
+  categoryAttribute: string;
+  allLabel?: string;
+  ariaLabel?: string;
+  class?: string;
+}
+
+const {
+  categories,
+  itemSelector,
+  categoryAttribute,
+  ariaLabel,
+  class: className = '',
+} = Astro.props;
+---
+
+<section
+  class:list={['category-filter', className]}
+  aria-label={ariaLabel}
+  data-item-selector={itemSelector}
+  data-category-attribute={categoryAttribute}
+>
+  <div class="container">
+    <div class="category-filter__list">
+      {
+        categories.map((category, index) => (
+          <button
+            class="category-filter__btn"
+            class:list={{ 'category-filter__btn--active': index === 0 }}
+            data-category={category.key}
+          >
+            {category.label}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .category-filter {
+    padding: var(--space-6) 0;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .category-filter__list {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .category-filter__btn {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    background-color: transparent;
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .category-filter__btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .category-filter__btn--active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text-inverted);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const filters = document.querySelectorAll('.category-filter');
+
+    filters.forEach((filter) => {
+      const itemSelector = filter.getAttribute('data-item-selector');
+      const categoryAttr = filter.getAttribute('data-category-attribute');
+      if (!itemSelector || !categoryAttr) return;
+
+      const btns = filter.querySelectorAll('.category-filter__btn');
+      const items = document.querySelectorAll(itemSelector);
+
+      btns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          btns.forEach((b) => b.classList.remove('category-filter__btn--active'));
+          btn.classList.add('category-filter__btn--active');
+
+          const category = btn.getAttribute('data-category');
+
+          items.forEach((item) => {
+            let itemCategory: string | null | undefined;
+
+            if (categoryAttr.startsWith('.')) {
+              itemCategory = item.querySelector(categoryAttr)?.textContent?.toLowerCase();
+            } else {
+              itemCategory = item.getAttribute(categoryAttr);
+            }
+
+            const el = item as HTMLElement;
+            if (category === 'all' || itemCategory === category) {
+              el.style.display = '';
+            } else {
+              el.style.display = 'none';
+            }
+          });
+        });
+      });
+    });
+  });
+</script>
