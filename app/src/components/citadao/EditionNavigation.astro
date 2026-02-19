@@ -1,0 +1,106 @@
+---
+import Icon from '@ui/icons/Icon.astro';
+
+interface Props {
+  prevYear: number | null;
+  nextYear: number | null;
+  allEditionsLabel: string;
+  allEditionsHref: string;
+}
+
+const { prevYear, nextYear, allEditionsLabel, allEditionsHref } = Astro.props;
+---
+
+<section class="navigation-section" aria-label="Edition navigation">
+  <div class="navigation-container">
+    <a href={allEditionsHref} class="nav-link nav-back">
+      <Icon name="arrow-left" size={20} class="nav-icon" />
+      <span>{allEditionsLabel}</span>
+    </a>
+    <div class="nav-pagination">
+      {prevYear && (
+        <a href={`${allEditionsHref}/${prevYear}`} class="nav-link nav-prev" rel="prev">
+          <Icon name="chevron-left" size={20} class="nav-icon" />
+          <span>CITADÃO {prevYear}</span>
+        </a>
+      )}
+      {nextYear && (
+        <a href={`${allEditionsHref}/${nextYear}`} class="nav-link nav-next" rel="next">
+          <span>CITADÃO {nextYear}</span>
+          <Icon name="chevron-right" size={20} class="nav-icon" />
+        </a>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Navigation Section */
+  .navigation-section {
+    padding: var(--space-8) var(--space-6);
+    background-color: var(--color-background);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .navigation-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color var(--transition-fast), transform var(--transition-fast), color var(--transition-fast);
+  }
+
+  [data-theme='dark'] .nav-link {
+    color: var(--color-accent-gold);
+  }
+
+  .nav-link:hover {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: var(--color-text-inverted);
+    transform: translateY(-2px);
+  }
+
+  .nav-icon {
+    flex-shrink: 0;
+  }
+
+  .nav-pagination {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .navigation-section {
+      padding: var(--space-6) var(--space-4);
+    }
+
+    .navigation-container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .nav-pagination {
+      justify-content: space-between;
+    }
+
+    .nav-link {
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--font-size-sm);
+    }
+  }
+</style>

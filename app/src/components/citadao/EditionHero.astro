@@ -1,0 +1,208 @@
+---
+import Icon from '@ui/icons/Icon.astro';
+import ResponsiveImage from '@components/ResponsiveImage.astro';
+
+interface Props {
+  edition: {
+    edition: number;
+    year: number;
+    date: string;
+    venue?: string;
+    notes?: string;
+    posterUrl?: string;
+  };
+  editionLabel: string;
+  posterPublicId: string | null;
+}
+
+const { edition, editionLabel, posterPublicId } = Astro.props;
+---
+
+<section class="hero" aria-labelledby="edition-title">
+  <div class="hero-container">
+    {edition.posterUrl && (
+      <div class="hero-poster">
+        <button
+          type="button"
+          class="poster-button"
+          data-poster-url={edition.posterUrl}
+          data-poster-alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
+        >
+          {posterPublicId ? (
+            <ResponsiveImage
+              publicId={posterPublicId}
+              alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
+              class="poster-image"
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
+              aspectRatio="2/3"
+            />
+          ) : (
+            <img
+              src={edition.posterUrl}
+              alt={`Cartaz do ${edition.edition}º Citadão (${edition.year})`}
+              class="poster-image"
+              loading="lazy"
+            />
+          )}
+        </button>
+      </div>
+    )}
+    <div class="hero-content">
+      <div class="hero-badge" aria-hidden="true">
+        {edition.edition}{editionLabel}
+      </div>
+      <h1 id="edition-title" class="hero-title">
+        CITADÃO {edition.year}
+      </h1>
+      <div class="hero-details">
+        <div class="detail-item">
+          <Icon name="calendar" size={20} class="detail-icon" />
+          <span>{edition.date}</span>
+        </div>
+        {edition.venue && (
+          <div class="detail-item">
+            <Icon name="map-pin" size={20} class="detail-icon" />
+            <span>{edition.venue}</span>
+          </div>
+        )}
+      </div>
+      {edition.notes && <p class="hero-notes">{edition.notes}</p>}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Hero Section */
+  .hero {
+    padding: 3rem 1.5rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: var(--color-text-inverted);
+  }
+
+  .hero-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  .hero-poster {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .poster-button {
+    display: block;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: zoom-in;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .poster-button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .poster-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .hero-badge {
+    display: inline-block;
+    align-self: flex-start;
+    padding: var(--space-2) var(--space-4);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--font-size-lg);
+  }
+
+  .detail-icon {
+    flex-shrink: 0;
+  }
+
+  .hero-notes {
+    font-size: var(--font-size-lg);
+    opacity: 0.9;
+    background: var(--color-secondary);
+    display: inline-block;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-4);
+    align-self: flex-start;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero {
+      padding: 2rem 1rem;
+    }
+
+    .hero-container {
+      gap: var(--space-6);
+    }
+
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .detail-item {
+      font-size: var(--font-size-base);
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .hero-container {
+      grid-template-columns: 300px 1fr;
+    }
+
+    .hero-poster {
+      max-width: 100%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-container {
+      grid-template-columns: 400px 1fr;
+    }
+  }
+</style>
