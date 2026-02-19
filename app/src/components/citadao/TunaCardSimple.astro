@@ -1,0 +1,127 @@
+---
+/**
+ * TunaCardSimple - Simple tuna card with logo, name, and city
+ */
+import type { FrontendTunaWithLogo } from '@lib/cms/types';
+
+interface Props {
+  tuna: FrontendTunaWithLogo;
+  showCity?: boolean;
+}
+
+const { tuna, showCity = true } = Astro.props;
+const initials = tuna.shortName.slice(0, 2).toUpperCase();
+const displayName = tuna.shortName || tuna.fullName;
+---
+
+<div class="tuna-card">
+  <div class="tuna-logo-container">
+    {tuna.logoUrl ? (
+      <img
+        src={tuna.logoUrl}
+        alt={displayName}
+        class="tuna-logo"
+        loading="lazy"
+      />
+    ) : (
+      <div class="tuna-logo-placeholder" aria-hidden="true">
+        <span class="tuna-initials">{initials}</span>
+      </div>
+    )}
+  </div>
+  <div class="tuna-info">
+    <p class="tuna-name">{displayName}</p>
+    {showCity && tuna.city && (
+      <p class="tuna-city">{tuna.city}</p>
+    )}
+  </div>
+</div>
+
+<style>
+  .tuna-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .tuna-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .tuna-logo-container {
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tuna-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+  }
+
+  .tuna-logo-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tuna-initials {
+    color: var(--color-text-inverted);
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .tuna-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .tuna-name {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-1) 0;
+  }
+
+  .tuna-city {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .tuna-card {
+      padding: var(--space-3);
+      gap: var(--space-3);
+    }
+
+    .tuna-logo-container {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .tuna-name {
+      font-size: var(--font-size-sm);
+    }
+
+    .tuna-city {
+      font-size: var(--font-size-xs);
+    }
+  }
+</style>

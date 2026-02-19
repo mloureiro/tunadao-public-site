@@ -1,0 +1,138 @@
+---
+/**
+ * ParticipantList - Display participating tunas grouped by role (contestants vs guests)
+ */
+import TunaCardSimple from './TunaCardSimple.astro';
+import type { FrontendTunaWithLogo } from '@lib/cms/types';
+
+interface Props {
+  contestants: FrontendTunaWithLogo[];
+  guests: FrontendTunaWithLogo[];
+  labels: {
+    contestants: string;
+    guests: string;
+    count: string;
+  };
+}
+
+const { contestants, guests, labels } = Astro.props;
+---
+
+<div class="participants-container">
+  {contestants.length > 0 && (
+    <section class="participants-section" aria-labelledby="contestants-heading">
+      <div class="section-header">
+        <h3 id="contestants-heading" class="section-title">{labels.contestants}</h3>
+        <span class="count-badge" aria-label={`${contestants.length} ${labels.count}`}>
+          {contestants.length}
+        </span>
+      </div>
+      <div class="participants-grid">
+        {contestants.map((tuna) => (
+          <TunaCardSimple tuna={tuna} showCity={true} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {guests.length > 0 && (
+    <section class="participants-section" aria-labelledby="guests-heading">
+      <div class="section-header">
+        <h3 id="guests-heading" class="section-title">{labels.guests}</h3>
+        <span class="count-badge" aria-label={`${guests.length} ${labels.count}`}>
+          {guests.length}
+        </span>
+      </div>
+      <div class="participants-grid">
+        {guests.map((tuna) => (
+          <TunaCardSimple tuna={tuna} showCity={true} />
+        ))}
+      </div>
+    </section>
+  )}
+</div>
+
+<style>
+  .participants-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .participants-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .section-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 var(--space-3);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: var(--color-text-inverted);
+    border-radius: var(--radius-full);
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-base);
+    font-weight: 700;
+  }
+
+  .participants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 768px) {
+    .participants-container {
+      gap: var(--space-8);
+    }
+
+    .participants-section {
+      gap: var(--space-4);
+    }
+
+    .section-title {
+      font-size: var(--font-size-xl);
+    }
+
+    .count-badge {
+      min-width: 2rem;
+      height: 2rem;
+      font-size: var(--font-size-sm);
+    }
+
+    .participants-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .participants-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .participants-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
