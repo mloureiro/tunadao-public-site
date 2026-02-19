@@ -27,8 +27,12 @@ const sortedYears = [...years].sort((a, b) => b - a);
     <div class="vertical-timeline__line" aria-hidden="true"></div>
     <ul class="vertical-timeline__list" role="list">
       {sortedYears.map((year, index) => {
-        const isFirst = index === 0;
-        const isLast = index === sortedYears.length - 1;
+        const t = sortedYears.length > 1 ? index / (sortedYears.length - 1) : 0;
+        const r = Math.round(41 + t * (212 - 41));
+        const g = Math.round(22 + t * (161 - 22));
+        const b = Math.round(111 + t * (94 - 111));
+        const dotColor = `rgb(${r}, ${g}, ${b})`;
+
         return (
           <li class="vertical-timeline__item">
             <a
@@ -38,11 +42,8 @@ const sortedYears = [...years].sort((a, b) => b - a);
               aria-label={`Jump to ${year}`}
             >
               <span
-                class:list={[
-                  'vertical-timeline__dot',
-                  { 'vertical-timeline__dot--first': isFirst },
-                  { 'vertical-timeline__dot--last': isLast },
-                ]}
+                class="vertical-timeline__dot"
+                style={`--dot-color: ${dotColor};`}
                 aria-hidden="true"
               ></span>
               <span class="vertical-timeline__label">{year}</span>
@@ -160,6 +161,12 @@ const sortedYears = [...years].sort((a, b) => b - a);
           const isVisible = entries[0].isIntersecting;
           indicator?.classList.toggle('year-indicator--visible', isVisible);
           nav.classList.toggle('vertical-timeline--active', isVisible);
+          if (isVisible) {
+            updateTimelinePosition();
+          } else {
+            nav.style.top = '';
+            nav.style.transform = '';
+          }
         }, { threshold: 0 });
 
         sectionObserver.observe(scopeSection);
@@ -187,7 +194,6 @@ const sortedYears = [...years].sort((a, b) => b - a);
 
         window.addEventListener('scroll', updateTimelinePosition, { passive: true });
         window.addEventListener('resize', updateTimelinePosition, { passive: true });
-        updateTimelinePosition();
       } else {
         // Fallback: original behavior (show when first section scrolls past)
         const showObserver = new IntersectionObserver((entries) => {
@@ -330,7 +336,6 @@ const sortedYears = [...years].sort((a, b) => b - a);
     background: linear-gradient(
       to bottom,
       var(--color-primary),
-      var(--color-secondary),
       var(--color-accent-gold)
     );
   }
@@ -369,20 +374,10 @@ const sortedYears = [...years].sort((a, b) => b - a);
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background-color: var(--color-secondary);
-    border: 2px solid var(--color-secondary-light);
+    background-color: var(--dot-color);
+    border: 2px solid color-mix(in srgb, var(--dot-color) 70%, white);
     transition: all var(--transition-fast);
     flex-shrink: 0;
-  }
-
-  .vertical-timeline__dot--first {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary-light);
-  }
-
-  .vertical-timeline__dot--last {
-    background-color: var(--color-accent-gold);
-    border-color: var(--color-gold-light);
   }
 
   .vertical-timeline__label {
@@ -417,15 +412,7 @@ const sortedYears = [...years].sort((a, b) => b - a);
     opacity: 1;
     transform: translateX(0);
     font-weight: 600;
-    color: var(--color-secondary);
-  }
-
-  .vertical-timeline__link--active .vertical-timeline__dot--first ~ .vertical-timeline__label {
-    color: var(--color-primary);
-  }
-
-  .vertical-timeline__link--active .vertical-timeline__dot--last ~ .vertical-timeline__label {
-    color: var(--color-accent-gold);
+    color: var(--dot-color);
   }
 
   /* Mobile Year Indicator */
