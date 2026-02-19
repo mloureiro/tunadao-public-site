@@ -1,9 +1,11 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Button from '@components/Button.astro';
+import HeroSection from '@components/HeroSection.astro';
 import { useTranslations, type Language, defaultLang } from '@i18n/index';
 import { getAlbums } from '@lib/cms';
 import { Icon } from '@ui/icons';
+import heroImage from '@assets/photos/performance-percussao.jpg';
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
@@ -34,13 +36,13 @@ const albums = cmsAlbums.map((album) => ({
 ---
 
 <Layout title={`${t('music.title')} | Tunadão 1998`} description={t('music.description')}>
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <h1 class="hero__title">{t('music.title')}</h1>
-      <p class="hero__subtitle">{t('music.subtitle')}</p>
-    </div>
-  </section>
+  <HeroSection
+    title={t('music.title')}
+    subtitle={t('music.subtitle')}
+    backgroundImage={heroImage}
+    backgroundAlt={t('music.heroAlt')}
+    height="60vh"
+  />
 
   <!-- Spotify CTA -->
   <section class="spotify-cta">
@@ -103,25 +105,6 @@ const albums = cmsAlbums.map((album) => ({
 </Layout>
 
 <style>
-  /* Hero Section */
-  .hero {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: var(--color-text-inverted);
-    padding: var(--space-12) 0;
-    text-align: center;
-  }
-
-  .hero__title {
-    font-size: var(--text-4xl);
-    font-weight: 700;
-    margin-bottom: var(--space-2);
-  }
-
-  .hero__subtitle {
-    font-size: var(--text-xl);
-    opacity: 0.9;
-  }
-
   /* Spotify CTA */
   .spotify-cta {
     background-color: var(--color-spotify);
