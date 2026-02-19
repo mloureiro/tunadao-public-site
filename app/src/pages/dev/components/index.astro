@@ -1,12 +1,8 @@
 ---
 import DevLayout from '@layouts/DevLayout.astro';
 import Button from '@components/Button.astro';
-import Card from '@components/Card.astro';
 import Award from '@components/Award.astro';
-import TunaAvatar from '@components/tunas/Avatar.astro';
-import TunaCard from '@components/tunas/Card.astro';
 import DesignThemeToggle from '@components/DesignThemeToggle.astro';
-import type { FrontendTunaWithLogo } from '@lib/cms/types';
 
 // All award types for demo
 const allAwards = [
@@ -31,40 +27,6 @@ const allAwards = [
   { key: 'premio-participacao', name: 'Premio Participacao' },
   { key: 'premio-tema-especial', name: 'Premio Tema Especial' },
 ];
-
-// Sample tuna data for demos
-const sampleTunas: FrontendTunaWithLogo[] = [
-  {
-    shortName: 'TEUP',
-    fullName: 'Tuna de Engenharia da Universidade do Porto',
-    logoUrl: undefined,
-    city: 'Porto',
-  },
-  {
-    shortName: 'TUM',
-    fullName: 'Tuna Universitaria do Minho',
-    logoUrl: undefined,
-    city: 'Braga',
-  },
-  {
-    shortName: 'Azeituna',
-    fullName: 'Azeituna - Tuna Academica da Universidade de Lisboa',
-    logoUrl: undefined,
-    city: 'Lisboa',
-  },
-  {
-    shortName: 'TFLUL',
-    fullName: 'Tuna da Faculdade de Letras da Universidade de Lisboa',
-    logoUrl: undefined,
-    city: 'Lisboa',
-  },
-  {
-    shortName: 'Tunadao',
-    fullName: 'Tunadao 1998 - Tuna Academica da Universidade do Algarve',
-    logoUrl: undefined,
-    city: 'Faro',
-  },
-];
 ---
 
 <DevLayout title="Components" currentPage="components">
@@ -81,9 +43,6 @@ const sampleTunas: FrontendTunaWithLogo[] = [
 
   <nav class="component-nav">
     <a href="#button">Button</a>
-    <a href="#card">Card</a>
-    <a href="#tuna-avatar">TunaAvatar</a>
-    <a href="#tuna-card">TunaCard</a>
     <a href="#award">Award</a>
   </nav>
 
@@ -132,152 +91,6 @@ const sampleTunas: FrontendTunaWithLogo[] = [
       <div class="component-row hero">
         <Button variant="primary">Primary</Button>
         <Button variant="outline">Outline</Button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Card -->
-  <section id="card" class="component-section">
-    <h2>Card</h2>
-    <p class="component-path">@components/Card.astro</p>
-
-    <div class="component-group">
-      <h3>Variants</h3>
-      <div class="component-grid">
-        <Card variant="default">
-          <div class="card__content">
-            <h4 class="card__title">Default Card</h4>
-            <p class="card__description">This is the default card variant with subtle shadow.</p>
-          </div>
-        </Card>
-        <Card variant="elevated">
-          <div class="card__content">
-            <h4 class="card__title">Elevated Card</h4>
-            <p class="card__description">This card has a more prominent shadow.</p>
-          </div>
-        </Card>
-        <Card variant="outlined">
-          <div class="card__content">
-            <h4 class="card__title">Outlined Card</h4>
-            <p class="card__description">This card has a border instead of shadow.</p>
-          </div>
-        </Card>
-      </div>
-    </div>
-
-    <div class="component-group">
-      <h3>As Link</h3>
-      <div class="component-grid">
-        <Card href="#" variant="default">
-          <div class="card__content">
-            <h4 class="card__title">Clickable Card</h4>
-            <p class="card__description">Hover to see the lift effect.</p>
-          </div>
-        </Card>
-      </div>
-    </div>
-  </section>
-
-  <!-- TunaAvatar -->
-  <section id="tuna-avatar" class="component-section">
-    <h2>TunaAvatar</h2>
-    <p class="component-path">@components/tunas/Avatar.astro</p>
-
-    <div class="component-group">
-      <h3>Sizes</h3>
-      <div class="component-row">
-        <TunaAvatar shortName="TEUP" size="sm" />
-        <TunaAvatar shortName="TEUP" size="md" />
-        <TunaAvatar shortName="TEUP" size="lg" />
-        <TunaAvatar shortName="TEUP" size="xl" />
-      </div>
-      <p class="component-note">sm: 24px | md: 48px | lg: 64px | xl: 96px</p>
-    </div>
-
-    <div class="component-group">
-      <h3>Shapes</h3>
-      <div class="component-row">
-        <TunaAvatar shortName="TUM" size="lg" shape="rounded" />
-        <TunaAvatar shortName="TUM" size="lg" shape="circle" />
-      </div>
-      <p class="component-note">rounded (default) | circle</p>
-    </div>
-
-    <div class="component-group">
-      <h3>Fallback Colors (based on shortName hash)</h3>
-      <div class="component-row">
-        {
-          sampleTunas.map(tuna => (
-            <div style="text-align: center;">
-              <TunaAvatar shortName={tuna.shortName} size="lg" />
-              <p class="component-note" style="margin-top: 4px;">
-                {tuna.shortName}
-              </p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-
-    <div class="component-group">
-      <h3>With Logo (simulated)</h3>
-      <div class="component-row">
-        <TunaAvatar
-          shortName="Tunadao"
-          logoUrl="https://res.cloudinary.com/demo/image/upload/v1/sample"
-          size="lg"
-        />
-        <TunaAvatar shortName="Tunadao" size="lg" />
-      </div>
-      <p class="component-note">With logo vs fallback</p>
-    </div>
-  </section>
-
-  <!-- TunaCard -->
-  <section id="tuna-card" class="component-section">
-    <h2>TunaCard</h2>
-    <p class="component-path">@components/tunas/Card.astro</p>
-
-    <div class="component-group">
-      <h3>Display Modes</h3>
-      <div class="component-column">
-        <div>
-          <p class="component-label">both (default)</p>
-          <TunaCard tuna={sampleTunas[0]} display="both" />
-        </div>
-        <div>
-          <p class="component-label">short</p>
-          <TunaCard tuna={sampleTunas[0]} display="short" />
-        </div>
-        <div>
-          <p class="component-label">full</p>
-          <TunaCard tuna={sampleTunas[0]} display="full" />
-        </div>
-      </div>
-    </div>
-
-    <div class="component-group">
-      <h3>Sizes</h3>
-      <div class="component-column">
-        <div>
-          <p class="component-label">sm</p>
-          <TunaCard tuna={sampleTunas[1]} size="sm" />
-        </div>
-        <div>
-          <p class="component-label">md (default)</p>
-          <TunaCard tuna={sampleTunas[1]} size="md" />
-        </div>
-        <div>
-          <p class="component-label">lg</p>
-          <TunaCard tuna={sampleTunas[1]} size="lg" />
-        </div>
-      </div>
-    </div>
-
-    <div class="component-group">
-      <h3>Multiple Tunas</h3>
-      <div class="component-column">
-        {sampleTunas.map(tuna => <TunaCard tuna={tuna} size="md" />)}
       </div>
     </div>
   </section>
