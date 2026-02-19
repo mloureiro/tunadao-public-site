@@ -140,7 +140,9 @@ function getCollection<T>(
   const dump = loadDump();
   if (dump?.collections?.[collectionName]) {
     const collection = dump.collections[collectionName] as { docs: T[]; totalDocs: number };
-    return paginate(collection.docs);
+    if (collection.docs.length > 0) {
+      return paginate(collection.docs);
+    }
   }
   return paginate(fallback);
 }
@@ -213,7 +215,26 @@ const fallbackFestivals: CMSFestival[] = [];
 const fallbackFestivalAwards: CMSFestivalAward[] = [];
 const fallbackBlogPosts: CMSBlogPost[] = [];
 const fallbackVideos: CMSVideo[] = [];
-const fallbackAlbums: CMSAlbum[] = [];
+const fallbackAlbums: CMSAlbum[] = [
+  {
+    id: 1,
+    title: 'Por Ruelas e Calçadas',
+    year: 2003,
+    coverImage: 1,
+    spotifyUrl: 'https://open.spotify.com/album/3xcpAOCKk7soUNfdnTC6Sn',
+    recordingType: 'live',
+    status: 'published',
+  },
+  {
+    id: 2,
+    title: 'De Capa Bem Traçada',
+    year: 2008,
+    coverImage: 2,
+    spotifyUrl: 'https://open.spotify.com/album/5ljVRcZan9DLkFDm5aWAgt',
+    recordingType: 'studio',
+    status: 'published',
+  },
+];
 
 const fallbackSiteSettings: CMSSiteSettings = {
   id: 1,
