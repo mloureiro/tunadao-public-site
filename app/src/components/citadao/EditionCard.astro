@@ -1,4 +1,5 @@
 ---
+import { Icon } from '@ui/icons';
 import ResponsiveImage from '@components/ResponsiveImage.astro';
 import type { FrontendCitadaoEdition } from '@lib/cms/types';
 import { extractPublicId } from '@lib/cms';
@@ -57,21 +58,7 @@ const detailPath = getLocalizedPath(`/citadao/${edition.year}`, lang);
       )}
       <div class="edition-cta">
         <span class="cta-text">{labels.viewDetails}</span>
-        <svg
-          class="cta-arrow"
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M5 12h14M12 5l7 7-7 7"></path>
-        </svg>
+        <Icon name="arrow-right" size={20} class="cta-arrow" />
       </div>
     </div>
   </a>

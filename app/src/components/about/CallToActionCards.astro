@@ -5,6 +5,7 @@
  */
 import { Image } from 'astro:assets';
 import { getLocalizedPath, type Language } from '@i18n/index';
+import { Icon } from '@ui/icons';
 import SectionDivider from '@components/SectionDivider.astro';
 import placaPhoto from '@assets/photos/placa-25-anos.jpg';
 import palcoPhoto from '@assets/photos/palco-completo.jpg';
@@ -47,9 +48,7 @@ const { lang, title, description, dividerLabel, palmaresText, citadaoText } = As
           <h3 class="cta-card__title">{palmaresText}</h3>
           <div class="cta-card__link">
             <span>{palmaresText}</span>
-            <svg class="cta-card__arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            <Icon name="arrow-right" size={20} class="cta-card__arrow" />
           </div>
         </div>
       </a>
@@ -73,9 +72,7 @@ const { lang, title, description, dividerLabel, palmaresText, citadaoText } = As
           <h3 class="cta-card__title">{citadaoText}</h3>
           <div class="cta-card__link">
             <span>{citadaoText}</span>
-            <svg class="cta-card__arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            <Icon name="arrow-right" size={20} class="cta-card__arrow" />
           </div>
         </div>
       </a>
