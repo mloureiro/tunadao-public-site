@@ -77,6 +77,7 @@ export interface Config {
     'citadao-awards': CitadaoAward;
     festivals: Festival;
     'festival-awards': FestivalAward;
+    'festival-participants': FestivalParticipant;
     'blog-posts': BlogPost;
     videos: Video;
     albums: Album;
@@ -99,6 +100,7 @@ export interface Config {
     'citadao-awards': CitadaoAwardsSelect<false> | CitadaoAwardsSelect<true>;
     festivals: FestivalsSelect<false> | FestivalsSelect<true>;
     'festival-awards': FestivalAwardsSelect<false> | FestivalAwardsSelect<true>;
+    'festival-participants': FestivalParticipantsSelect<false> | FestivalParticipantsSelect<true>;
     'blog-posts': BlogPostsSelect<false> | BlogPostsSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     albums: AlbumsSelect<false> | AlbumsSelect<true>;
@@ -316,6 +318,10 @@ export interface Tuna {
    */
   city?: string | null;
   /**
+   * Tipo de tuna/grupo
+   */
+  type?: ('tuna' | 'tuna-feminina' | 'tuna-veterana' | 'tuna-senior' | 'international' | 'group' | 'soloist') | null;
+  /**
    * Website ou perfil (URL completo)
    */
   website?: string | null;
@@ -471,6 +477,29 @@ export interface FestivalAward {
    * Nome personalizado (se diferente do tipo)
    */
   customName?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Participacoes de tunas nos festivais externos
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "festival-participants".
+ */
+export interface FestivalParticipant {
+  id: number;
+  /**
+   * Festival
+   */
+  festival: number | Festival;
+  /**
+   * Tuna participante
+   */
+  tuna: number | Tuna;
+  /**
+   * Tipo de participacao
+   */
+  type: 'contestant' | 'guest';
   updatedAt: string;
   createdAt: string;
 }
@@ -747,6 +776,10 @@ export interface PayloadLockedDocument {
         value: number | FestivalAward;
       } | null)
     | ({
+        relationTo: 'festival-participants';
+        value: number | FestivalParticipant;
+      } | null)
+    | ({
         relationTo: 'blog-posts';
         value: number | BlogPost;
       } | null)
@@ -890,6 +923,7 @@ export interface TunasSelect<T extends boolean = true> {
   fullName?: T;
   logo?: T;
   city?: T;
+  type?: T;
   website?: T;
   description?: T;
   updatedAt?: T;
@@ -962,6 +996,17 @@ export interface FestivalAwardsSelect<T extends boolean = true> {
   festival?: T;
   awardType?: T;
   customName?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "festival-participants_select".
+ */
+export interface FestivalParticipantsSelect<T extends boolean = true> {
+  festival?: T;
+  tuna?: T;
+  type?: T;
   updatedAt?: T;
   createdAt?: T;
 }
