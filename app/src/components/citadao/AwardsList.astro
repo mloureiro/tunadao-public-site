@@ -2,6 +2,7 @@
 /**
  * AwardsList - Display awards with winning tunas
  */
+import { Icon as AstroIcon } from 'astro-icon/components';
 import TunaCardSimple from './TunaCardSimple.astro';
 import type { FrontendTunaWithLogo } from '@lib/cms/types';
 
@@ -37,22 +38,7 @@ const displayAwards: DisplayAward[] = tunasWithPrizes.flatMap(({ tuna, awards })
         {displayAwards.map((award) => (
           <div class="award-item">
             <div class="award-header">
-              <svg
-                class="award-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="8" r="7" />
-                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
-              </svg>
+              <AstroIcon name="lucide:award" size={24} class:list={['award-icon']} aria-hidden="true" />
               <h3 class="award-name">{award.name}</h3>
             </div>
             <div class="award-winner">
