@@ -1,4 +1,6 @@
 ---
+import { Icon as AstroIcon } from 'astro-icon/components';
+
 /**
  * VerticalTimeline - Modern vertical year navigation
  * Displays years as a vertical timeline with scroll-based tracking
@@ -59,9 +61,7 @@ const sortedYears = [...years].sort((a, b) => b - a);
 <div class="year-indicator" aria-hidden="true">
   <button class="year-indicator__button" type="button" aria-label="Current year navigation">
     <span class="year-indicator__text"></span>
-    <svg class="year-indicator__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M6 9l6 6 6-6"/>
-    </svg>
+    <AstroIcon name="lucide:chevron-down" class:list={['year-indicator__icon']} size={16} />
   </button>
   <div class="year-indicator__dropdown">
     <ul class="year-indicator__list" role="list">

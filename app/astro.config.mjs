@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import icon from 'astro-icon';
 
 // Use BASE_PATH env var for deployments, defaults to '/' for local dev
 const base = process.env.BASE_PATH || '/';
@@ -10,6 +11,7 @@ export default defineConfig({
   output: 'static',
   srcDir: './src',
   integrations: [
+    icon(),
     sitemap({
       changefreq: 'weekly',
       priority: 0.7,
