@@ -1,4 +1,6 @@
 ---
+import { Icon as AstroIcon } from 'astro-icon/components';
+
 export type AwardVariant = 'default' | 'gold' | 'special' | 'public';
 
 export type AwardKey = 'melhor-tuna' | 'segunda-melhor-tuna' | 'terceira-melhor-tuna' | 'tuna-mais-tuna' | 'tuna-do-publico' | 'tuno-mais-tuninho' | 'tuna-mais-marafada' | 'tuna-mais-real' | 'tuna-mais-bebedora' | 'melhor-serenata' | 'melhor-passacalles' | 'melhor-pandeireta' | 'melhor-instrumental' | 'melhor-solista' | 'melhor-original' | 'melhor-estandarte' | 'mencao-honrosa' | 'premio-ibero-americano' | 'premio-participacao' | 'premio-tema-especial';
@@ -11,22 +13,22 @@ interface Props {
 
 const { awardKey, size = 'sm', class: className = '' } = Astro.props;
 
-const DEFAULT_ICON = '♦';
+const DEFAULT_ICON = 'lucide:award';
 
 const AWARD_ICONS: Record<string, string> = {
-  'melhor-tuna': '🏆',
-  'segunda-melhor-tuna': '🥈',
-  'terceira-melhor-tuna': '🥉',
-  'tuna-mais-tuna': '🎭',
-  'tuna-do-publico': '❤️',
-  'melhor-serenata': '🎵',
-  'melhor-passacalles': '🕺',
-  'melhor-pandeireta': '🥁',
-  'melhor-instrumental': '🎸',
-  'melhor-solista': '🎤',
-  'melhor-original': '✨',
-  'melhor-estandarte': '🏴',
-  'premio-participacao': '🎶',
+  'melhor-tuna':        'lucide:trophy',
+  'segunda-melhor-tuna': 'lucide:medal',
+  'terceira-melhor-tuna': 'lucide:medal',
+  'tuna-mais-tuna':     'lucide:drama',
+  'tuna-do-publico':    'lucide:heart',
+  'melhor-serenata':    'lucide:music',
+  'melhor-passacalles': 'lucide:footprints',
+  'melhor-pandeireta':  'lucide:drum',
+  'melhor-instrumental': 'lucide:guitar',
+  'melhor-solista':     'lucide:mic',
+  'melhor-original':    'lucide:sparkles',
+  'melhor-estandarte':  'lucide:flag',
+  'premio-participacao': 'lucide:music-2',
 };
 
 function getVariant(key: string): AwardVariant {
@@ -38,6 +40,7 @@ function getVariant(key: string): AwardVariant {
 
 const variant = getVariant(awardKey);
 const icon = AWARD_ICONS[awardKey] || DEFAULT_ICON;
+const iconSize = size === 'sm' ? 14 : 20;
 ---
 
 <span
@@ -48,7 +51,7 @@ const icon = AWARD_ICONS[awardKey] || DEFAULT_ICON;
     className,
   ]}
 >
-  <span class="award__icon" aria-hidden="true">{icon}</span>
+  <AstroIcon name={icon} size={iconSize} class:list={['award__icon']} aria-hidden="true" />
   <slot />
 </span>
 
@@ -65,8 +68,9 @@ const icon = AWARD_ICONS[awardKey] || DEFAULT_ICON;
   }
 
   .award__icon {
-    line-height: 1;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
   }
 
   /* Size: sm (inline badge) */
@@ -75,18 +79,10 @@ const icon = AWARD_ICONS[awardKey] || DEFAULT_ICON;
     font-size: var(--font-size-xs);
   }
 
-  .award--sm .award__icon {
-    font-size: 0.875rem;
-  }
-
   /* Size: md (card-like) */
   .award--md {
     padding: var(--space-2) var(--space-3);
     font-size: var(--font-size-sm);
-  }
-
-  .award--md .award__icon {
-    font-size: 1.25rem;
   }
 
   /* Variant: gold */

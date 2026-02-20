@@ -1,4 +1,5 @@
 ---
+import { Icon as AstroIcon } from 'astro-icon/components';
 import DevLayout from '@layouts/DevLayout.astro';
 
 const base = import.meta.env.BASE_URL;
@@ -8,21 +9,21 @@ const devPages = [
     title: 'Components',
     description: 'UI component library showcase with all variants, sizes, and states.',
     href: `${base}dev/components/`,
-    icon: '🧩',
+    icon: 'lucide:puzzle',
     status: 'complete',
   },
   {
     title: 'Timeline',
     description: 'Year navigation and timeline component exploration.',
     href: `${base}dev/components/timeline`,
-    icon: '📅',
+    icon: 'lucide:calendar',
     status: 'wip',
   },
   {
     title: 'Layout',
     description: 'Page layout patterns and structure showcase.',
     href: `${base}dev/layout`,
-    icon: '📐',
+    icon: 'lucide:layout',
     status: 'wip',
   },
 ];
@@ -42,7 +43,7 @@ const devPages = [
       <a href={page.href} class="dev-card">
         <div class="dev-card__content">
           <div class="dev-card__header">
-            <span class="dev-card__icon">{page.icon}</span>
+            <AstroIcon name={page.icon} size={28} class:list={['dev-card__icon']} aria-hidden="true" />
             <span class:list={['dev-card__status', `dev-card__status--${page.status}`]}>
               {page.status === 'complete' ? 'Complete' : 'WIP'}
             </span>
@@ -122,7 +123,8 @@ const devPages = [
     }
 
     .dev-card__icon {
-      font-size: var(--font-size-2xl);
+      display: flex;
+      align-items: center;
     }
 
     .dev-card__status {
