@@ -1,6 +1,6 @@
 ---
 /**
- * TunaCardSimple - Simple tuna card with logo, name, and city
+ * TunaCardSimple - Compact tuna card with crest (logo), sigla, and city.
  */
 import type { FrontendTunaWithLogo } from '@lib/cms/types';
 
@@ -15,25 +15,20 @@ const displayName = tuna.shortName || tuna.fullName;
 ---
 
 <div class="tuna-card">
-  <div class="tuna-logo-container">
-    {tuna.logoUrl ? (
-      <img
-        src={tuna.logoUrl}
-        alt={displayName}
-        class="tuna-logo"
-        loading="lazy"
-      />
-    ) : (
-      <div class="tuna-logo-placeholder" aria-hidden="true">
-        <span class="tuna-initials">{initials}</span>
-      </div>
-    )}
+  <div class="tuna-crest">
+    {
+      tuna.logoUrl ? (
+        <img src={tuna.logoUrl} alt={displayName} class="tuna-logo" loading="lazy" />
+      ) : (
+        <span class="tuna-initials" aria-hidden="true">
+          {initials}
+        </span>
+      )
+    }
   </div>
   <div class="tuna-info">
     <p class="tuna-name">{displayName}</p>
-    {showCity && tuna.city && (
-      <p class="tuna-city">{tuna.city}</p>
-    )}
+    {showCity && tuna.city && <p class="tuna-city">{tuna.city}</p>}
   </div>
 </div>
 
@@ -41,22 +36,29 @@ const displayName = tuna.shortName || tuna.fullName;
   .tuna-card {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-4);
+    gap: var(--space-3);
+    padding: var(--space-3);
     background-color: var(--color-surface);
-    border-radius: var(--radius-md);
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast);
   }
 
   .tuna-card:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
+    border-color: var(--color-primary);
   }
 
-  .tuna-logo-container {
+  [data-theme='dark'] .tuna-card:hover {
+    border-color: var(--color-primary-light);
+  }
+
+  .tuna-crest {
     flex-shrink: 0;
-    width: 4rem;
-    height: 4rem;
+    width: 3rem;
+    height: 3rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,22 +71,18 @@ const displayName = tuna.shortName || tuna.fullName;
     border-radius: var(--radius-sm);
   }
 
-  .tuna-logo-placeholder {
+  .tuna-initials {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .tuna-initials {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--radius-sm);
     color: var(--color-text-inverted);
     font-family: var(--font-family-heading);
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-lg);
     font-weight: 700;
-    text-transform: uppercase;
   }
 
   .tuna-info {
@@ -93,35 +91,22 @@ const displayName = tuna.shortName || tuna.fullName;
   }
 
   .tuna-name {
+    margin: 0;
+    font-family: var(--font-family-heading);
     font-size: var(--font-size-base);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--color-text);
-    margin: 0 0 var(--space-1) 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .tuna-city {
-    font-size: var(--font-size-sm);
+    margin: var(--space-1) 0 0 0;
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
-    margin: 0;
-  }
-
-  @media (max-width: 768px) {
-    .tuna-card {
-      padding: var(--space-3);
-      gap: var(--space-3);
-    }
-
-    .tuna-logo-container {
-      width: 3rem;
-      height: 3rem;
-    }
-
-    .tuna-name {
-      font-size: var(--font-size-sm);
-    }
-
-    .tuna-city {
-      font-size: var(--font-size-xs);
-    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>

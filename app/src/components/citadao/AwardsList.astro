@@ -1,15 +1,11 @@
 ---
 /**
- * AwardsList - Display awards with winning tunas
+ * AwardsList — Palmarés grouped by winning tuna.
+ * Each tuna appears once with all the prizes it took, shown as medal chips.
+ * The top-ranked winner (holds Melhor Tuna) gets a laureate treatment.
  */
 import { Icon as AstroIcon } from 'astro-icon/components';
-import TunaCardSimple from './TunaCardSimple.astro';
 import type { FrontendTunaWithLogo } from '@lib/cms/types';
-
-interface DisplayAward {
-  name: string;
-  tuna: FrontendTunaWithLogo;
-}
 
 interface Props {
   tunasWithPrizes: { tuna: FrontendTunaWithLogo; awards: string[] }[];
@@ -19,136 +15,269 @@ interface Props {
 
 const { tunasWithPrizes, awardLabel, sectionTitle } = Astro.props;
 
-// Flatten: one card per award (not per tuna)
-const displayAwards: DisplayAward[] = tunasWithPrizes.flatMap(({ tuna, awards }) =>
-  awards.map((key) => ({
-    name: awardLabel(key),
-    tuna,
-  }))
-);
+const GRAND_PRIZE = 'melhor-tuna';
+const laureateIndex = tunasWithPrizes.findIndex(({ awards }) => awards.includes(GRAND_PRIZE));
+const totalPrizes = tunasWithPrizes.reduce((sum, { awards }) => sum + awards.length, 0);
+
+const displayName = (tuna: FrontendTunaWithLogo) => tuna.shortName || tuna.fullName;
+const initials = (tuna: FrontendTunaWithLogo) =>
+  (tuna.shortName || tuna.fullName).slice(0, 2).toUpperCase();
 ---
 
 {
-  displayAwards.length > 0 && (
-    <section class="awards-section" aria-labelledby="awards-heading">
-      <h2 id="awards-heading" class="awards-title">
-        {sectionTitle}
-      </h2>
-      <div class="awards-list">
-        {displayAwards.map((award) => (
-          <div class="award-item">
-            <div class="award-header">
-              <AstroIcon name="lucide:award" size={24} class:list={['award-icon']} aria-hidden="true" />
-              <h3 class="award-name">{award.name}</h3>
+  tunasWithPrizes.length > 0 && (
+    <section class="palmares" aria-labelledby="awards-heading">
+      <header class="palmares-head">
+        <h2 id="awards-heading" class="palmares-title">
+          {sectionTitle}
+        </h2>
+        <span class="palmares-count">{totalPrizes}</span>
+      </header>
+
+      <ol class="laureates">
+        {tunasWithPrizes.map(({ tuna, awards }, i) => (
+          <li class:list={['laureate', { 'laureate--top': i === laureateIndex }]}>
+            <div class="laureate-tuna">
+              <div class="laureate-crest">
+                {tuna.logoUrl ? (
+                  <img
+                    src={tuna.logoUrl}
+                    alt={displayName(tuna)}
+                    class="laureate-logo"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span class="laureate-initials" aria-hidden="true">
+                    {initials(tuna)}
+                  </span>
+                )}
+              </div>
+              <div class="laureate-id">
+                <p class="tuna-name">{displayName(tuna)}</p>
+                {tuna.city && <p class="laureate-city">{tuna.city}</p>}
+              </div>
             </div>
-            <div class="award-winner">
-              <TunaCardSimple tuna={award.tuna} showCity={true} />
-            </div>
-          </div>
+
+            <ul class="medals" aria-label={`${awards.length}`}>
+              {awards.map((key) => (
+                <li class:list={['medal', { 'medal--grand': key === GRAND_PRIZE }]}>
+                  {key === GRAND_PRIZE && (
+                    <AstroIcon
+                      name="lucide:crown"
+                      size={14}
+                      class:list={['medal-icon']}
+                      aria-hidden="true"
+                    />
+                  )}
+                  {awardLabel(key)}
+                </li>
+              ))}
+            </ul>
+          </li>
         ))}
-      </div>
+      </ol>
     </section>
   )
 }
 
 <style>
-  .awards-section {
+  .palmares {
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
-  }
-
-  .awards-title {
-    font-size: var(--font-size-2xl);
-    font-weight: 700;
-    color: var(--color-primary);
-    margin: 0;
-  }
-
-  [data-theme='dark'] .awards-title {
-    color: var(--color-accent-gold);
-  }
-
-  .awards-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: var(--space-6);
   }
 
-  .award-item {
+  .palmares-head {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    padding: var(--space-6);
-    background-color: var(--color-background);
-    border-radius: var(--radius-xl);
-    border: 2px solid transparent;
-    transition:
-      border-color var(--transition-fast),
-      transform var(--transition-fast);
-  }
-
-  .award-item:hover {
-    border-color: var(--color-primary);
-    transform: translateY(-2px);
-  }
-
-  [data-theme='dark'] .award-item:hover {
-    border-color: var(--color-accent-gold);
-  }
-
-  .award-header {
-    display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: var(--space-3);
   }
 
-  .award-icon {
-    flex-shrink: 0;
-    color: var(--color-accent-gold);
-  }
-
-  .award-name {
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    color: var(--color-primary);
+  .palmares-title {
     margin: 0;
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--color-primary);
   }
 
-  [data-theme='dark'] .award-name {
+  [data-theme='dark'] .palmares-title {
+    color: var(--color-text);
+  }
+
+  .palmares-count {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-gold-dark);
+  }
+
+  [data-theme='dark'] .palmares-count {
     color: var(--color-accent-gold);
   }
 
-  .award-winner {
-    margin-top: var(--space-2);
+  .laureates {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
   }
 
-  @media (max-width: 768px) {
-    .awards-section {
-      gap: var(--space-6);
+  .laureate {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) 1fr;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: border-color var(--transition-fast);
+  }
+
+  .laureate:hover {
+    border-left-color: var(--color-primary);
+  }
+
+  /* Laureate — the one bold moment */
+  .laureate--top {
+    border: 1px solid var(--color-gold-dark);
+    border-left: 3px solid var(--color-gold-dark);
+    background:
+      linear-gradient(100deg, rgba(212, 161, 94, 0.12), transparent 60%), var(--color-surface);
+  }
+
+  [data-theme='dark'] .laureate--top {
+    border-color: var(--color-accent-gold);
+    border-left-color: var(--color-accent-gold);
+  }
+
+  .laureate-tuna {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-width: 0;
+  }
+
+  .laureate-crest {
+    flex-shrink: 0;
+    width: 3.25rem;
+    height: 3.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .laureate--top .laureate-crest {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .laureate-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .laureate-initials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--radius-sm);
+    color: var(--color-text-inverted);
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+  }
+
+  .laureate-id {
+    min-width: 0;
+  }
+
+  .tuna-name {
+    margin: 0;
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+
+  .laureate--top .tuna-name {
+    font-size: var(--font-size-xl);
+  }
+
+  .laureate-city {
+    margin: var(--space-1) 0 0 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  .medals {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .medal {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-gold-dark);
+    border-radius: var(--radius-full);
+    color: var(--color-gold-dark);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  [data-theme='dark'] .medal {
+    border-color: var(--color-accent-gold);
+    color: var(--color-accent-gold);
+  }
+
+  .medal--grand {
+    background: var(--color-gold-dark);
+    border-color: var(--color-gold-dark);
+    color: #fff;
+  }
+
+  [data-theme='dark'] .medal--grand {
+    background: var(--color-accent-gold);
+    border-color: var(--color-accent-gold);
+    color: var(--color-primary-dark);
+  }
+
+  .medal-icon {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 767.98px) {
+    .palmares-title {
+      font-size: var(--font-size-2xl);
     }
 
-    .awards-title {
-      font-size: var(--font-size-xl);
-    }
-
-    .awards-list {
+    .laureate,
+    .laureate--top {
       grid-template-columns: 1fr;
-      gap: var(--space-4);
-    }
-
-    .award-item {
+      gap: var(--space-3);
       padding: var(--space-4);
     }
 
-    .award-name {
-      font-size: var(--font-size-base);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .awards-list {
-      grid-template-columns: repeat(2, 1fr);
+    .medal {
+      white-space: normal;
     }
   }
 </style>

@@ -51,12 +51,11 @@ const currentIndex = allYears.indexOf(edition.year);
 const prevYear = currentIndex < allYears.length - 1 ? allYears[currentIndex + 1] : null;
 const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
 
-// Split tunas into those with and without prizes
-const { withPrizes: tunasWithPrizes, withoutPrizes: tunasWithoutPrizes } =
-  splitTunasByAwards(edition);
+// Winners (grouped by tuna) power the Palmarés section
+const { withPrizes: tunasWithPrizes } = splitTunasByAwards(edition);
 
-// All contestants without awards
-const contestants = tunasWithoutPrizes.map(({ tuna }) => tuna);
+// Roster lists every competing tuna, whether or not it won a prize
+const contestants = edition.tunas;
 
 // Poster
 const posterPublicId = edition.posterUrl ? extractPublicId(edition.posterUrl) : null;
@@ -76,10 +75,25 @@ const posterAlt = t('citadao.posterAlt', { edition: editionLabel, year: edition.
     posterAlt={posterAlt}
   />
 
-  <!-- Participants Section -->
+  <!-- Palmarés — awards grouped by winning tuna -->
+  {
+    tunasWithPrizes.length > 0 && (
+      <section class="content-section palmares-bg" aria-label={t('citadao.awards')}>
+        <div class="content-container">
+          <AwardsList
+            tunasWithPrizes={tunasWithPrizes}
+            awardLabel={(key) => t(`awards.${key}` as DotPaths<typeof pt>)}
+            sectionTitle={t('citadao.awards')}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Participating tunas -->
   {
     (contestants.length > 0 || edition.guests.length > 0) && (
-      <section class="content-section" aria-labelledby="participants-title">
+      <section class="content-section roster-bg" aria-labelledby="participants-title">
         <div class="content-container">
           <h2 id="participants-title" class="section-title">
             {t('citadao.participatingTunas')}
@@ -98,25 +112,10 @@ const posterAlt = t('citadao.posterAlt', { edition: editionLabel, year: edition.
     )
   }
 
-  <!-- Awards Section -->
-  {
-    tunasWithPrizes.length > 0 && (
-      <section class="content-section awards-bg" aria-label={t('citadao.awards')}>
-        <div class="content-container">
-          <AwardsList
-            tunasWithPrizes={tunasWithPrizes}
-            awardLabel={(key) => t(`awards.${key}` as DotPaths<typeof pt>)}
-            sectionTitle={t('citadao.awards')}
-          />
-        </div>
-      </section>
-    )
-  }
-
   <!-- No data fallback -->
   {
     contestants.length === 0 && edition.guests.length === 0 && tunasWithPrizes.length === 0 && (
-      <section class="content-section" aria-label={t('common.noResults')}>
+      <section class="content-section roster-bg" aria-label={t('common.noResults')}>
         <div class="content-container">
           <p class="no-data-text">{t('common.noResults')}</p>
         </div>
@@ -137,12 +136,15 @@ const posterAlt = t('citadao.posterAlt', { edition: editionLabel, year: edition.
 <style>
   /* Content Sections */
   .content-section {
-    padding: var(--space-16) var(--space-6);
-    background-color: var(--color-surface);
+    padding: var(--space-12) var(--space-6);
   }
 
-  .awards-bg {
+  .palmares-bg {
     background-color: var(--color-background);
+  }
+
+  .roster-bg {
+    background-color: var(--color-background-alt);
   }
 
   .content-container {
@@ -151,31 +153,33 @@ const posterAlt = t('citadao.posterAlt', { edition: editionLabel, year: edition.
   }
 
   .section-title {
-    font-size: var(--font-size-2xl);
-    font-weight: 700;
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: 800;
+    letter-spacing: -0.01em;
     color: var(--color-primary);
-    margin: 0 0 var(--space-8) 0;
+    margin: 0 0 var(--space-6) 0;
   }
 
   [data-theme='dark'] .section-title {
-    color: var(--color-accent-gold);
+    color: var(--color-text);
   }
 
   .no-data-text {
     text-align: center;
     font-size: var(--font-size-lg);
     color: var(--color-text-muted);
-    padding: var(--space-12) 0;
+    padding: var(--space-10) 0;
   }
 
   /* Responsive */
-  @media (max-width: 768px) {
+  @media (max-width: 767.98px) {
     .content-section {
       padding: var(--space-10) var(--space-4);
     }
 
     .section-title {
-      font-size: var(--font-size-xl);
+      font-size: var(--font-size-2xl);
     }
   }
 </style>
