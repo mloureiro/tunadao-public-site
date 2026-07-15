@@ -1,6 +1,7 @@
 ---
 /**
- * ParticipantList - Display participating tunas grouped by role (contestants vs guests)
+ * ParticipantList - Participating tunas grouped by role (contestants vs guests).
+ * Contestants render as a dense crest grid; guests as compact chips.
  */
 import TunaCardSimple from './TunaCardSimple.astro';
 import type { FrontendTunaWithLogo } from '@lib/cms/types';
@@ -16,123 +17,177 @@ interface Props {
 }
 
 const { contestants, guests, labels } = Astro.props;
+
+const guestName = (tuna: FrontendTunaWithLogo) => tuna.shortName || tuna.fullName;
+const guestInitials = (tuna: FrontendTunaWithLogo) =>
+  (tuna.shortName || tuna.fullName).slice(0, 2).toUpperCase();
 ---
 
-<div class="participants-container">
-  {contestants.length > 0 && (
-    <section class="participants-section" aria-labelledby="contestants-heading">
-      <div class="section-header">
-        <h3 id="contestants-heading" class="section-title">{labels.contestants}</h3>
-        <span class="count-badge" aria-label={`${contestants.length} ${labels.count}`}>
-          {contestants.length}
-        </span>
-      </div>
-      <div class="participants-grid">
-        {contestants.map((tuna) => (
-          <TunaCardSimple tuna={tuna} showCity={true} />
-        ))}
-      </div>
-    </section>
-  )}
+<div class="roster">
+  {
+    contestants.length > 0 && (
+      <section class="roster-section" aria-labelledby="contestants-heading">
+        <header class="roster-head">
+          <h3 id="contestants-heading" class="roster-title">
+            {labels.contestants}
+          </h3>
+          <span class="roster-count" aria-label={`${contestants.length} ${labels.count}`}>
+            {contestants.length}
+          </span>
+        </header>
+        <div class="contestants-grid">
+          {contestants.map((tuna) => (
+            <TunaCardSimple tuna={tuna} showCity={true} />
+          ))}
+        </div>
+      </section>
+    )
+  }
 
-  {guests.length > 0 && (
-    <section class="participants-section" aria-labelledby="guests-heading">
-      <div class="section-header">
-        <h3 id="guests-heading" class="section-title">{labels.guests}</h3>
-        <span class="count-badge" aria-label={`${guests.length} ${labels.count}`}>
-          {guests.length}
-        </span>
-      </div>
-      <div class="participants-grid">
-        {guests.map((tuna) => (
-          <TunaCardSimple tuna={tuna} showCity={true} />
-        ))}
-      </div>
-    </section>
-  )}
+  {
+    guests.length > 0 && (
+      <section class="roster-section" aria-labelledby="guests-heading">
+        <header class="roster-head">
+          <h3 id="guests-heading" class="roster-title">
+            {labels.guests}
+          </h3>
+          <span class="roster-count" aria-label={`${guests.length} ${labels.count}`}>
+            {guests.length}
+          </span>
+        </header>
+        <ul class="guest-chips">
+          {guests.map((tuna) => (
+            <li class="guest-chip">
+              <span class="guest-crest">
+                {tuna.logoUrl ? (
+                  <img src={tuna.logoUrl} alt={guestName(tuna)} class="guest-logo" loading="lazy" />
+                ) : (
+                  <span class="guest-initials" aria-hidden="true">
+                    {guestInitials(tuna)}
+                  </span>
+                )}
+              </span>
+              <span class="tuna-name">{guestName(tuna)}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
 </div>
 
 <style>
-  .participants-container {
+  .roster {
     display: flex;
     flex-direction: column;
     gap: var(--space-10);
   }
 
-  .participants-section {
+  .roster-section {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--space-5);
   }
 
-  .section-header {
+  .roster-head {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--space-3);
   }
 
-  .section-title {
-    font-size: var(--font-size-2xl);
+  .roster-title {
+    margin: 0;
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xl);
     font-weight: 700;
     color: var(--color-text);
-    margin: 0;
   }
 
-  .count-badge {
+  .roster-count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 2.5rem;
-    height: 2.5rem;
-    padding: 0 var(--space-3);
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    min-width: 1.75rem;
+    height: 1.75rem;
+    padding: 0 var(--space-2);
+    background: var(--color-primary);
     color: var(--color-text-inverted);
     border-radius: var(--radius-full);
     font-family: var(--font-family-heading);
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
     font-weight: 700;
   }
 
-  .participants-grid {
+  /* Contestants — dense crest grid */
+  .contestants-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: var(--space-3);
   }
 
-  @media (max-width: 768px) {
-    .participants-container {
+  /* Guests — compact chips */
+  .guest-chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  .guest-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+  }
+
+  .guest-crest {
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .guest-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .guest-initials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-neutral-200);
+    border-radius: var(--radius-full);
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--color-text-secondary);
+  }
+
+  .guest-chip .tuna-name {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  @media (max-width: 767.98px) {
+    .roster {
       gap: var(--space-8);
     }
 
-    .participants-section {
-      gap: var(--space-4);
-    }
-
-    .section-title {
-      font-size: var(--font-size-xl);
-    }
-
-    .count-badge {
-      min-width: 2rem;
-      height: 2rem;
-      font-size: var(--font-size-sm);
-    }
-
-    .participants-grid {
-      grid-template-columns: 1fr;
-      gap: var(--space-3);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .participants-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .participants-grid {
-      grid-template-columns: repeat(3, 1fr);
+    .contestants-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: var(--space-2);
     }
   }
 </style>

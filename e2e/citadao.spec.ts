@@ -51,13 +51,15 @@ test.describe('Citadão — fixture-tied participant names', () => {
   test('should render participant tuna name EUL on the 2023 detail page', async ({ page }) => {
     // Fixture: edition 2 (XVII, 2023) has EUL as contestant.
     await page.goto('/citadao/2023');
-    // The tuna name is rendered as <p class="tuna-name">EUL</p>
-    await expect(page.locator('.tuna-name', { hasText: 'EUL' })).toBeVisible();
+    // The tuna name is rendered as <p class="tuna-name">EUL</p>. A tuna can appear both
+    // in the Palmarés (if it won) and in the "Tunas a Concurso" roster, so match the first.
+    await expect(page.locator('.tuna-name', { hasText: 'EUL' }).first()).toBeVisible();
   });
 
   test('should render participant tuna name Afonsina on the 2024 detail page', async ({ page }) => {
-    // Fixture: edition 1 (XVIII, 2024) has Afonsina as award winner (Melhor Tuna).
+    // Fixture: edition 1 (XVIII, 2024) has Afonsina as Melhor Tuna winner AND a contestant,
+    // so it appears in both the Palmarés and the roster — assert the first occurrence.
     await page.goto('/citadao/2024');
-    await expect(page.locator('.tuna-name', { hasText: 'Afonsina' })).toBeVisible();
+    await expect(page.locator('.tuna-name', { hasText: 'Afonsina' }).first()).toBeVisible();
   });
 });
